@@ -1,0 +1,86 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum DataType {
+  String
+  Boolean
+  Number
+}
+
+enum SchemaType {
+  /// allowed/used schema.org types
+  /// Thing /// is the default. just leave it empty
+  Person /// for a user
+  DefinedTerm /// for a word
+}
+
+model Permission {
+  permission_id  String   @id @default(cuid())
+  index          Int      @default(autoincrement())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  //
+  grantedFor     Thing    @relation("Permission.grantedFor", fields: [grantedForId], references: [thing_id])
+  grantedForId   String
+  grantedAbout   Thing    @relation("Permission.grantedAbout", fields: [grantedAboutId], references: [thing_id])
+  grantedAboutId String
+  // canRead    Boolean
+  // canWrite   Boolean
+  // canDelete  Boolean
+  canAdmin       Boolean
+  //
+  key            String?  @unique
+}
+
+model Thing {
+  thing_id       String       @id @default(cuid())
+  index          Int          @default(autoincrement())
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  //
+  type           SchemaType
+  name           String
+  locale         String? /// any locale string
+  jsonld         String? /// JSON-LD /// in json-ld: for a word/DefinedTerm this could contain termCode with wikidata-id + inDefinedTermSet would have the url to wikidata
+  //
+  isAnswering    Answer[]     @relation("Answer.isAnsweredBy")
+  isReferencedIn Answer[]     @relation("Answer.isAbout")
+  isAccessedBy   Permission[] @relation("Permission.grantedFor")
+  hasAccessFor   Permission[] @relation("Permission.grantedAbout")
+}
+
+model Question {
+  question_id String   @id @default(cuid())
+  index       Int      @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  //
+  question    String
+  locale      String? /// any locale string
+  answers     Answer[]
+}
+
+model Answer {
+  answer_id      String   @id @default(cuid())
+  index          Int      @default(autoincrement())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  //
+  answerType     DataType
+  answer         String? /// todo should this be a Thing?
+  isAnswering    Question @relation(fields: [isAnsweringId], references: [question_id])
+  isAnsweringId  String
+  isAbout        Thing    @relation("Answer.isAbout", fields: [isAboutId], references: [thing_id])
+  isAboutId      String
+  isAnsweredBy   Thing    @relation("Answer.isAnsweredBy", fields: [isAnsweredById], references: [thing_id])
+  isAnsweredById String
+}
