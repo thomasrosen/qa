@@ -12,75 +12,92 @@ datasource db {
 
 enum DataType {
   String
-  Boolean
   Number
+  Boolean
+  Thing /// a reference to a Thing
 }
 
 enum SchemaType {
   /// allowed/used schema.org types
   /// Thing /// is the default. just leave it empty
   Person /// for a user
-  DefinedTerm /// for a word
+  DefinedTerm /// for a word / job title / etc
 }
 
-model Permission {
-  permission_id  String   @id @default(cuid())
-  index          Int      @default(autoincrement())
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  //
-  grantedFor     Thing    @relation("Permission.grantedFor", fields: [grantedForId], references: [thing_id])
-  grantedForId   String
-  grantedAbout   Thing    @relation("Permission.grantedAbout", fields: [grantedAboutId], references: [thing_id])
-  grantedAboutId String
-  // canRead    Boolean
-  // canWrite   Boolean
-  // canDelete  Boolean
-  canAdmin       Boolean
-  //
-  key            String?  @unique
-}
+// model Backup {
+//   backup_id String   @id @default(cuid())
+//   index     Int      @default(autoincrement())
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   //
+//   data      String /// encrypted stringified-json of the users data
+//   name      String /// a name of the backup
+// }
 
 model Thing {
-  thing_id       String       @id @default(cuid())
-  index          Int          @default(autoincrement())
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  /// similar to the schema.org Thing
+  thing_id                 String      @id @default(cuid())
+  index                    Int         @default(autoincrement())
+  createdAt                DateTime    @default(now())
+  updatedAt                DateTime    @updatedAt
   //
-  type           SchemaType
-  name           String
-  locale         String? /// any locale string
-  jsonld         String? /// JSON-LD /// in json-ld: for a word/DefinedTerm this could contain termCode with wikidata-id + inDefinedTermSet would have the url to wikidata
+  type                     SchemaType? /// empty is just a generic thing
+  name                     String?
+  locale                   String? /// any locale string
+  sameAs                   String[] /// could a wikidata-url
+  jsonld                   Json? /// JSON-LD: For a word/DefinedTerm this could contain a wikidata-id as the termCode. Or an email for a person.
   //
-  isAnswering    Answer[]     @relation("Answer.isAnsweredBy")
-  isReferencedIn Answer[]     @relation("Answer.isAbout")
-  isAccessedBy   Permission[] @relation("Permission.grantedFor")
-  hasAccessFor   Permission[] @relation("Permission.grantedAbout")
+  Answer_isAnsweredByAgent Answer[]    @relation("Answer.isAnsweredByAgent")
+  Answer_isAbout           Answer[]    @relation("Answer.isAbout")
+  isUsedInValues           Value[]     @relation("Value.thing")
 }
 
 model Question {
-  question_id String   @id @default(cuid())
-  index       Int      @default(autoincrement())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  /// similar to the schema.org SearchAction
+  question_id        String       @id @default(cuid())
+  index              Int          @default(autoincrement())
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
   //
-  question    String
-  locale      String? /// any locale string
-  answers     Answer[]
+  question           String?
+  description        String?
+  locale             String? /// any locale string
+  asProperty         String? /// if this question is a schema property, this would be the schema.org property name
+  expectedValueType  DataType
+  expectedThingTypes SchemaType[] /// if the expectedValueType is Thing, this would be the possible types of the thing
+  //
+  Answer_isAnswering Answer[]     @relation("Answer.isAnswering")
 }
 
 model Answer {
-  answer_id      String   @id @default(cuid())
-  index          Int      @default(autoincrement())
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  /// similar to the schema.org FindAction
+  answer_id            String   @id @default(cuid())
+  index                Int      @default(autoincrement())
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
   //
-  answerType     DataType
-  answer         String? /// todo should this be a Thing?
-  isAnswering    Question @relation(fields: [isAnsweringId], references: [question_id])
-  isAnsweringId  String
-  isAbout        Thing    @relation("Answer.isAbout", fields: [isAboutId], references: [thing_id])
-  isAboutId      String
-  isAnsweredBy   Thing    @relation("Answer.isAnsweredBy", fields: [isAnsweredById], references: [thing_id])
-  isAnsweredById String
+  values               Value[]  @relation("Value.isValueFor")
+  isAnswering          Question @relation("Answer.isAnswering", fields: [isAnswering_id], references: [question_id])
+  isAnswering_id       String
+  isAbout              Thing?   @relation("Answer.isAbout", fields: [isAbout_id], references: [thing_id]) /// could be a defined term or a person if answering about themselves
+  isAbout_id           String?
+  isAnsweredByAgent    Thing    @relation("Answer.isAnsweredByAgent", fields: [isAnsweredByAgent_id], references: [thing_id]) /// the person who answered
+  isAnsweredByAgent_id String
+}
+
+model Value {
+  value_id        String   @id @default(cuid())
+  index           Int      @default(autoincrement())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  //
+  valueType       DataType
+  valueAsString   String?
+  valueAsNumber   Float?
+  valueAsBoolean  Boolean?
+  valueAsThing    Thing?   @relation("Value.thing", fields: [valueAsThing_id], references: [thing_id])
+  valueAsThing_id String?
+  //
+  isValueFor      Answer   @relation("Value.isValueFor", fields: [isValueFor_id], references: [answer_id])
+  isValueFor_id   String
 }
