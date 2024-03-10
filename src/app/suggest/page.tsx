@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
 import { DataTypeSchema, SchemaTypeSchema } from '@/generated/zod'
 import { QuestionSchema, type QuestionSchemaType } from '@/lib/prisma'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -59,36 +60,28 @@ export function InputForm() {
           form={form}
           name="question"
           label="Question"
-          input={(field) => (
-            <Input type="text" placeholder="" {...field} value={field.value ?? ''} />
-          )}
+          input={(field) => <Textarea {...field} value={field.value || ''} />}
         />
 
         <FormInput
           form={form}
           name="description"
           label="Description"
-          input={(field) => (
-            <Input type="text" placeholder="" {...field} value={field.value ?? ''} />
-          )}
+          input={(field) => <Textarea {...field} value={field.value || ''} />}
         />
 
         <FormInput
           form={form}
           name="locale"
           label="Locale"
-          input={(field) => (
-            <Input type="text" placeholder="" {...field} value={field.value ?? ''} />
-          )}
+          input={(field) => <Input type="text" {...field} value={field.value || ''} />}
         />
 
         <FormInput
           form={form}
           name="asProperty"
           label="asProperty"
-          input={(field) => (
-            <Input type="text" placeholder="" {...field} value={field.value ?? ''} />
-          )}
+          input={(field) => <Input type="text" {...field} value={field.value || ''} />}
         />
 
         <FormInput
