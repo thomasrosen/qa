@@ -14,7 +14,7 @@ export function Headline({
       return (
         <h2
           className={cn(
-            'scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0 mb-4',
+            'scroll-m-20 border-b border-foreground/20 first:pt-0 pt-8 pb-2 text-3xl font-semibold tracking-tight mb-4',
             className
           )}
         >
@@ -23,7 +23,12 @@ export function Headline({
       )
     case 'h3':
       return (
-        <h3 className={cn('scroll-m-20 text-2xl font-semibold tracking-tight mb-4', className)}>
+        <h3
+          className={cn(
+            'scroll-m-20 text-2xl font-semibold tracking-tight first:pt-0 pt-4 mb-4',
+            className
+          )}
+        >
           {children}
         </h3>
       )
