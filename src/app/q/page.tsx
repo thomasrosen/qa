@@ -1,32 +1,24 @@
 import { P } from '@/components/P'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { getRandomQuestion } from '@/lib/getRandomQuestion'
+import { getRandomThing } from '@/lib/getRandomThing'
 import Link from 'next/link'
 
-const things = [
-  {
-    thing_id: '1',
-    type: 'DefinedTerm',
-    name: 'Celsius',
-  },
-  {
-    thing_id: '2',
-    type: 'DefinedTerm',
-    name: 'Fahrenheit',
-  },
-  {
-    thing_id: '3',
-    type: 'DefinedTerm',
-    name: 'Kelvin',
-  },
-]
+export default async function Questions() {
+  const question = await getRandomQuestion()
+  const thing = await getRandomThing({})
 
-export default function Questions() {
+  if (!question) {
+    return <P className="text-center">There are no questions available at the moment.</P>
+  }
+
   return (
     <section className="flex flex-col gap-4">
+      <pre>{JSON.stringify(question, null, 2)}</pre>
       <Card>
         <CardHeader>
-          <CardTitle className="text-center">Do you know this word?</CardTitle>
+          <CardTitle className="text-center">{question.question}</CardTitle>
         </CardHeader>
         <CardContent className="text-center">
           <P className="mb-0">Fachwort</P>

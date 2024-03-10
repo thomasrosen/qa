@@ -1,38 +1,39 @@
 import { Prisma, PrismaClient } from '@prisma/client'
 import { z } from 'zod'
 
-export const prisma = new PrismaClient()
-export { Prisma }
+const prismaClientSingleton = () => {
+  // source: https://www.prisma.io/docs/orm/more/help-and-troubleshooting/help-articles/nextjs-prisma-client-dev-practices
+  return new PrismaClient()
+}
+declare global {
+  var prismaGlobal: undefined | ReturnType<typeof prismaClientSingleton>
+}
+const prisma = globalThis.prismaGlobal ?? prismaClientSingleton()
+export { Prisma, prisma }
+if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma
 
 export const DataTypeSchema = z.enum(['String', 'Number', 'Boolean', 'Thing'])
 export const SchemaTypeSchema = z.enum(['Person', 'DefinedTerm'])
 
+export const JsonValueSchema: z.ZodType<Prisma.JsonValue> = z.lazy(() =>
+  z.union([
+    z.string(),
+    z.number(),
+    z.boolean(),
+    z.literal(null),
+    z.record(z.lazy(() => JsonValueSchema.optional())),
+    z.array(z.lazy(() => JsonValueSchema)),
+  ])
+)
+
 export const QuestionSchema = z
   .object({
-    expectedValueType: DataTypeSchema,
-    /**
-     * if the expectedValueType is Thing, this would be the possible types of the thing
-     */
-    expectedThingTypes: SchemaTypeSchema.array(),
-    /**
-     * similar to the schema.org SearchAction
-     */
-    // omitted: question_id: z.string().cuid(),
-    // omitted: index: z.number().int(),
-    // omitted: createdAt: z.coerce.date(),
-    // omitted: updatedAt: z.coerce.date(),
     question: z
       .string()
       .min(10, { message: 'Question must be at least 10 characters long.' })
       .nullable(),
     description: z.string().nullable(),
-    /**
-     * any locale string ///
-     */
     locale: z.string().min(2, { message: 'Locale must be at least 2 characters long.' }).nullable(),
-    /**
-     * if this question is a schema property, this would be the schema.org property name ///
-     */
     asProperty: z
       .string()
       .regex(/^([a-z]+(?:[A-Z][a-z]*)*)?$/, {
@@ -40,13 +41,21 @@ export const QuestionSchema = z
           'asProperty must be a valid schema.org property name. These must be lowerCamelCase and only a-Z and A-Z are allowed.',
       })
       .nullable(),
+    aboutThingTypes: SchemaTypeSchema.array(),
+    answerType: DataTypeSchema,
+    answerThingTypes: SchemaTypeSchema.array(),
   })
-  .refine(
-    (schema) =>
-      schema.expectedValueType === 'Thing' ? schema.expectedThingTypes.length > 0 : true,
-    {
-      path: ['expectedThingTypes'],
-      message: 'expectedThingTypes must be set when expectedValueType is Thing',
-    }
-  )
+  .refine((schema) => (schema.answerType === 'Thing' ? schema.answerThingTypes.length > 0 : true), {
+    path: ['answerThingTypes'],
+    message: 'answerThingTypes must be set when answerType is "Thing".',
+  })
 export type QuestionSchemaType = z.input<typeof QuestionSchema>
+
+export const ThingSchema = z.object({
+  type: SchemaTypeSchema.nullable(),
+  name: z.string().min(1, { message: 'Name must be at least 1 character long.' }).nullable(),
+  locale: z.string().min(2, { message: 'Locale must be at least 2 characters long.' }).nullable(),
+  sameAs: z.string().array(),
+  jsonld: JsonValueSchema,
+})
+export type ThingSchemaType = z.input<typeof ThingSchema>

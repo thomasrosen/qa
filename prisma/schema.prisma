@@ -69,8 +69,9 @@ model Question {
   description        String?
   locale             String? /// any locale string /// @zod.string.min(2, { message: 'Locale must be at least 2 characters long.' })
   asProperty         String? /// if this question is a schema property, this would be the schema.org property name /// @zod.string.regex(/^([a-z]+(?:[A-Z][a-z]*)*)?$/, { message: 'asProperty must be a valid schema.org property name. These must be lowerCamelCase and only a-Z and A-Z are allowed.' })
-  expectedValueType  DataType
-  expectedThingTypes SchemaType[] /// if the expectedValueType is Thing, this would be the possible types of the thing
+  aboutThingTypes    SchemaType[]
+  answerType         DataType
+  answerThingTypes   SchemaType[] /// if the expectedAnswerType is Thing, this would be the possible types of this thing
   //
   Answer_isAnswering Answer[]     @relation("Answer.isAnswering")
 }

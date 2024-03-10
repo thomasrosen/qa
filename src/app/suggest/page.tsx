@@ -30,15 +30,15 @@ function InputForm() {
     defaultValues: {
       question: '',
       description: '',
-      locale: '',
-      asProperty: '',
-      expectedValueType: 'Thing',
-      expectedThingTypes: [],
+      locale: 'en',
+      asProperty: 'knowsAbout',
+      aboutThingTypes: ['DefinedTerm'],
+      answerType: 'Boolean',
+      answerThingTypes: [],
     },
   })
 
   async function onSubmit(data: QuestionSchemaType) {
-    console.log('data', data)
     const submitted = await suggest(data)
 
     if (submitted) {
@@ -88,31 +88,8 @@ function InputForm() {
 
         <FormInput
           form={form}
-          name="expectedValueType"
-          label="expectedValueType"
-          inputHasFormControl={true}
-          input={(field) => (
-            <Select onValueChange={field.onChange} defaultValue={field.value}>
-              <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a DataType…" />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                {DataTypeSchema.options.map((option) => (
-                  <SelectItem key={option} value={option}>
-                    {option}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          )}
-        />
-
-        <FormInput
-          form={form}
-          name="expectedThingTypes"
-          label="expectedThingTypes"
+          name="aboutThingTypes"
+          label="What type of data is the question about?"
           inputHasFormControl={true}
           input={(field) => {
             const values = field.value || []
@@ -164,7 +141,85 @@ function InputForm() {
           }}
         />
 
-        <Button type="submit">Suggest</Button>
+        <FormInput
+          form={form}
+          name="answerType"
+          label="With which type of data can the question be answered?"
+          inputHasFormControl={true}
+          input={(field) => (
+            <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <FormControl>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a DataType…" />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                {DataTypeSchema.options.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        />
+
+        <FormInput
+          form={form}
+          name="answerThingTypes"
+          label="If it's a thing, which types are allowed?"
+          inputHasFormControl={true}
+          input={(field) => {
+            const values = field.value || []
+            return [...new Array(values.length + 1)]
+              .map((_, i) => {
+                const value = values[i] || ''
+                const onChange = (value: string) => {
+                  if (value === 'DESELECT') {
+                    value = ''
+                  }
+                  values.splice(i, 1, value)
+                  const uniqueValues = Array.from(new Set(values)).filter(Boolean)
+                  field.onChange(uniqueValues)
+                }
+                const possibleOptions = SchemaTypeSchema.options
+                  .filter((options) => !values.includes(options) || options === value)
+                  .sort()
+
+                if (!value && possibleOptions.length === 0) {
+                  return null
+                }
+
+                return (
+                  <Select key={i} onValueChange={onChange} value={value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a SchemaType…" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {value && (
+                        <>
+                          <SelectItem value="DESELECT">Deselect Value</SelectItem>
+                          <SelectItem value="-" disabled>
+                            —————
+                          </SelectItem>
+                        </>
+                      )}
+                      {possibleOptions.map((option) => (
+                        <SelectItem key={option} value={option}>
+                          {option}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )
+              })
+              .filter(Boolean)
+          }}
+        />
+
+        <Button type="submit">Suggest Question</Button>
       </form>
     </Form>
   )
