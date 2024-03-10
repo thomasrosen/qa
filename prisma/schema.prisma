@@ -5,10 +5,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
-generator zod {
-  provider = "zod-prisma-types"
-  output   = "../src/generated/zod" // default is ./generated/zod
-}
+// generator zod {
+//   provider = "zod-prisma-types"
+//   output   = "../src/generated/zod" // default is ./generated/zod
+// }
 
 datasource db {
   provider = "postgresql"

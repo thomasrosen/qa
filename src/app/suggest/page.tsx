@@ -14,8 +14,12 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { DataTypeSchema, SchemaTypeSchema } from '@/generated/zod'
-import { QuestionSchema, type QuestionSchemaType } from '@/lib/prisma'
+import {
+  DataTypeSchema,
+  QuestionSchema,
+  SchemaTypeSchema,
+  type QuestionSchemaType,
+} from '@/lib/prisma'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
