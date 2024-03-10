@@ -20,7 +20,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
-export function InputForm() {
+function InputForm() {
   const form = useForm<QuestionSchemaType>({
     resolver: zodResolver(QuestionSchema),
     defaultValues: {
