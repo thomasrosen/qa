@@ -1,3 +1,4 @@
+import { ControllerRenderProps, FieldValues } from 'react-hook-form'
 import {
   FormControl,
   FormDescription,
@@ -5,8 +6,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
-import { ControllerRenderProps, FieldValues } from 'react-hook-form'
+} from './ui/form'
 
 type InputProps = {
   form: any // can be any useForm().form
