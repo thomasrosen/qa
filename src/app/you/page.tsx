@@ -1,5 +1,5 @@
-import { P } from '@/compo@/comp'
 import { Headline } from '@/components/Headline'
+import { P } from '@/components/P'
 
 export default function AboutYou() {
   return (
