@@ -37,8 +37,6 @@ export function InputForm() {
     console.log('data', data)
     const submitted = await suggest(data)
 
-    // const submitted = true
-
     if (submitted) {
       form.reset()
       toast('You submitted the following values:', {
@@ -114,7 +112,7 @@ export function InputForm() {
           inputHasFormControl={true}
           input={(field) => {
             const values = field.value || []
-            const selects = [...new Array(values.length + 1)]
+            return [...new Array(values.length + 1)]
               .map((_, i) => {
                 const value = values[i] || ''
                 const onChange = (value: string) => {
@@ -159,48 +157,7 @@ export function InputForm() {
                 )
               })
               .filter(Boolean)
-
-            console.log('selects', selects)
-
-            return selects
-            const onChange = (value: string) => {
-              field.onChange([value])
-            }
-            return (
-              <Select onValueChange={onChange} defaultValue={field.value[0]}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a SchemaType…" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {SchemaTypeSchema.options.map((option) => (
-                    <SelectItem key={option} value={option}>
-                      {option}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )
           }}
-
-          // input={(field) => {
-          //   const currentValue = (field.value || []).join(', ')
-          //   const onChange = (e: { target: { value: any } }) => {
-          //     const value = e.target.value
-          //     const values = value.split(',').map((v: string) => v.trim())
-          //     field.onChange(values)
-          //   }
-          //   return (
-          //     <Input
-          //       type="text"
-          //       placeholder=""
-          //       {...field}
-          //       onChange={onChange}
-          //       defaultValue={currentValue}
-          //     />
-          //   )
-          // }}
         />
 
         <Button type="submit">Suggest</Button>
