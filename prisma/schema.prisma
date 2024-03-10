@@ -5,6 +5,11 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator zod {
+  provider = "zod-prisma-types"
+  output   = "../src/generated/zod" // default is ./generated/zod
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -52,17 +57,18 @@ model Thing {
   isUsedInValues           Value[]     @relation("Value.thing")
 }
 
+/// @zod.refine(schema => schema.expectedValueType === 'Thing' ? schema.expectedThingTypes.length > 0 : true, { path: ['expectedThingTypes'], message: 'expectedThingTypes must be set when expectedValueType is Thing' })
 model Question {
   /// similar to the schema.org SearchAction
-  question_id        String       @id @default(cuid())
-  index              Int          @default(autoincrement())
-  createdAt          DateTime     @default(now())
-  updatedAt          DateTime     @updatedAt
+  question_id        String       @id @default(cuid()) /// @zod.custom.omit([model, input])
+  index              Int          @default(autoincrement()) /// @zod.custom.omit([model, input])
+  createdAt          DateTime     @default(now()) /// @zod.custom.omit([model, input])
+  updatedAt          DateTime     @updatedAt /// @zod.custom.omit([model, input])
   //
-  question           String?
+  question           String? /// @zod.string.min(10, { message: 'Question must be at least 10 characters long.' })
   description        String?
-  locale             String? /// any locale string
-  asProperty         String? /// if this question is a schema property, this would be the schema.org property name
+  locale             String? /// any locale string /// @zod.string.min(2, { message: 'Locale must be at least 2 characters long.' })
+  asProperty         String? /// if this question is a schema property, this would be the schema.org property name /// @zod.string.regex(/^([a-z]+(?:[A-Z][a-z]*)*)?$/, { message: 'asProperty must be a valid schema.org property name. These must be lowerCamelCase and only a-Z and A-Z are allowed.' })
   expectedValueType  DataType
   expectedThingTypes SchemaType[] /// if the expectedValueType is Thing, this would be the possible types of the thing
   //

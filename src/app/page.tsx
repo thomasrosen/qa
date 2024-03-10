@@ -1,12 +1,49 @@
+import { DarkModeToggle } from '@/components/DarkModeToggle'
+import { NavButton } from '@/components/NavButton'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          QA
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-      </div>
-    </main>
-  );
+    <>
+      <Card>
+        <CardHeader>
+          <CardTitle>Curious minds thrive on answers. 🧠💡🌱</CardTitle>
+        </CardHeader>
+        <CardContent>
+          While a quick poll might determine the best ice cream flavour, deeper inquiries require a
+          bit more insight. That‘s where you come in!
+        </CardContent>
+      </Card>
+      <br />
+      <Card>
+        <CardHeader>
+          <CardTitle>Go deeper than ice cream... 🍦🌊</CardTitle>
+        </CardHeader>
+        <CardContent>
+          Join me in gathering insights by answering questions that go beyond a simple socialmedia
+          poll.
+        </CardContent>
+      </Card>
+      <br />
+      <Card>
+        <CardHeader>
+          <CardTitle>Let’s go! 🚀</CardTitle>
+        </CardHeader>
+        <CardContent>
+          I am starting this dataset with a simple question: Who knows which words?
+        </CardContent>
+      </Card>
+      <br />
+
+      <nav className="flex gap-4 mb-8 flex-wrap justify-center">
+        <NavButton href="/q" variant="default">
+          Start collecting Answers
+        </NavButton>
+        <NavButton href="/you">About You</NavButton>
+        <NavButton href="/insights">Insights</NavButton>
+        <NavButton href="/imprint">Imprint + Privacy</NavButton>
+        <DarkModeToggle />
+      </nav>
+    </>
+  )
 }

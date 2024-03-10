@@ -2,32 +2,77 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --background: 277 100% 95%;
+    --foreground: 266 87% 41%;
+    --card: 270 71% 89%;
+    --card-foreground: 266 87% 41%;
+    --popover: 270 71% 89%;
+    --popover-foreground: 266 87% 41%;
+    --primary: 266 87% 41%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 267 94% 6%;
+    --secondary-foreground: 275 86% 95%;
+    --muted: 270 71% 89%;
+    --muted-foreground: 266 87% 41%;
+    --accent: 266 87% 41%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 352 81% 56%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 266 87% 41%;
+    --input: 266 87% 41%;
+    --ring: 266 87% 41%;
+    --radius: 2rem;
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+.dark {
+  --background: 270 100% 7%;
+  --foreground: 0 0% 100%;
+  --card: 267 94% 13%;
+  --card-foreground: 0 0% 100%;
+  --popover: 267 94% 13%;
+  --popover-foreground: 0 0% 100%;
+  --primary: 266 87% 41%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 0 0% 100%;
+  --secondary-foreground: 267 94% 6%;
+  --muted: 267 94% 13%;
+  --muted-foreground: 0 0% 100%;
+  --accent: 266 87% 41%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 352 81% 56%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 266 87% 41%;
+  --input: 266 87% 41%;
+  --ring: 266 87% 41%;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+@layer base {
+  * {
+    @apply border-border;
   }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+a {
+  text-decoration: underline;
+}
+a:hover {
+  text-decoration: none;
+}
+
+.screen_reader_only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
