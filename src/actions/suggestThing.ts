@@ -11,7 +11,9 @@ export async function suggestThing(data: ThingSchemaType) {
       return false
     }
 
-    await prisma.thing.create({ data: validatedFields.data })
+    await prisma.thing.create({
+      data: validatedFields.data as any, // TODO Fix type
+    })
 
     return true
   } catch (error) {
