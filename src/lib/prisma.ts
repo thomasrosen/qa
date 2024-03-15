@@ -59,3 +59,27 @@ export const ThingSchema = z.object({
   jsonld: JsonValueSchema,
 })
 export type ThingSchemaType = z.input<typeof ThingSchema>
+
+export const ValueSchema = z.object({
+  valueType: DataTypeSchema,
+  valueAsString: z.string().nullable(),
+  valueAsNumber: z.number().nullable(),
+  valueAsBoolean: z.boolean().nullable(),
+  // valueAsThing: ThingSchema.nullable(),
+  valueAsThing_id: z.string().nullable(),
+})
+export type ValueSchemaType = z.input<typeof ValueSchema>
+
+export const SaveAnswerSchema = z.object({
+  isAnswering_id: z.string(),
+  values: ValueSchema.array(),
+  isAbout_id: z.string(),
+  isAnsweredByAgent_id: z.string(),
+})
+export type SaveAnswerSchemaType = z.input<typeof SaveAnswerSchema>
+
+export const UserSchema = z.object({
+  user_id: z.string(),
+  privateIdentifier: z.string(),
+})
+export type UserSchemaType = z.input<typeof UserSchema>

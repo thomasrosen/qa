@@ -4,49 +4,70 @@
 
 @layer base {
   :root {
-    --background: 277 100% 95%;
-    --foreground: 266 87% 41%;
-    --card: 270 71% 89%;
-    --card-foreground: 266 87% 41%;
-    --popover: 270 71% 89%;
-    --popover-foreground: 266 87% 41%;
     --primary: 266 87% 41%;
     --primary-foreground: 0 0% 100%;
     --secondary: 267 94% 6%;
     --secondary-foreground: 275 86% 95%;
+    --background: 277 100% 95%;
+    --foreground: var(--primary);
+    --card: 270 71% 89%;
+    --card-foreground: var(--primary);
+    --popover: 270 71% 89%;
+    --popover-foreground: var(--primary);
     --muted: 270 71% 89%;
-    --muted-foreground: 266 87% 41%;
-    --accent: 266 87% 41%;
+    --muted-foreground: var(--primary);
+    --accent: var(--primary);
     --accent-foreground: 0 0% 100%;
     --destructive: 352 81% 56%;
     --destructive-foreground: 0 0% 100%;
-    --border: 266 87% 41%;
-    --input: 266 87% 41%;
-    --ring: 266 87% 41%;
+    --border: var(--primary);
+    --input: var(--primary);
+    --ring: var(--primary);
     --radius: 2rem;
   }
 }
 
 .dark {
+  --primary: 266 87% 41%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 0 0% 100%;
+  --secondary-foreground: 267 94% 6%;
   --background: 270 100% 7%;
   --foreground: 0 0% 100%;
   --card: 267 94% 13%;
   --card-foreground: 0 0% 100%;
   --popover: 267 94% 13%;
   --popover-foreground: 0 0% 100%;
-  --primary: 266 87% 41%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 0 0% 100%;
-  --secondary-foreground: 267 94% 6%;
   --muted: 267 94% 13%;
   --muted-foreground: 0 0% 100%;
-  --accent: 266 87% 41%;
+  --accent: var(--primary);
   --accent-foreground: 0 0% 100%;
   --destructive: 352 81% 56%;
   --destructive-foreground: 0 0% 100%;
-  --border: 266 87% 41%;
-  --input: 266 87% 41%;
-  --ring: 266 87% 41%;
+  --border: var(--primary);
+  --input: var(--primary);
+  --ring: var(--primary);
+}
+
+.orange {
+  --primary: 27 100% 37%;
+  --primary-foreground: 0 100% 100%;
+  --background: 325 43% 89%;
+  --foreground: var(--primary);
+  --card: var(--background);
+  --card-foreground: var(--primary);
+  --muted: var(--background);
+  --muted-foreground: var(--primary);
+}
+.dark .orange {
+  --primary: 0 100% 100%;
+  --primary-foreground: 10 40% 15%;
+  --background: 10 40% 15%;
+  --foreground: var(--primary);
+  --card: var(--background);
+  --card-foreground: var(--primary);
+  --muted: var(--background);
+  --muted-foreground: var(--primary);
 }
 
 @layer base {

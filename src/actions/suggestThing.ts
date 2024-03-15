@@ -11,8 +11,13 @@ export async function suggestThing(data: ThingSchemaType) {
       return false
     }
 
+    const validatedData = {
+      ...validatedFields.data,
+      canBeUsed: false,
+    }
+
     await prisma.thing.create({
-      data: validatedFields.data as any, // TODO Fix type
+      data: validatedData as any, // TODO Fix type
     })
 
     return true

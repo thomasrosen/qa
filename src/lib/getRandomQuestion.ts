@@ -1,6 +1,9 @@
 import { prisma } from './prisma'
 
-export async function getRandomQuestion() {
+type FunctionArgs = {
+  where?: Record<string, any> // TODO Fix type
+}
+export async function getRandomQuestion({ where = {} }: FunctionArgs = {}) {
   const itemCount = await prisma.question.count()
   const skip = Math.floor(Math.random() * itemCount)
   const randomQuestion = await prisma.question.findMany({
@@ -8,6 +11,10 @@ export async function getRandomQuestion() {
     skip,
     orderBy: {
       question_id: 'desc',
+    },
+    where: {
+      canBeUsed: true,
+      ...where,
     },
   })
 
