@@ -1,7 +1,10 @@
 import 'server-only'
 
+import { SignIn } from '@/components/SignIn'
+import { SignOut } from '@/components/SignOut'
+import { authOptions } from '@/lib/auth'
 import { getServerSession } from 'next-auth/next'
-import { authOptions } from 'pages/api/auth/[...nextauth]'
+import { Suspense } from 'react'
 
 export async function CheckSession({
   children,
@@ -12,9 +15,14 @@ export async function CheckSession({
 }) {
   const session = await getServerSession(authOptions)
 
+  console.log('session', session)
+
   if (!session) {
     return (
       <>
+        <Suspense>
+          <SignIn />
+        </Suspense>
         <pre>{JSON.stringify(session, null, 2)}</pre>
         {noSessionChildren}
       </>
@@ -23,6 +31,9 @@ export async function CheckSession({
 
   return (
     <>
+      <Suspense>
+        <SignOut />
+      </Suspense>
       <pre>{JSON.stringify(session, null, 2)}</pre>
       {children}
     </>

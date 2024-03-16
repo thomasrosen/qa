@@ -3,8 +3,8 @@ import { nanoid } from 'nanoid'
 export function createAnonymousUser() {
   return {
     id: nanoid(),
-    email: '',
-    name: '',
-    image: '',
+    email: '1',
+    name: '2',
+    image: '3',
   }
 }

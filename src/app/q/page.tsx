@@ -1,9 +1,12 @@
+import { CheckSession } from '@/components/CheckSession'
 import { P } from '@/components/P'
 import { QuestionCard } from '@/components/QuestionCard'
 import { getRandomQuestion } from '@/lib/getRandomQuestion'
 import { getRandomThing } from '@/lib/getRandomThing'
 
 export default async function Questions() {
+  return <CheckSession noSessionChildren="signed out">signed in</CheckSession>
+
   const question = await getRandomQuestion()
   let aboutThing = null
 

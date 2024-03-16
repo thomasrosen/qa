@@ -6,7 +6,6 @@ import {
   Profile,
   Session,
   SessionStrategy,
-  User,
   getServerSession,
   type NextAuthOptions,
 } from 'next-auth'
@@ -14,6 +13,7 @@ import { AdapterUser, type Adapter } from 'next-auth/adapters'
 import { JWT } from 'next-auth/jwt'
 import CredentialsProvider from 'next-auth/providers/credentials'
 // import { sendVerificationRequest } from './sendVerificationRequest'
+import EmailProvider from 'next-auth/providers/email'
 import { createAnonymousUser } from './createAnonymousUser'
 
 // You'll need to import and pass this to `NextAuth` in `app/api/auth/[...nextauth]/route.ts`
@@ -37,6 +37,17 @@ export const authOptions = {
         return createAnonymousUser()
       },
     }),
+    EmailProvider({
+      server: {
+        host: process.env.EMAIL_SERVER_HOST,
+        port: process.env.EMAIL_SERVER_PORT,
+        auth: {
+          user: process.env.EMAIL_SERVER_USER,
+          pass: process.env.EMAIL_SERVER_PASSWORD,
+        },
+      },
+      from: process.env.EMAIL_FROM,
+    }),
   ],
   callbacks: {
     async jwt({
@@ -48,9 +59,6 @@ export const authOptions = {
       account: Account | null
       profile?: Profile
     }): Promise<JWT> {
-      console.log('token', token)
-      console.log('account', account)
-      console.log('profile', profile)
       if (account && account?.expires_at && account?.type === 'oauth') {
         // at sign-in, persist in the JWT the GitHub account details to enable brokered requests in the future
         token.access_token = account.access_token
@@ -60,6 +68,7 @@ export const authOptions = {
         token.provider = ''
       }
       if (!token.provider) {
+        token.id = account?.id
         token.provider = 'anonymous'
       }
       return token
@@ -73,9 +82,6 @@ export const authOptions = {
       token: JWT
       user: AdapterUser
     }): Promise<Session> {
-      console.log('session', session)
-      console.log('token', token)
-      console.log('user', user)
       // don't make the token (JWT) contents available to the client session (JWT), but flag that they're server-side
       // if (token.provider) {
       //   session.token_provider = token.provider
@@ -84,25 +90,16 @@ export const authOptions = {
     },
   },
   events: {
-    async signIn({
-      user,
-      account,
-      profile,
-    }: {
-      user: User
-      account: Account | null
-      profile?: Profile
-    }): Promise<void> {
-      console.log('signIn')
-      console.log('user', user)
-      console.log('account', account)
-      console.log('profile', profile)
-    },
-    async signOut({ session, token }: { session: Session; token: JWT }): Promise<void> {
-      console.log('signOut')
-      console.log('session', session)
-      console.log('token', token)
-    },
+    // async signIn({
+    //   user,
+    //   account,
+    //   profile,
+    // }: {
+    //   user: User
+    //   account: Account | null
+    //   profile?: Profile
+    // }): Promise<void> {},
+    // async signOut({ session, token }: { session: Session; token: JWT }): Promise<void> {},
   },
   session: {
     // use default, an encrypted JWT (JWE) store in the session cookie
