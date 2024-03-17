@@ -79,7 +79,19 @@ export const SaveAnswerSchema = z.object({
 export type SaveAnswerSchemaType = z.input<typeof SaveAnswerSchema>
 
 export const UserSchema = z.object({
-  user_id: z.string(),
-  privateIdentifier: z.string(),
+  id: z.string().refine((val) => val.length > 0, { message: 'id is required' }),
+  index: z.number().nullable(),
+  createdAt: z.date().nullable(),
+  updatedAt: z.date().nullable(),
+  name: z.string().nullable(),
+  email: z.string().email().nullable(),
+  emailVerified: z.date().nullable(),
+  image: z.string().nullable(),
 })
 export type UserSchemaType = z.input<typeof UserSchema>
+
+export const SessionSchema = z.object({
+  user: UserSchema.nullable(),
+  expires: z.date().nullable(),
+})
+export type SessionSchemaType = z.input<typeof SessionSchema>

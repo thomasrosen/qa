@@ -1,92 +1,110 @@
-import { prisma } from '@/lib/prisma'
+import { createAnonymousUser } from '@/lib/createAnonymousUser'
+import { UserSchemaType, prisma } from '@/lib/prisma'
+import { sendVerificationRequest } from '@/lib/sendVerificationRequest'
 import { PrismaAdapter } from '@auth/prisma-adapter'
-import { type GetServerSidePropsContext, type NextApiRequest, type NextApiResponse } from 'next'
-import {
-  Account,
-  Profile,
-  Session,
-  SessionStrategy,
-  getServerSession,
-  type NextAuthOptions,
-} from 'next-auth'
-import { AdapterUser, type Adapter } from 'next-auth/adapters'
-import { JWT } from 'next-auth/jwt'
+import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next'
+import { SessionStrategy, getServerSession, type NextAuthOptions } from 'next-auth'
+import { type Adapter } from 'next-auth/adapters'
 import CredentialsProvider from 'next-auth/providers/credentials'
-// import { sendVerificationRequest } from './sendVerificationRequest'
 import EmailProvider from 'next-auth/providers/email'
-import { createAnonymousUser } from './createAnonymousUser'
 
 // You'll need to import and pass this to `NextAuth` in `app/api/auth/[...nextauth]/route.ts`
 export const authOptions = {
   adapter: PrismaAdapter(prisma) as Adapter,
   providers: [
-    // {
-    //   id: 'email',
-    //   type: 'email',
-    //   name: 'Email',
-    //   server: '',
-    //   options: {},
-    //   from: 'hello@thomasrosen.me',
-    //   maxAge: 0,
-    //   sendVerificationRequest,
-    // },
     CredentialsProvider({
       name: 'anonymous',
       credentials: {},
       async authorize(credentials, req) {
-        return createAnonymousUser()
+        console.log('credentials, req', credentials, req)
+        return await createAnonymousUser()
       },
     }),
     EmailProvider({
       server: {
         host: process.env.EMAIL_SERVER_HOST,
-        port: process.env.EMAIL_SERVER_PORT,
+        port: parseInt(process.env.EMAIL_SERVER_PORT || ''),
         auth: {
           user: process.env.EMAIL_SERVER_USER,
           pass: process.env.EMAIL_SERVER_PASSWORD,
         },
       },
       from: process.env.EMAIL_FROM,
+      sendVerificationRequest,
     }),
   ],
   callbacks: {
-    async jwt({
-      token,
-      account,
-      profile,
-    }: {
-      token: JWT
-      account: Account | null
-      profile?: Profile
-    }): Promise<JWT> {
-      if (account && account?.expires_at && account?.type === 'oauth') {
-        // at sign-in, persist in the JWT the GitHub account details to enable brokered requests in the future
-        token.access_token = account.access_token
-        token.expires_at = account.expires_at
-        token.refresh_token = account.refresh_token
-        token.refresh_token_expires_in = account.refresh_token_expires_in
-        token.provider = ''
+    // async signIn({ user, account, profile }) {
+    //   return true
+    // },
+    async jwt(options) {
+      const { token, account, user, trigger } = options // profile
+      const typedUser = user as UserSchemaType | undefined
+
+      if (trigger === 'signIn') {
+        // at sign-in, persist in the JWT the user details
+        if (typedUser) {
+          token.user = {
+            id: user.id,
+            email: user.email,
+            createdAt: typedUser.createdAt,
+          }
+        }
+
+        if (account) {
+          token.account = account
+
+          if (account?.expires_at && account?.type === 'oauth') {
+            // at sign-in, persist in the JWT the GitHub account details to enable brokered requests in the future
+
+            token.access_token = account.access_token
+            token.expires_at = account.expires_at
+            token.refresh_token = account.refresh_token
+            token.refresh_token_expires_in = account.refresh_token_expires_in
+            token.provider = 'oauth'
+          }
+          if (account?.type === 'email') {
+            token.provider = account.provider
+          }
+        }
+
+        if (!token.provider) {
+          token.provider = 'anonymous'
+        }
       }
-      if (!token.provider) {
-        token.id = account?.id
-        token.provider = 'anonymous'
-      }
+
       return token
     },
-    async session({
-      session,
-      token,
-      user,
-    }: {
-      session: Session
-      token: JWT
-      user: AdapterUser
-    }): Promise<Session> {
-      // don't make the token (JWT) contents available to the client session (JWT), but flag that they're server-side
-      // if (token.provider) {
-      //   session.token_provider = token.provider
-      // }
-      return session
+    async session({ session, token }) {
+      const { user, account } = token
+
+      // check if user exists. otherwise delete the session
+      const typedUser = user as UserSchemaType | undefined
+      const user_id = typedUser?.id
+      if (!user_id) {
+        return {
+          expires: new Date(0).toISOString(), // force session to expire
+          user: undefined, // keep empty user object for nicer types
+        }
+      }
+      const userExists = await prisma.user.findUnique({
+        where: { id: user_id },
+      })
+      if (!userExists) {
+        return {
+          expires: new Date(0).toISOString(), // force session to expire
+          user: undefined, // keep empty user object for nicer types
+        }
+      }
+
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          ...(user || {}),
+          account,
+        },
+      }
     },
   },
   events: {
@@ -104,6 +122,11 @@ export const authOptions = {
   session: {
     // use default, an encrypted JWT (JWE) store in the session cookie
     strategy: 'jwt' as SessionStrategy,
+  },
+  theme: {
+    colorScheme: 'auto',
+    brandColor: '#6600CC',
+    buttonText: '#fff',
   },
 } satisfies NextAuthOptions
 

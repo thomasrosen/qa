@@ -1,8 +1,8 @@
 'use client'
 
+import { DarkModeToggle } from '@/components/DarkModeToggle'
+import { NavButton } from '@/components/NavButton'
 import { usePathname } from 'next/navigation'
-import { DarkModeToggle } from './DarkModeToggle'
-import { NavButton } from './NavButton'
 
 export function MainNav() {
   const pathname = usePathname()

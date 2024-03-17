@@ -35,14 +35,15 @@ export default function Home() {
       </Card>
       <br />
 
-      <nav className="flex gap-4 mb-8 flex-wrap justify-center">
-        <NavButton href="/q" variant="default">
+      <nav className="text-center" aria-label="Main">
+        <NavButton href="/q" variant="default" className="mb-4">
           Start collecting Answers
         </NavButton>
-        <NavButton href="/you">About You</NavButton>
-        <NavButton href="/insights">Insights</NavButton>
-        <NavButton href="/imprint">Imprint + Privacy</NavButton>
-        <DarkModeToggle />
+        <div className="flex gap-4 flex-wrap justify-center">
+          <NavButton href="/insights">Insights</NavButton>
+          <NavButton href="/imprint">Imprint + Privacy</NavButton>
+          <DarkModeToggle />
+        </div>
       </nav>
     </>
   )

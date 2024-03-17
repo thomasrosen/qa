@@ -15,44 +15,65 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Account {
-  id                String  @id @default(cuid())
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String? @db.Text
-  session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
-}
-
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
+// model Account {
+//   id                String   @id @default(cuid())
+//   index             Int      @default(autoincrement())
+//   createdAt         DateTime @default(now())
+//   updatedAt         DateTime @updatedAt
+//   //
+//   userId            String
+//   type              String
+//   provider          String
+//   providerAccountId String
+//   refresh_token     String?  @db.Text
+//   access_token      String?  @db.Text
+//   expires_at        Int?
+//   token_type        String?
+//   scope             String?
+//   id_token          String?  @db.Text
+//   session_state     String?
+//
+//   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+//
+//   @@unique([provider, providerAccountId])
+// }
+//
+// model Session {
+//   id           String   @id @default(cuid())
+//   index        Int      @default(autoincrement())
+//   createdAt    DateTime @default(now())
+//   updatedAt    DateTime @updatedAt
+//   //
+//   sessionToken String   @unique
+//   userId       String
+//   expires      DateTime
+//   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+// }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
+  id                 String     @id @default(cuid())
+  index              Int        @default(autoincrement())
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+  //
+  name               String?
+  email              String?    @unique
+  emailVerified      DateTime?
+  image              String?
+  //
+  // accounts      Account[]
+  // sessions      Session[]
+  //
+  answers            Answer[]   @relation("Answer.isAnsweredByAgent")
+  publishedThings    Thing[]    @relation("Thing.publishedBy")
+  publishedQuestions Question[] @relation("Question.publishedBy")
 }
 
 model VerificationToken {
+  index      Int      @default(autoincrement())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  //
   identifier String
   token      String   @unique
   expires    DateTime
@@ -84,21 +105,6 @@ enum SchemaType {
 //   name      String /// a name of the backup
 // }
 
-model Person {
-  person_id          String     @id @default(cuid())
-  index              Int        @default(autoincrement())
-  createdAt          DateTime   @default(now())
-  updatedAt          DateTime   @updatedAt
-  //
-  isAnonymous        Boolean    @default(true) /// if the user is anonymous
-  privateIdentifier  String?    @unique @default(cuid()) /// a private identifier for this thing. used for things like a user
-  email              String?    @unique
-  //
-  answers            Answer[]   @relation("Answer.isAnsweredByAgent")
-  publishedThings    Thing[]    @relation("Thing.publishedBy")
-  publishedQuestions Question[] @relation("Question.publishedBy")
-}
-
 model Thing {
   /// similar to the schema.org Thing
   thing_id       String      @id @default(cuid())
@@ -112,7 +118,7 @@ model Thing {
   sameAs         String[] /// could a wikidata-url
   jsonld         Json? /// JSON-LD: For a word/DefinedTerm this could contain a wikidata-id as the termCode. Or an email for a person.
   canBeUsed      Boolean?    @default(false) /// if this thing can be used in anywhere in the app
-  publishedBy    Person?     @relation("Thing.publishedBy", fields: [publishedBy_id], references: [person_id])
+  publishedBy    User?       @relation("Thing.publishedBy", fields: [publishedBy_id], references: [id])
   publishedBy_id String?
   //
   Answer_isAbout Answer[]    @relation("Answer.isAbout")
@@ -135,7 +141,7 @@ model Question {
   answerType         DataType
   answerThingTypes   SchemaType[] /// if the expectedAnswerType is Thing, this would be the possible types of this thing
   canBeUsed          Boolean?     @default(false) /// if this thing can be used in anywhere in the app
-  publishedBy        Person?      @relation("Question.publishedBy", fields: [publishedBy_id], references: [person_id])
+  publishedBy        User?        @relation("Question.publishedBy", fields: [publishedBy_id], references: [id])
   publishedBy_id     String?
   //
   Answer_isAnswering Answer[]     @relation("Answer.isAnswering")
@@ -153,7 +159,7 @@ model Answer {
   isAnswering_id       String
   isAbout              Thing?   @relation("Answer.isAbout", fields: [isAbout_id], references: [thing_id]) /// could be a defined term or a person if answering about themselves
   isAbout_id           String?
-  isAnsweredByAgent    Person   @relation("Answer.isAnsweredByAgent", fields: [isAnsweredByAgent_id], references: [person_id]) /// the person who answered
+  isAnsweredByAgent    User     @relation("Answer.isAnsweredByAgent", fields: [isAnsweredByAgent_id], references: [id]) /// the person who answered
   isAnsweredByAgent_id String
 }
 

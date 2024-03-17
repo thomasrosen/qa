@@ -5,7 +5,7 @@ import { prisma, ThingSchema, type ThingSchemaType } from '@/lib/prisma'
 export async function suggestThing(data: ThingSchemaType) {
   try {
     const validatedFields = ThingSchema.safeParse(data)
-    console.log('validatedFields', validatedFields)
+    console.log('INFO_NNq62tuI validatedFields', validatedFields)
 
     if (!validatedFields.success) {
       return false

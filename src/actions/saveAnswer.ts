@@ -15,7 +15,10 @@ export async function saveAnswer({
     await checkUser(user)
 
     const validatedDataFields = SaveAnswerSchema.safeParse(data)
-    console.log('saveAnswer-validatedDataFields', JSON.stringify(validatedDataFields, null, 2))
+    console.log(
+      'INFO_9Qk0rn7X saveAnswer-validatedDataFields',
+      JSON.stringify(validatedDataFields, null, 2)
+    )
 
     if (!validatedDataFields.success) {
       return false
@@ -27,7 +30,7 @@ export async function saveAnswer({
       return false
     }
 
-    console.log('saveAnswer-validatedDataFields.data', validatedDataFields.data)
+    console.log('INFO_pWHEfMNQ saveAnswer-validatedDataFields.data', validatedDataFields.data)
 
     await prisma.answer.create({
       data: {

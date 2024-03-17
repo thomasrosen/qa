@@ -14,7 +14,6 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   //   }
   //
   //   const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)')
-  //   console.log(darkModeQuery)
   //   darkModeQuery.addEventListener('change', setThemeOnEvent)
   //   setThemeOnEvent(darkModeQuery)
   //

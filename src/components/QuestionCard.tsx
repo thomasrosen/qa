@@ -14,12 +14,11 @@ import {
 import { ValueSchemaType } from '@/lib/prisma'
 import Link from 'next/link'
 import { useCallback } from 'react'
-import { AboutYouCard } from './AboutYouCard'
 
-export function QuestionCard({ question, aboutThing }: { question: any; aboutThing: any }) {
+export function QuestionCard({ question, aboutThing }: { question: Question; aboutThing: Thing }) {
   const answer = useCallback(
     async ({ value }: { value: ValueSchemaType }) => {
-      console.log('value', value)
+      console.log('INFO_CiYX7QC2 value', value)
 
       const newAnswer = await saveAnswer({
         isAnswering_id: question.question_id,
@@ -28,7 +27,7 @@ export function QuestionCard({ question, aboutThing }: { question: any; aboutThi
         isAnsweredByAgent_id: '',
       })
 
-      console.log('newAnswer', newAnswer)
+      console.log('INFO_k28cDJlN newAnswer', newAnswer)
     },
     [question, aboutThing]
   )
@@ -93,7 +92,6 @@ export function QuestionCard({ question, aboutThing }: { question: any; aboutThi
           </CardFooter>
         ) : null}
       </Card>
-      <AboutYouCard />
       <div className="flex justify-between">
         <nav className="text-white flex">
           {/*

@@ -1,4 +1,4 @@
-import { prisma } from './prisma'
+import { prisma } from '@/lib/prisma'
 
 type FunctionArgs = {
   where?: Record<string, any> // TODO Fix type

@@ -1,3 +1,4 @@
+import '@/app/globals.css'
 import { Headline } from '@/components/Headline'
 import { MainNav } from '@/components/MainNav'
 import { ThemeProvider } from '@/components/ThemeProvider'
@@ -5,13 +6,12 @@ import { Toaster } from '@/components/ui/sonner'
 import { cn } from '@/lib/utils'
 import type { Metadata } from 'next'
 import { Ubuntu } from 'next/font/google'
-import './globals.css'
 
 const fontSans = Ubuntu({
   subsets: ['latin'],
   variable: '--font-sans',
   display: 'swap',
-  weight: ['400', '700'],
+  weight: ['300', '400', '500', '700'],
 })
 
 export const metadata: Metadata = {
