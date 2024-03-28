@@ -15,25 +15,16 @@ export function SignIn() {
   return (
     <section>
       <Headline type="h2">How should your answers be grouped?</Headline>
-      <P>
-        To learn insights, <strong>your answers are grouped to an identifier</strong>. Your privacy
-        is important. So you can choose here between an anonymous identifier or your email address.
-      </P>
-      <P>
-        The <strong>anonymous identifier</strong> is a random string and can’t be used to identify
-        you. This also means, that we can’t delete or recover your answers if you lose the
-        identifier.
-      </P>
-      <P>
-        If you choose <strong>your email address</strong>, we will send you a confirmation email.
-        You can login on other devices, and delete your answers.
-      </P>
       <div className="flex gap-4 flex-col">
         <Card>
           <CardHeader>
             <CardTitle>Anonymously</CardTitle>
           </CardHeader>
           <CardContent>
+            <P>
+              The anonymous identifier is a random string. Your answers can not easily traced back
+              to you.
+            </P>
             <Button
               variant="secondary"
               onClick={() => {
@@ -41,33 +32,40 @@ export function SignIn() {
                 signIn('credentials', {})
               }}
             >
-              Sign in Anonymously
+              Group Anonymously
             </Button>
           </CardContent>
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>With Email</CardTitle>
+            <CardTitle>With my Email</CardTitle>
           </CardHeader>
-          <CardContent className="flex gap-4">
-            <Input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@domain.tld"
-              autoComplete="email"
-              autoFocus
-              aria-label="Email"
-            />
-            <Button
-              variant="secondary"
-              onClick={() => {
-                setLoading(true)
-                signIn('email', { email })
-              }}
-            >
-              Sign in
-            </Button>
+          <CardContent>
+            <P>
+              The email option allows login on other devices and future deletion of your answers. In
+              the published dataset, your email is replaced by an anonymous-id. Your email address
+              will never be published.
+            </P>
+            <div className="flex gap-4">
+              <Input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@domain.tld"
+                autoComplete="email"
+                autoFocus
+                aria-label="Email"
+              />
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  setLoading(true)
+                  signIn('email', { email })
+                }}
+              >
+                Group by Email
+              </Button>
+            </div>
           </CardContent>
         </Card>
         {loading && <P>Loading...</P>}

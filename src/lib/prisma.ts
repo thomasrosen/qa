@@ -14,6 +14,14 @@ if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma
 
 export const DataTypeSchema = z.enum(['String', 'Number', 'Boolean', 'Thing'])
 export const SchemaTypeSchema = z.enum(['Person', 'DefinedTerm'])
+export type SchemaTypeSchemaType = z.input<typeof SchemaTypeSchema>
+
+export const SchemaTypeArraySchema = z
+  .array(z.any())
+  .transform(
+    (as) => as.filter((a) => SchemaTypeSchema.safeParse(a).success) as SchemaTypeSchemaType[]
+  )
+export type SchemaTypeArraySchemaType = z.input<typeof SchemaTypeArraySchema>
 
 export const JsonValueSchema: z.ZodType<Prisma.JsonValue> = z.lazy(() =>
   z.union([
@@ -28,6 +36,7 @@ export const JsonValueSchema: z.ZodType<Prisma.JsonValue> = z.lazy(() =>
 
 export const QuestionSchema = z
   .object({
+    question_id: z.string().nullable().optional(),
     question: z
       .string()
       .min(10, { message: 'Question must be at least 10 characters long.' })
@@ -52,6 +61,7 @@ export const QuestionSchema = z
 export type QuestionSchemaType = z.input<typeof QuestionSchema>
 
 export const ThingSchema = z.object({
+  thing_id: z.string().nullable().optional(),
   type: SchemaTypeSchema.nullable(),
   name: z.string().min(1, { message: 'Name must be at least 1 character long.' }).nullable(),
   locale: z.string().min(2, { message: 'Locale must be at least 2 characters long.' }).nullable(),
@@ -71,10 +81,10 @@ export const ValueSchema = z.object({
 export type ValueSchemaType = z.input<typeof ValueSchema>
 
 export const SaveAnswerSchema = z.object({
-  isAnswering_id: z.string(),
+  isAnswering_id: z.string().nullable().optional(),
   values: ValueSchema.array(),
-  isAbout_id: z.string(),
-  isAnsweredByAgent_id: z.string(),
+  isAbout_id: z.string().nullable().optional(),
+  isAnsweredByAgent_id: z.string().nullable().optional(),
 })
 export type SaveAnswerSchemaType = z.input<typeof SaveAnswerSchema>
 

@@ -26,28 +26,9 @@ import { useCallback, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
-const frameworks = [
-  {
-    value: 'next.js',
-    data: 'Next.js',
-  },
-  {
-    value: 'sveltekit',
-    data: 'SvelteKit',
-  },
-  {
-    value: 'nuxt.js',
-    data: 'Nuxt.js',
-  },
-  {
-    value: 'remix',
-    data: 'Remix',
-  },
-  {
-    value: 'astro',
-    data: 'Astro',
-  },
-]
+function ComboBoxBadge({ children }: { children: React.ReactNode }) {
+  return <span className="bg-card text-card-foreground rounded-xs -ms-1 px-3 py-1">{children}</span>
+}
 
 function InputForm() {
   const [thingOptions, setThingOptions] = useState<string[]>([])
@@ -105,14 +86,6 @@ function InputForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <Combobox
-          options={frameworks}
-          placeholder="Select framework…"
-          renderLabel={(option) => <span>{option.data}</span>}
-          multiple
-          onChange={(value) => console.log('value', value)}
-        />
-
         <FormInput
           form={form}
           name="question"
@@ -146,54 +119,19 @@ function InputForm() {
           name="aboutThingTypes"
           label="What type of data is the question about?"
           inputHasFormControl={true}
-          input={(field) => {
-            const values = field.value || []
-            return [...new Array(values.length + 1)]
-              .map((_, i) => {
-                const value = values[i] || ''
-                const onChange = (value: string) => {
-                  if (value === 'DESELECT') {
-                    value = ''
-                  }
-                  values.splice(i, 1, value)
-                  const uniqueValues = Array.from(new Set(values)).filter(Boolean)
-                  field.onChange(uniqueValues)
-                }
-                const possibleOptions = SchemaTypeSchema.options
-                  .filter((options) => !values.includes(options) || options === value)
-                  .sort()
-
-                if (!value && possibleOptions.length === 0) {
-                  return null
-                }
-
-                return (
-                  <Select key={i} onValueChange={onChange} value={value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a SchemaType…" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {value && (
-                        <>
-                          <SelectItem value="DESELECT">Deselect Value</SelectItem>
-                          <SelectItem value="-" disabled>
-                            —————
-                          </SelectItem>
-                        </>
-                      )}
-                      {possibleOptions.map((option) => (
-                        <SelectItem key={option} value={option}>
-                          {option}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )
-              })
-              .filter(Boolean)
-          }}
+          input={(field) => (
+            <Combobox
+              selected={field.value || []}
+              options={SchemaTypeSchema.options.map((option) => ({ value: option }))}
+              placeholder="Select a SchemaType…"
+              renderLabel={(option) => <ComboBoxBadge>{option.value}</ComboBoxBadge>}
+              multiple={true}
+              onChange={(values) => {
+                console.log('values', values)
+                field.onChange(values)
+              }}
+            />
+          )}
         />
 
         <FormInput
@@ -229,188 +167,51 @@ function InputForm() {
           )}
         />
 
-        <FormInput
-          form={form}
-          name="answerThingTypes"
-          label="If it's a thing, which types are allowed?"
-          inputHasFormControl={true}
-          input={(field) => {
-            const values = field.value || []
+        {answerType === 'Thing' ? (
+          <>
+            <FormInput
+              form={form}
+              name="answerThingTypes"
+              label="If it's a thing, which types are allowed?"
+              inputHasFormControl={true}
+              input={(field) => (
+                <Combobox
+                  selected={field.value || []}
+                  options={SchemaTypeSchema.options.map((option) => ({ value: option }))}
+                  placeholder="Select a SchemaType…"
+                  renderLabel={(option) => <ComboBoxBadge>{option.value}</ComboBoxBadge>}
+                  multiple={true}
+                  onChange={(values) => {
+                    console.log('values', values)
+                    field.onChange(values)
+                  }}
+                />
+              )}
+            />
 
-            return (
-              <Combobox
-                options={SchemaTypeSchema.options.map((option) => ({ value: option }))}
-                placeholder="Select a SchemaType…"
-                renderLabel={(option) => <span>{option.value}</span>}
-                multiple
-                onChange={(values) => {
-                  console.log('values', values)
-                  field.onChange(values)
-                }}
+            {thingOptions.length > 0 && (
+              <FormInput
+                form={form}
+                name="answerThingOptions"
+                label="If it's a thing, which types are allowed?"
+                inputHasFormControl={true}
+                input={(field) => (
+                  <Combobox
+                    selected={field.value || []}
+                    options={SchemaTypeSchema.options.map((option) => ({ value: option }))}
+                    placeholder="Select a SchemaType…"
+                    renderLabel={(option) => <ComboBoxBadge>{option.value}</ComboBoxBadge>}
+                    multiple={true}
+                    onChange={(values) => {
+                      console.log('values', values)
+                      field.onChange(values)
+                    }}
+                  />
+                )}
               />
-            )
-
-            return [...new Array(values.length + 1)]
-              .map((_, i) => {
-                const value = values[i] || ''
-                const onChange = (value: string) => {
-                  if (value === 'DESELECT') {
-                    value = ''
-                  }
-                  values.splice(i, 1, value)
-                  const uniqueValues = Array.from(new Set(values)).filter(Boolean) as string[]
-                  field.onChange(uniqueValues)
-                  answerThingTypes.current = uniqueValues
-                }
-                const possibleOptions = SchemaTypeSchema.options
-                  .filter((options) => !values.includes(options) || options === value)
-                  .sort()
-
-                if (!value && possibleOptions.length === 0) {
-                  return null
-                }
-
-                return (
-                  <Select key={i} onValueChange={onChange} value={value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a SchemaType…" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {value && (
-                        <>
-                          <SelectItem value="DESELECT">Deselect Value</SelectItem>
-                          <SelectItem value="-" disabled>
-                            —————
-                          </SelectItem>
-                        </>
-                      )}
-                      {possibleOptions.map((option) => (
-                        <SelectItem key={option} value={option}>
-                          {option}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )
-              })
-              .filter(Boolean)
-          }}
-        />
-
-        <FormInput
-          form={form}
-          name="answerThingTypes"
-          label="If it's a thing, which types are allowed?"
-          inputHasFormControl={true}
-          input={(field) => {
-            const values = field.value || []
-            return [...new Array(values.length + 1)]
-              .map((_, i) => {
-                const value = values[i] || ''
-                const onChange = (value: string) => {
-                  if (value === 'DESELECT') {
-                    value = ''
-                  }
-                  values.splice(i, 1, value)
-                  const uniqueValues = Array.from(new Set(values)).filter(Boolean) as string[]
-                  field.onChange(uniqueValues)
-                  answerThingTypes.current = uniqueValues
-                }
-                const possibleOptions = SchemaTypeSchema.options
-                  .filter((options) => !values.includes(options) || options === value)
-                  .sort()
-
-                if (!value && possibleOptions.length === 0) {
-                  return null
-                }
-
-                return (
-                  <Select key={i} onValueChange={onChange} value={value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a SchemaType…" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {value && (
-                        <>
-                          <SelectItem value="DESELECT">Deselect Value</SelectItem>
-                          <SelectItem value="-" disabled>
-                            —————
-                          </SelectItem>
-                        </>
-                      )}
-                      {possibleOptions.map((option) => (
-                        <SelectItem key={option} value={option}>
-                          {option}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )
-              })
-              .filter(Boolean)
-          }}
-        />
-
-        {thingOptions.length > 0 && (
-          <FormInput
-            form={form}
-            name="answerThingOptions"
-            label="If it's a thing, which types are allowed?"
-            inputHasFormControl={true}
-            input={(field) => {
-              const values = field.value || []
-              return [...new Array(values.length + 1)]
-                .map((_, i) => {
-                  const value = values[i] || ''
-                  const onChange = (value: string) => {
-                    if (value === 'DESELECT') {
-                      value = ''
-                    }
-                    values.splice(i, 1, value)
-                    const uniqueValues = Array.from(new Set(values)).filter(Boolean)
-                    field.onChange(uniqueValues)
-                  }
-                  const possibleOptions = SchemaTypeSchema.options
-                    .filter((options) => !values.includes(options) || options === value)
-                    .sort()
-
-                  if (!value && possibleOptions.length === 0) {
-                    return null
-                  }
-
-                  return (
-                    <Select key={i} onValueChange={onChange} value={value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a SchemaType…" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {value && (
-                          <>
-                            <SelectItem value="DESELECT">Deselect Value</SelectItem>
-                            <SelectItem value="-" disabled>
-                              —————
-                            </SelectItem>
-                          </>
-                        )}
-                        {possibleOptions.map((option) => (
-                          <SelectItem key={option} value={option}>
-                            {option}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  )
-                })
-                .filter(Boolean)
-            }}
-          />
-        )}
+            )}
+          </>
+        ) : null}
 
         <Button type="submit">Suggest Question</Button>
       </form>

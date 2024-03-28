@@ -1,10 +1,10 @@
 import { SignIn } from '@/components/SignIn'
+import { auth } from '@/lib/auth'
 import { isSignedOut } from '@/lib/isSignedIn'
-import { getServerSession } from 'next-auth'
 import NextQuestion from './NextQuestion'
 
 export default async function Questions() {
-  const session = await getServerSession()
+  const session = await auth()
 
   if (isSignedOut(session)) {
     return <SignIn />

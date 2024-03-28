@@ -123,6 +123,7 @@ model Thing {
   //
   Answer_isAbout Answer[]    @relation("Answer.isAbout")
   isUsedInValues Value[]     @relation("Value.thing")
+  isOptionFor    Question[]  @relation("Thing.isOptionFor")
 }
 
 /// @zod.refine(schema => schema.expectedValueType === 'Thing' ? schema.expectedThingTypes.length > 0 : true, { path: ['expectedThingTypes'], message: 'expectedThingTypes must be set when expectedValueType is Thing' })
@@ -140,6 +141,7 @@ model Question {
   aboutThingTypes    SchemaType[]
   answerType         DataType
   answerThingTypes   SchemaType[] /// if the expectedAnswerType is Thing, this would be the possible types of this thing
+  answerThingOptions Thing[]      @relation("Thing.isOptionFor") /// if the expectedAnswerType is Thing, this would be the possible options of this thing
   canBeUsed          Boolean?     @default(false) /// if this thing can be used in anywhere in the app
   publishedBy        User?        @relation("Question.publishedBy", fields: [publishedBy_id], references: [id])
   publishedBy_id     String?

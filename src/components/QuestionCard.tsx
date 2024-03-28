@@ -11,11 +11,17 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { ValueSchemaType } from '@/lib/prisma'
+import { QuestionSchemaType, ThingSchemaType, ValueSchemaType } from '@/lib/prisma'
 import Link from 'next/link'
 import { useCallback } from 'react'
 
-export function QuestionCard({ question, aboutThing }: { question: Question; aboutThing: Thing }) {
+export function QuestionCard({
+  question,
+  aboutThing,
+}: {
+  question: QuestionSchemaType
+  aboutThing: ThingSchemaType
+}) {
   const answer = useCallback(
     async ({ value }: { value: ValueSchemaType }) => {
       console.log('INFO_CiYX7QC2 value', value)
@@ -24,7 +30,7 @@ export function QuestionCard({ question, aboutThing }: { question: Question; abo
         isAnswering_id: question.question_id,
         values: [value],
         isAbout_id: aboutThing.thing_id,
-        isAnsweredByAgent_id: '',
+        isAnsweredByAgent_id: '-',
       })
 
       console.log('INFO_k28cDJlN newAnswer', newAnswer)
@@ -96,14 +102,14 @@ export function QuestionCard({ question, aboutThing }: { question: Question; abo
         <nav className="text-white flex">
           {/*
           <Button variant="link" asChild className="z-10">
-            <Link href="/suggestthing" className="no-underline">
+            <Link href="/suggest_thing" className="no-underline">
               Suggest a Word
             </Link>
           </Button>
           <Separator orientation="vertical" className="my-2 h-auto" />
           */}
           <Button variant="link" asChild className="z-10">
-            <Link href="/suggest" className="no-underline">
+            <Link href="/suggest_q" className="no-underline">
               Suggest a Question
             </Link>
           </Button>

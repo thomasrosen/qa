@@ -1,42 +1,32 @@
 'use server'
 
-import { checkUser } from '@/lib/checkUser'
-import { SaveAnswerSchema, SaveAnswerSchemaType, UserSchemaType, prisma } from '@/lib/prisma'
+import { auth } from '@/lib/auth'
+import { isSignedOut } from '@/lib/isSignedIn'
+import { SaveAnswerSchema, SaveAnswerSchemaType, prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 
-export async function saveAnswer({
-  data,
-  user,
-}: {
-  data: SaveAnswerSchemaType
-  user: UserSchemaType
-}) {
+export async function saveAnswer(data: SaveAnswerSchemaType) {
   try {
-    await checkUser(user)
+    // check if logged in
+    const session = await auth()
+    if (isSignedOut(session)) {
+      console.error('ERROR_2e8d3f', 'user is required')
+      return false
+    }
 
     const validatedDataFields = SaveAnswerSchema.safeParse(data)
-    console.log(
-      'INFO_9Qk0rn7X saveAnswer-validatedDataFields',
-      JSON.stringify(validatedDataFields, null, 2)
-    )
-
     if (!validatedDataFields.success) {
       return false
     }
 
-    const isAnsweredByAgent_id = validatedDataFields.data.isAnsweredByAgent_id
-    if (!isAnsweredByAgent_id || isAnsweredByAgent_id === '') {
-      console.error('ERROR_2e8d3f', 'isAnsweredByAgent_id is required')
-      return false
-    }
-
-    console.log('INFO_pWHEfMNQ saveAnswer-validatedDataFields.data', validatedDataFields.data)
+    // @ts-ignore Is already checked in isSignedOut()
+    const isAnsweredByAgent_id = session.user.id
 
     await prisma.answer.create({
       data: {
         isAnsweredByAgent: {
           connect: {
-            thing_id: validatedDataFields.data.isAnsweredByAgent_id,
+            id: isAnsweredByAgent_id,
           },
         },
         isAnswering: {
@@ -53,9 +43,6 @@ export async function saveAnswer({
           },
         },
       },
-      // include: {
-      //   isAbout: true,
-      // },
     })
 
     revalidatePath('/q', 'page')

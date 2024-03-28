@@ -5,17 +5,12 @@ export async function createAnonymousUser() {
     const new_user = await prisma.user.create({
       data: {
         email: null,
-        emailVerified: null,
-        name: null,
-        image: null,
       },
     })
 
-    console.log('new_user', new_user)
-
     return new_user
   } catch (error) {
-    console.log('error', error)
+    console.log('ERROR_pouIZGle', error)
     throw new Error('Error creating anonymous user')
   }
 }

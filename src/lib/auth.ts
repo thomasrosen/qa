@@ -16,7 +16,6 @@ export const authOptions = {
       name: 'anonymous',
       credentials: {},
       async authorize(credentials, req) {
-        console.log('credentials, req', credentials, req)
         return await createAnonymousUser()
       },
     }),
@@ -34,43 +33,41 @@ export const authOptions = {
     }),
   ],
   callbacks: {
-    // async signIn({ user, account, profile }) {
-    //   return true
-    // },
+    async signIn({ user, account, profile }) {
+      return true
+    },
     async jwt(options) {
       const { token, account, user, trigger } = options // profile
       const typedUser = user as UserSchemaType | undefined
 
-      if (trigger === 'signIn') {
-        // at sign-in, persist in the JWT the user details
-        if (typedUser) {
-          token.user = {
-            id: user.id,
-            email: user.email,
-            createdAt: typedUser.createdAt,
-          }
+      // at sign-in or sign-up, persist in the JWT the user details
+      if (typedUser) {
+        token.user = {
+          id: user.id,
+          email: user.email,
+          createdAt: typedUser.createdAt,
         }
+      }
 
-        if (account) {
-          token.account = account
+      if (account) {
+        token.account = account
 
-          if (account?.expires_at && account?.type === 'oauth') {
-            // at sign-in, persist in the JWT the GitHub account details to enable brokered requests in the future
+        if (account?.expires_at && account?.type === 'oauth') {
+          // at sign-in, persist in the JWT the GitHub account details to enable brokered requests in the future
 
-            token.access_token = account.access_token
-            token.expires_at = account.expires_at
-            token.refresh_token = account.refresh_token
-            token.refresh_token_expires_in = account.refresh_token_expires_in
-            token.provider = 'oauth'
-          }
-          if (account?.type === 'email') {
-            token.provider = account.provider
-          }
+          token.access_token = account.access_token
+          token.expires_at = account.expires_at
+          token.refresh_token = account.refresh_token
+          token.refresh_token_expires_in = account.refresh_token_expires_in
+          token.provider = 'oauth'
         }
-
-        if (!token.provider) {
-          token.provider = 'anonymous'
+        if (account?.type === 'email') {
+          token.provider = account.provider
         }
+      }
+
+      if (!token.provider) {
+        token.provider = 'anonymous'
       }
 
       return token
@@ -81,12 +78,14 @@ export const authOptions = {
       // check if user exists. otherwise delete the session
       const typedUser = user as UserSchemaType | undefined
       const user_id = typedUser?.id
+
       if (!user_id) {
         return {
           expires: new Date(0).toISOString(), // force session to expire
           user: undefined, // keep empty user object for nicer types
         }
       }
+
       const userExists = await prisma.user.findUnique({
         where: { id: user_id },
       })
