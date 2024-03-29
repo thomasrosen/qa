@@ -16,6 +16,7 @@ import React, { useState } from 'react'
 
 type Option = {
   value: string
+  keywords?: string[]
   [key: string]: any
 }
 type ComboboxProps = {
@@ -71,6 +72,7 @@ export function Combobox({
                 <CommandItem
                   key={option.value}
                   value={option.value}
+                  keywords={option.keywords ?? []}
                   onSelect={(currentValue) => {
                     let newValues = [...selected]
                     if (multiple) {
@@ -82,7 +84,6 @@ export function Combobox({
                         ? (newValues = [])
                         : (newValues = [currentValue])
                     }
-                    // setValues(newValues)
                     onChange?.(newValues)
                     setOpen(multiple)
                   }}
