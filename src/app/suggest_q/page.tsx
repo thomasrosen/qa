@@ -19,6 +19,7 @@ import {
   DataTypeSchema,
   QuestionSchema,
   SchemaTypeSchema,
+  ThingSchemaType,
   type QuestionSchemaType,
 } from '@/lib/prisma'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -29,14 +30,31 @@ import { toast } from 'sonner'
 function ComboBoxBadge({ children }: { children: React.ReactNode }) {
   return <span className="bg-card text-card-foreground rounded-xs -ms-1 px-3 py-1">{children}</span>
 }
+function ThingRow({ thing }: { thing: ThingSchemaType }) {
+  return (
+    <div className="w-full bg-card text-card-foreground rounded-xs -ms-1 px-3 py-1">
+      <strong>{thing.name}</strong>
+      <br />
+      {thing.type}
+      <br />
+      {thing.thing_id}
+    </div>
+  )
+}
 
 function InputForm() {
-  const [thingOptions, setThingOptions] = useState<string[]>([])
+  const [thingOptions, setThingOptions] = useState<ThingSchemaType[]>([])
   const [answerType, setAnswerType] = useState<string | null>(null)
   const answerThingTypes = useRef<string[]>([])
 
   const fetchThingOptions = useCallback(() => {
     async function fetchOptions() {
+      if (answerThingTypes.current.length === 0) {
+        // set things to an empty array if no types are selected
+        setThingOptions([])
+        return
+      }
+
       const url = new URL('/api/thingOptions', window.location.href)
       for (const type of answerThingTypes.current) {
         url.searchParams.append('t', type)
@@ -44,7 +62,6 @@ function InputForm() {
 
       const response = await fetch(url.href)
       const { things } = await response.json()
-      console.log('things', things)
       setThingOptions(things)
     }
 
@@ -126,10 +143,7 @@ function InputForm() {
               placeholder="Select a SchemaType…"
               renderLabel={(option) => <ComboBoxBadge>{option.value}</ComboBoxBadge>}
               multiple={true}
-              onChange={(values) => {
-                console.log('values', values)
-                field.onChange(values)
-              }}
+              onChange={(values) => field.onChange(values)}
             />
           )}
         />
@@ -142,7 +156,6 @@ function InputForm() {
           input={(field) => (
             <Select
               onValueChange={(newValue) => {
-                console.log('newValue', newValue)
                 field.onChange(newValue)
                 setAnswerType(newValue)
                 if (newValue === 'Thing') {
@@ -182,8 +195,9 @@ function InputForm() {
                   renderLabel={(option) => <ComboBoxBadge>{option.value}</ComboBoxBadge>}
                   multiple={true}
                   onChange={(values) => {
-                    console.log('values', values)
                     field.onChange(values)
+                    answerThingTypes.current = values
+                    fetchThingOptions()
                   }}
                 />
               )}
@@ -193,19 +207,20 @@ function InputForm() {
               <FormInput
                 form={form}
                 name="answerThingOptions"
-                label="If it's a thing, which types are allowed?"
+                label="Which things are allowed? (leave empty for all)"
                 inputHasFormControl={true}
                 input={(field) => (
                   <Combobox
                     selected={field.value || []}
-                    options={SchemaTypeSchema.options.map((option) => ({ value: option }))}
+                    options={thingOptions.map((option) => ({
+                      value: option.thing_id || '', // should always be set. just to make types happy
+                      keywords: [option.name, option.type, option.thing_id] as string[],
+                      data: option,
+                    }))}
                     placeholder="Select a SchemaType…"
-                    renderLabel={(option) => <ComboBoxBadge>{option.value}</ComboBoxBadge>}
+                    renderLabel={(option) => <ThingRow thing={option.data} />}
                     multiple={true}
-                    onChange={(values) => {
-                      console.log('values', values)
-                      field.onChange(values)
-                    }}
+                    onChange={(values) => field.onChange(values)}
                   />
                 )}
               />
