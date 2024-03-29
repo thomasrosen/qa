@@ -23,7 +23,7 @@
     --border: var(--primary);
     --input: var(--primary);
     --ring: var(--primary);
-    --radius: 2rem;
+    --radius: 1.5rem;
   }
 }
 
