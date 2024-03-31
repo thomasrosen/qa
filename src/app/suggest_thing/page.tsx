@@ -1,22 +1,15 @@
 'use client'
 
 import { suggestThing } from '@/actions/suggestThing'
+import { AutoGrowTextarea } from '@/components/AutogrowTextarea'
+import { ComboBoxBadge } from '@/components/ComboBoxBadge'
+import { Combobox } from '@/components/Combobox'
 import { FormInput } from '@/components/FormInput'
 import { Headline } from '@/components/Headline'
 import { Button } from '@/components/ui/button'
-import { Form, FormControl } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
+import { Form } from '@/components/ui/form'
 import { SchemaTypeSchema, ThingSchema, type ThingSchemaType } from '@/lib/prisma'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ChangeEvent } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
@@ -58,20 +51,13 @@ function InputForm() {
           label="Type"
           inputHasFormControl={true}
           input={(field) => (
-            <Select onValueChange={field.onChange} defaultValue={field.value}>
-              <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a SchemaType…" />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                {SchemaTypeSchema.options.map((option) => (
-                  <SelectItem key={option} value={option}>
-                    {option}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Combobox
+              selected={[field.value]}
+              options={SchemaTypeSchema.options.map((option) => ({ value: option }))}
+              placeholder="Select a SchemaType…"
+              renderLabel={(option) => <ComboBoxBadge>{option.value}</ComboBoxBadge>}
+              onChange={(values) => field.onChange(values[0])}
+            />
           )}
         />
 
@@ -79,21 +65,54 @@ function InputForm() {
           form={form}
           name="name"
           label="Name / Title"
-          input={(field) => <Input {...field} value={field.value || ''} />}
+          input={(field) => (
+            <AutoGrowTextarea
+              autoFocus
+              {...field}
+              value={field.value || ''}
+              placeholder="Universe / Nature / Antarktis / …"
+            />
+          )}
         />
+
+        {/* <FormInput
+          form={form}
+          name="locale"
+          label="Locale"
+          input={(field) => (
+            <Input type="text" {...field} value={field.value || ''} placeholder="en / de / …" />
+          )}
+        /> */}
 
         <FormInput
           form={form}
           name="locale"
           label="Locale"
-          input={(field) => <Input type="text" {...field} value={field.value || ''} />}
+          inputHasFormControl={true}
+          input={(field) => (
+            <Combobox
+              selected={[field.value]}
+              options={['en', 'de'].map((option) => ({ value: option }))}
+              placeholder="Select a Locale…"
+              renderLabel={(option) => <ComboBoxBadge>{option.value}</ComboBoxBadge>}
+              onChange={(values) => field.onChange(values[0])}
+              allowCustom={true}
+            />
+          )}
         />
 
         <FormInput
           form={form}
           name="jsonld"
           label="JSON-LD (schema.org)"
-          input={(field) => <Textarea className="font-mono" {...field} value={field.value || ''} />}
+          input={(field) => (
+            <AutoGrowTextarea
+              className="font-mono"
+              {...field}
+              value={field.value || ''}
+              placeholder={`{ "@context": "https://schema.org", … }`}
+            />
+          )}
         />
 
         <FormInput
@@ -106,7 +125,7 @@ function InputForm() {
             return [...new Array(values.length + 1)]
               .map((_, i) => {
                 const value = values[i] || ''
-                const onChange = (event: ChangeEvent<HTMLInputElement>) => {
+                const onChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
                   const newValue = event.target.value
                   values.splice(i, 1, newValue)
                   const uniqueValues = Array.from(new Set(values)).filter(Boolean)
@@ -114,9 +133,8 @@ function InputForm() {
                 }
 
                 return (
-                  <Input
+                  <AutoGrowTextarea
                     key={i}
-                    type="text"
                     {...field}
                     placeholder="https://www.wikidata.org/wiki/Q1"
                     onChange={onChange}
