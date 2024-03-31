@@ -4,8 +4,13 @@ type FunctionArgs = {
   where?: Record<string, any> // TODO Fix type
 }
 export async function getRandomQuestion({ where = {} }: FunctionArgs = {}) {
-  const itemCount = await prisma.question.count()
+  const itemCount = await prisma.question.count({
+    where: {
+      canBeUsed: true,
+    },
+  })
   const skip = Math.floor(Math.random() * itemCount)
+
   const randomQuestion = await prisma.question.findMany({
     take: 1,
     skip,
