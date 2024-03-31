@@ -93,6 +93,8 @@ enum SchemaType {
   /// Thing /// is the default. just leave it empty
   Person /// for a user
   DefinedTerm /// for a word / job title / etc
+  Country
+  City
 }
 
 // model Backup {

@@ -13,7 +13,7 @@ export { Prisma, prisma }
 if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma
 
 export const DataTypeSchema = z.enum(['String', 'Number', 'Boolean', 'Thing'])
-export const SchemaTypeSchema = z.enum(['Person', 'DefinedTerm'])
+export const SchemaTypeSchema = z.enum(['Person', 'DefinedTerm', 'Country', 'City'])
 export type SchemaTypeSchemaType = z.input<typeof SchemaTypeSchema>
 
 export const SchemaTypeArraySchema = z
