@@ -1,9 +1,12 @@
 'use client'
 
 import { suggest } from '@/actions/suggest'
+import { AutoGrowTextarea } from '@/components/AutogrowTextarea'
+import { ComboBoxBadge } from '@/components/ComboBoxBadge'
 import { Combobox } from '@/components/Combobox'
 import { FormInput } from '@/components/FormInput'
 import { Headline } from '@/components/Headline'
+import { ThingRow } from '@/components/ThingRow'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -14,7 +17,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
 import {
   DataTypeSchema,
   QuestionSchema,
@@ -26,21 +28,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useCallback, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-
-function ComboBoxBadge({ children }: { children: React.ReactNode }) {
-  return <span className="bg-card text-card-foreground rounded-xs -ms-1 px-3 py-1">{children}</span>
-}
-function ThingRow({ thing }: { thing: ThingSchemaType }) {
-  return (
-    <div className="w-full bg-card text-card-foreground rounded-xs -ms-1 px-3 py-1">
-      <strong>{thing.name}</strong>
-      <br />
-      {thing.type}
-      <br />
-      {thing.thing_id}
-    </div>
-  )
-}
 
 function InputForm() {
   const [thingOptions, setThingOptions] = useState<ThingSchemaType[]>([])
@@ -107,28 +94,50 @@ function InputForm() {
           form={form}
           name="question"
           label="Question"
-          input={(field) => <Textarea {...field} value={field.value || ''} />}
+          input={(field) => (
+            <AutoGrowTextarea
+              {...field}
+              autoFocus
+              value={field.value || ''}
+              placeholder="What / When / Where / Who / …"
+            />
+          )}
         />
 
         <FormInput
           form={form}
           name="description"
           label="Description"
-          input={(field) => <Textarea {...field} value={field.value || ''} />}
+          input={(field) => (
+            <AutoGrowTextarea
+              {...field}
+              value={field.value || ''}
+              placeholder="Information that are needed to understand the question."
+            />
+          )}
         />
 
         <FormInput
           form={form}
           name="locale"
           label="Locale"
-          input={(field) => <Input type="text" {...field} value={field.value || ''} />}
+          input={(field) => (
+            <Input type="text" {...field} value={field.value || ''} placeholder="en / de / …" />
+          )}
         />
 
         <FormInput
           form={form}
           name="asProperty"
           label="asProperty"
-          input={(field) => <Input type="text" {...field} value={field.value || ''} />}
+          input={(field) => (
+            <Input
+              type="text"
+              {...field}
+              value={field.value || ''}
+              placeholder="knows / likes / …"
+            />
+          )}
         />
 
         <FormInput
@@ -166,7 +175,9 @@ function InputForm() {
             >
               <FormControl>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select a DataType…" />
+                  <SelectValue
+                    placeholder={<span className="text-foreground/20">Select a DataType…</span>}
+                  />
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
