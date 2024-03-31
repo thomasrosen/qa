@@ -7,6 +7,7 @@ export async function GET(request: Request) {
   const validatedDataFields = SchemaTypeArraySchema.safeParse(schemaTypesFromGet)
   if (!validatedDataFields.success) {
     return Response.json({
+      things: [],
       error: 'Invalid schema types',
     })
   }
