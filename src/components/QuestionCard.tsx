@@ -20,20 +20,22 @@ export function QuestionCard({
   aboutThing,
 }: {
   question: QuestionSchemaType
-  aboutThing: ThingSchemaType
+  aboutThing?: ThingSchemaType
 }) {
   const answer = useCallback(
     async ({ value }: { value: ValueSchemaType }) => {
       console.log('INFO_CiYX7QC2 value', value)
 
-      const newAnswer = await saveAnswer({
-        isAnswering_id: question.question_id,
-        values: [value],
-        isAbout_id: aboutThing.thing_id,
-        isAnsweredByAgent_id: '-',
-      })
+      if (aboutThing) {
+        const newAnswer = await saveAnswer({
+          isAnswering_id: question.question_id,
+          values: [value],
+          isAbout_id: aboutThing.thing_id,
+          isAnsweredByAgent_id: '-',
+        })
 
-      console.log('INFO_k28cDJlN newAnswer', newAnswer)
+        console.log('INFO_k28cDJlN newAnswer', newAnswer)
+      }
     },
     [question, aboutThing]
   )

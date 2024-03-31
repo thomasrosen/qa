@@ -30,7 +30,7 @@ export default async function NextQuestion() {
   return (
     <>
       <section className="flex flex-col gap-4 mb-40 place-content-center">
-        <QuestionCard question={question} aboutThing={aboutThing} />
+        <QuestionCard question={question} aboutThing={aboutThing ?? undefined} />
       </section>
 
       <hr className="my-8" />

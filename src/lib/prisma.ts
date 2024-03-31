@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from '@prisma/client'
+import { Prisma, PrismaClient, type Prisma as PrismaType } from '@prisma/client'
 import { z } from 'zod'
 
 const prismaClientSingleton = () => {
@@ -23,7 +23,7 @@ export const SchemaTypeArraySchema = z
   )
 export type SchemaTypeArraySchemaType = z.input<typeof SchemaTypeArraySchema>
 
-export const JsonValueSchema: z.ZodType<Prisma.JsonValue> = z.lazy(() =>
+export const JsonValueSchema: z.ZodType<PrismaType.JsonValue> = z.lazy(() =>
   z.union([
     z.string(),
     z.number(),
@@ -36,7 +36,7 @@ export const JsonValueSchema: z.ZodType<Prisma.JsonValue> = z.lazy(() =>
 
 export const QuestionSchema = z
   .object({
-    question_id: z.string().nullable().optional(),
+    question_id: z.string().optional(),
     question: z
       .string()
       .min(10, { message: 'Question must be at least 10 characters long.' })

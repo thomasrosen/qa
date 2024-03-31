@@ -19,6 +19,10 @@ export async function saveAnswer(data: SaveAnswerSchemaType) {
       return false
     }
 
+    if (!validatedDataFields.data.isAnswering_id || !validatedDataFields.data.isAbout_id) {
+      return false
+    }
+
     // @ts-ignore Is already checked in isSignedOut()
     const isAnsweredByAgent_id = session.user.id
 
