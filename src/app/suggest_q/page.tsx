@@ -120,7 +120,7 @@ function InputForm() {
         <FormInput
           form={form}
           name="locale"
-          label="Locale"
+          label="Locale of the question and description."
           input={(field) => (
             <Input type="text" {...field} value={field.value || ''} placeholder="en / de / …" />
           )}
@@ -140,6 +140,7 @@ function InputForm() {
           )}
         />
 
+        <Headline type="h3">About</Headline>
         <FormInput
           form={form}
           name="aboutThingTypes"
@@ -157,6 +158,7 @@ function InputForm() {
           )}
         />
 
+        <Headline type="h3">Answer</Headline>
         <FormInput
           form={form}
           name="answerType"
