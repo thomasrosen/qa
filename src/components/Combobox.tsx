@@ -26,7 +26,8 @@ type ComboboxProps = {
   placeholder?: string
   onChange?: (value: string[]) => void
   multiple?: boolean
-  selected?: string[]
+  selected: string[]
+  allowCustom?: boolean
 }
 export function Combobox({
   options,
@@ -36,9 +37,30 @@ export function Combobox({
   onChange,
   multiple = false,
   selected = [],
+  allowCustom = false,
 }: ComboboxProps) {
   const [open, setOpen] = useState(false)
-  const choosenOptions = options.filter((option) => selected.includes(option.value))
+  const [search, setSearch] = useState('')
+
+  let choosenOptions: Option[] = []
+  if (Array.isArray(selected)) {
+    choosenOptions = selected.map(
+      (value) => options.find((option) => option.value === value) ?? { value }
+    )
+  }
+
+  const additionalChoosenOptions = choosenOptions.filter((option) => !options.includes(option))
+
+  const optionsFromSearch: Option[] = [
+    {
+      value: search,
+    },
+  ].filter(
+    (option) =>
+      allowCustom === true &&
+      option.value !== '' &&
+      additionalChoosenOptions.concat(options).find((o) => o.value === option.value) === undefined
+  )
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -51,24 +73,28 @@ export function Combobox({
           className="w-full justify-between font-normal text-start flex"
         >
           <span className="gap-2 flex flex-wrap items-center grow-1">
-            {choosenOptions.length > 0
-              ? typeof renderLabel === 'function'
-                ? choosenOptions.map((choosenOption, index) => (
-                    <React.Fragment key={index}>{renderLabel(choosenOption)}</React.Fragment>
-                  ))
-                : selected.join(', ')
-              : placeholder ?? 'Select...'}
+            {choosenOptions.length > 0 ? (
+              typeof renderLabel === 'function' ? (
+                choosenOptions.map((choosenOption, index) => (
+                  <React.Fragment key={index}>{renderLabel(choosenOption)}</React.Fragment>
+                ))
+              ) : (
+                selected.join(', ')
+              )
+            ) : (
+              <span className="text-foreground/20">{placeholder ?? 'Select…'}</span>
+            )}
           </span>
           <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="p-0">
         <Command>
-          <CommandInput placeholder="Search..." />
-          <CommandEmpty>{searchFallback ?? 'Nothing to show.'}</CommandEmpty>
+          <CommandInput value={search} onValueChange={setSearch} placeholder="Search..." />
+          <CommandEmpty>{searchFallback ?? 'Nothing found.'}</CommandEmpty>
           <CommandGroup>
             <CommandList>
-              {options.map((option) => (
+              {[...optionsFromSearch, ...additionalChoosenOptions, ...options].map((option) => (
                 <CommandItem
                   key={option.value}
                   value={option.value}
