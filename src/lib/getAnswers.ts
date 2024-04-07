@@ -1,6 +1,6 @@
 // import { auth } from '@/lib/auth';
 // import { isSignedOut } from '@/lib/isSignedIn';
-import { ExtendedValueSchemaType, prisma } from '@/lib/prisma'
+import { ExtendedValueSchemaType, ThingSchemaType, prisma } from '@/lib/prisma'
 
 export async function getAnswers({
   question_id,
@@ -116,10 +116,10 @@ export async function getAnswers({
         },
       })
 
-      mappedValues.forEach((value) => {
+      mappedValues.forEach((value: ExtendedValueSchemaType) => {
         if (value.valueType === 'Thing') {
           const thing = things.find(
-            (thing) => thing.thing_id === value.valueAsThing_id
+            (thing: ThingSchemaType) => thing.thing_id === value.valueAsThing_id
           )
           if (thing) {
             value.valueAsThing = thing
@@ -129,7 +129,7 @@ export async function getAnswers({
     }
 
     const amountOfAnswers = values.reduce(
-      (acc, value) => acc + value._count._all,
+      (acc, value: ExtendedValueSchemaType) => acc + value._count._all,
       0
     )
 
