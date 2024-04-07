@@ -10,7 +10,7 @@ export async function createAnonymousUser() {
 
     return new_user
   } catch (error) {
-    console.log('ERROR_pouIZGle', error)
+    console.error('ERROR_pouIZGle', error)
     throw new Error('Error creating anonymous user')
   }
 }
