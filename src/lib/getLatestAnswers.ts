@@ -1,0 +1,46 @@
+import { auth } from './auth'
+import { isSignedOut } from './isSignedIn'
+import { AnswerType, prisma } from './prisma'
+
+export async function getLatestAnswers({
+  take = 1,
+}: {
+  take?: number
+}): Promise<AnswerType[]> {
+  try {
+    // check if logged in
+    const session = await auth()
+    if (isSignedOut(session)) {
+      console.error('ERROR_2e8d3f', 'user is required')
+      return []
+    }
+
+    // @ts-ignore already checked with isSignedOut()
+    const user_id = session.user.id
+
+    const lastAnswers = await prisma.answer.findMany({
+      relationLoadStrategy: 'join', // or 'query'
+      where: {
+        createdBy_id: user_id,
+      },
+      distinct: ['createdBy_id', 'isAnswering_id', 'isAbout_id'],
+      orderBy: {
+        updatedAt: 'desc',
+      },
+      include: {
+        isAnswering: true,
+        isAbout: true,
+      },
+      take,
+    })
+
+    if (!lastAnswers || lastAnswers.length === 0) {
+      return []
+    }
+    return lastAnswers.filter((answer) => answer && answer.isAnswering)
+  } catch (error) {
+    console.error(error)
+  }
+
+  return []
+}

@@ -8,6 +8,8 @@ import { FormInput } from '@/components/FormInput'
 import { Headline } from '@/components/Headline'
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
+import { DEFAULT_LOCALE, LOCALES } from '@/lib/constants'
+import { intlDisplayNamesLanguage } from '@/lib/intlDisplayNamesLanguage'
 import { SchemaTypeSchema, ThingSchema, type ThingSchemaType } from '@/lib/prisma'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -52,7 +54,7 @@ function InputForm() {
           inputHasFormControl={true}
           input={(field) => (
             <Combobox
-              selected={[field.value]}
+              selected={[field.value].filter(Boolean)}
               options={SchemaTypeSchema.options.map((option) => ({ value: option }))}
               placeholder="Select a SchemaType…"
               renderLabel={(option) => <ComboBoxBadge>{option.value}</ComboBoxBadge>}
@@ -75,28 +77,24 @@ function InputForm() {
           )}
         />
 
-        {/* <FormInput
-          form={form}
-          name="locale"
-          label="Locale"
-          input={(field) => (
-            <Input type="text" {...field} value={field.value || ''} placeholder="en / de / …" />
-          )}
-        /> */}
-
         <FormInput
           form={form}
           name="locale"
-          label="Locale"
+          label="Locale of the question and description."
           inputHasFormControl={true}
           input={(field) => (
             <Combobox
-              selected={[field.value]}
-              options={['en', 'de'].map((option) => ({ value: option }))}
+              selected={[field.value].filter(Boolean)}
+              options={LOCALES.sort().map((option) => ({
+                value: option,
+                label: intlDisplayNamesLanguage(DEFAULT_LOCALE, option),
+                keywords: [option, intlDisplayNamesLanguage(option, option) || ''].filter(Boolean),
+              }))}
               placeholder="Select a Locale…"
-              renderLabel={(option) => <ComboBoxBadge>{option.value}</ComboBoxBadge>}
+              renderLabel={(option) => (
+                <ComboBoxBadge>{option.label || option.value}</ComboBoxBadge>
+              )}
               onChange={(values) => field.onChange(values[0])}
-              allowCustom={true}
             />
           )}
         />
@@ -152,7 +150,7 @@ function InputForm() {
   )
 }
 
-export default function Suggest() {
+export default function SuggestThing() {
   return (
     <section className="flex flex-col gap-4">
       <Headline type="h2">Suggest a Thing</Headline>

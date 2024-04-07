@@ -7,11 +7,13 @@ export async function getRandomQuestion({ where = {} }: FunctionArgs = {}) {
   const itemCount = await prisma.question.count({
     where: {
       canBeUsed: true,
+      ...where,
     },
   })
   const skip = Math.floor(Math.random() * itemCount)
 
   const randomQuestion = await prisma.question.findMany({
+    relationLoadStrategy: 'join', // or 'query'
     take: 1,
     skip,
     orderBy: {
@@ -20,6 +22,9 @@ export async function getRandomQuestion({ where = {} }: FunctionArgs = {}) {
     where: {
       canBeUsed: true,
       ...where,
+    },
+    include: {
+      answerThingOptions: true,
     },
   })
 

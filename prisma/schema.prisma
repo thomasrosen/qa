@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["relationJoins"]
 }
 
 // generator zod {
@@ -51,22 +52,27 @@ datasource db {
 // }
 
 model User {
-  id                 String     @id @default(cuid())
-  index              Int        @default(autoincrement())
-  createdAt          DateTime   @default(now())
-  updatedAt          DateTime   @updatedAt
+  id               String     @id @default(cuid())
+  index            Int        @default(autoincrement())
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
   //
-  name               String?
-  email              String?    @unique
-  emailVerified      DateTime?
-  image              String?
+  name             String?
+  email            String?    @unique
+  emailVerified    DateTime?
+  image            String?
   //
   // accounts      Account[]
   // sessions      Session[]
   //
-  answers            Answer[]   @relation("Answer.isAnsweredByAgent")
-  publishedThings    Thing[]    @relation("Thing.publishedBy")
-  publishedQuestions Question[] @relation("Question.publishedBy")
+  // answers            Answer[]   @relation("Answer.isAnsweredByAgent")
+  // publishedThings    Thing[]    @relation("Thing.publishedBy")
+  // publishedQuestions Question[] @relation("Question.publishedBy")
+  //
+  createdQuestions Question[] @relation("Question.createdBy")
+  createdThings    Thing[]    @relation("Thing.createdBy")
+  createdAnswers   Answer[]   @relation("Answer.createdBy")
+  createdValues    Value[]    @relation("Value.createdBy")
 }
 
 model VerificationToken {
@@ -113,6 +119,8 @@ model Thing {
   index          Int         @default(autoincrement())
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
+  createdBy      User        @relation("Thing.createdBy", fields: [createdBy_id], references: [id])
+  createdBy_id   String
   //
   type           SchemaType? /// empty is just a generic thing
   name           String?
@@ -120,8 +128,8 @@ model Thing {
   sameAs         String[] /// could a wikidata-url
   jsonld         Json? /// JSON-LD: For a word/DefinedTerm this could contain a wikidata-id as the termCode. Or an email for a person.
   canBeUsed      Boolean?    @default(false) /// if this thing can be used in anywhere in the app
-  publishedBy    User?       @relation("Thing.publishedBy", fields: [publishedBy_id], references: [id])
-  publishedBy_id String?
+  // publishedBy    User       @relation("Thing.publishedBy", fields: [publishedBy_id], references: [id])
+  // publishedBy_id String
   //
   Answer_isAbout Answer[]    @relation("Answer.isAbout")
   isUsedInValues Value[]     @relation("Value.thing")
@@ -135,6 +143,8 @@ model Question {
   index              Int          @default(autoincrement()) /// @zod.custom.omit([model, input])
   createdAt          DateTime     @default(now()) /// @zod.custom.omit([model, input])
   updatedAt          DateTime     @updatedAt /// @zod.custom.omit([model, input])
+  createdBy          User         @relation("Question.createdBy", fields: [createdBy_id], references: [id])
+  createdBy_id       String
   //
   question           String? /// @zod.string.min(10, { message: 'Question must be at least 10 characters long.' })
   description        String?
@@ -145,26 +155,28 @@ model Question {
   answerThingTypes   SchemaType[] /// if the expectedAnswerType is Thing, this would be the possible types of this thing
   answerThingOptions Thing[]      @relation("Thing.isOptionFor") /// if the expectedAnswerType is Thing, this would be the possible options of this thing
   canBeUsed          Boolean?     @default(false) /// if this thing can be used in anywhere in the app
-  publishedBy        User?        @relation("Question.publishedBy", fields: [publishedBy_id], references: [id])
-  publishedBy_id     String?
+  // publishedBy        User        @relation("Question.publishedBy", fields: [publishedBy_id], references: [id])
+  // publishedBy_id     String
   //
   Answer_isAnswering Answer[]     @relation("Answer.isAnswering")
 }
 
 model Answer {
   /// similar to the schema.org FindAction
-  answer_id            String   @id @default(cuid())
-  index                Int      @default(autoincrement())
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
+  answer_id      String   @id @default(cuid())
+  index          Int      @default(autoincrement())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  createdBy      User     @relation("Answer.createdBy", fields: [createdBy_id], references: [id])
+  createdBy_id   String
   //
-  values               Value[]  @relation("Value.isValueFor")
-  isAnswering          Question @relation("Answer.isAnswering", fields: [isAnswering_id], references: [question_id])
-  isAnswering_id       String
-  isAbout              Thing?   @relation("Answer.isAbout", fields: [isAbout_id], references: [thing_id]) /// could be a defined term or a person if answering about themselves
-  isAbout_id           String?
-  isAnsweredByAgent    User     @relation("Answer.isAnsweredByAgent", fields: [isAnsweredByAgent_id], references: [id]) /// the person who answered
-  isAnsweredByAgent_id String
+  values         Value[]  @relation("Value.isValueFor")
+  isAnswering    Question @relation("Answer.isAnswering", fields: [isAnswering_id], references: [question_id])
+  isAnswering_id String
+  isAbout        Thing?   @relation("Answer.isAbout", fields: [isAbout_id], references: [thing_id]) /// could be a defined term or a person if answering about themselves
+  isAbout_id     String?
+  // isAnsweredByAgent    User     @relation("Answer.isAnsweredByAgent", fields: [isAnsweredByAgent_id], references: [id]) /// the person who answered
+  // isAnsweredByAgent_id String
 }
 
 model Value {
@@ -172,6 +184,8 @@ model Value {
   index           Int      @default(autoincrement())
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+  createdBy       User?    @relation("Value.createdBy", fields: [createdBy_id], references: [id])
+  createdBy_id    String?
   //
   valueType       DataType
   valueAsString   String?
