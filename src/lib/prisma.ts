@@ -123,7 +123,7 @@ export const ValueSchema = z.object({
 export type ValueSchemaType = z.input<typeof ValueSchema>
 
 export type ExtendedValueSchemaType = ValueSchemaType & {
-  valueAsThing: any
+  valueAsThing?: any
   _count: {
     _all: number
   }
