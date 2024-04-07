@@ -17,7 +17,6 @@ import {
   ValueSchemaType,
 } from '@/lib/prisma'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Combobox } from './Combobox'
 import { Headline } from './Headline'
@@ -308,32 +307,20 @@ export function QuestionCard({
   question: QuestionSchemaType
   aboutThing?: ThingSchemaType
 }) {
-  const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
   const answer = useCallback(
     async ({ value }: { value: ValueSchemaType }) => {
       setIsLoading(true)
-      // console.time('answer')
-      performance.mark('A')
 
+      // await to be after the revalidation
       await saveAnswer({
         isAnswering_id: question.question_id,
         values: [value],
         isAbout_id: aboutThing ? aboutThing.thing_id : null,
       })
 
-      performance.mark('B')
-      // console.timeEnd('answer')
-      performance.measure('A to B', 'A', 'B')
-      const measure = performance.getEntriesByName('A to B')[0]
-      console.log(measure.duration)
-      performance.clearMarks()
-      performance.clearMeasures()
-
       window.location.reload()
-      // await router.refresh()
-      setIsLoading(false)
     },
     [question.question_id, aboutThing]
   )

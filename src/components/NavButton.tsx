@@ -10,14 +10,16 @@ export function NavButton({
   href = '/',
   variant,
   className,
+  startsWith = false,
 }: {
   children: React.ReactNode
   href?: string
   variant?: string
   className?: string
+  startsWith?: boolean
 }) {
   const pathname = usePathname()
-  const isActive = pathname === href
+  const isActive = startsWith ? pathname.startsWith(href) : pathname === href
 
   return (
     <Button variant={variant || isActive ? 'default' : 'ghost'} asChild>
