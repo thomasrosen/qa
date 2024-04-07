@@ -75,10 +75,10 @@ export async function getAnswers({
           value.valueType === 'Thing' &&
           typeof value.valueAsThing_id === 'string'
       )
-      .map((value) => value.valueAsThing_id)
+      .map((value: any) => value.valueAsThing_id)
 
     const mappedValues: ExtendedValueSchemaType[] = values
-      .map((value) => ({
+      .map((value: any) => ({
         ...value,
         valueAsThing: undefined,
       }))
