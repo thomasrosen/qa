@@ -69,16 +69,28 @@ export async function getAnswers({
       },
     })
 
-    const thing_ids = values
+    const typedValues = values as ExtendedValueSchemaType[]
+    // as {
+    //   valueType?: string
+    //   valueAsString?: string
+    //   valueAsNumber?: number
+    //   valueAsBoolean?: boolean
+    //   valueAsThing_id?: string
+    //   _count: {
+    //     _all: number
+    //   }
+    // }[]
+
+    const thing_ids = typedValues
       .filter(
-        (value: any) =>
+        (value: ExtendedValueSchemaType) =>
           value.valueType === 'Thing' &&
           typeof value.valueAsThing_id === 'string'
       )
-      .map((value: any) => value.valueAsThing_id)
+      .map((value: ExtendedValueSchemaType) => value.valueAsThing_id)
 
-    const mappedValues: ExtendedValueSchemaType[] = values
-      .map((value: any) => ({
+    const mappedValues: ExtendedValueSchemaType[] = typedValues
+      .map((value: ExtendedValueSchemaType) => ({
         ...value,
         valueAsThing: undefined,
       }))
