@@ -71,7 +71,7 @@ export async function getAnswers({
 
     const thing_ids = values
       .filter(
-        (value) =>
+        (value: any) =>
           value.valueType === 'Thing' &&
           typeof value.valueAsThing_id === 'string'
       )
