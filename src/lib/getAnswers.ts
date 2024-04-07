@@ -129,7 +129,7 @@ export async function getAnswers({
     }
 
     const amountOfAnswers = values.reduce(
-      (acc, value: ExtendedValueSchemaType) => acc + value._count._all,
+      (acc: number, value: ExtendedValueSchemaType) => acc + value._count._all,
       0
     )
 
@@ -138,7 +138,7 @@ export async function getAnswers({
       newestValueDate: newestValue?.updatedAt,
       values: mappedValues,
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error('ERROR_edgAlwkv', error)
   }
 
