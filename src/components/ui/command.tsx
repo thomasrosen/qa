@@ -76,7 +76,11 @@ const CommandEmpty = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Empty>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Empty>
 >((props, ref) => (
-  <CommandPrimitive.Empty ref={ref} className="py-6 text-center text-sm" {...props} />
+  <CommandPrimitive.Empty
+    ref={ref}
+    className="py-6 text-center text-sm"
+    {...props}
+  />
 ))
 
 CommandEmpty.displayName = CommandPrimitive.Empty.displayName
@@ -103,7 +107,10 @@ const CommandSeparator = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <CommandPrimitive.Separator
     ref={ref}
-    className={cn('-mx-1 h-px dark:bg-popover-foreground/10 bg-popover-foreground/40', className)}
+    className={cn(
+      '-mx-1 h-px dark:bg-popover-foreground/10 bg-popover-foreground/40',
+      className
+    )}
     {...props}
   />
 ))
@@ -125,10 +132,16 @@ const CommandItem = React.forwardRef<
 
 CommandItem.displayName = CommandPrimitive.Item.displayName
 
-const CommandShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => {
+const CommandShortcut = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLSpanElement>) => {
   return (
     <span
-      className={cn('ml-auto text-xs tracking-widest text-popover-foreground', className)}
+      className={cn(
+        'ml-auto text-xs tracking-widest text-popover-foreground',
+        className
+      )}
       {...props}
     />
   )
@@ -144,5 +157,5 @@ export {
   CommandItem,
   CommandList,
   CommandSeparator,
-  CommandShortcut
+  CommandShortcut,
 }
