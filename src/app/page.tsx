@@ -1,5 +1,5 @@
-import { DarkModeToggle } from '@/components/DarkModeToggle'
-import { NavButton } from '@/components/NavButton'
+import { DarkModeToggle } from '@/components/client/DarkModeToggle'
+import { NavButton } from '@/components/client/NavButton'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 export default function Home() {

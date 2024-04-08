@@ -1,8 +1,8 @@
 'use client'
 
+import { Textarea } from '@/components/ui/textarea'
 import { useRef } from 'react'
 import { resize } from 'react-expanding-textarea'
-import { Textarea } from './ui/textarea'
 
 import * as React from 'react'
 

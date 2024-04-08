@@ -1,7 +1,10 @@
 'use client'
 
 import { saveAnswer } from '@/actions/saveAnswer'
+import { Combobox } from '@/components/client/Combobox'
+import { Headline } from '@/components/Headline'
 import { P } from '@/components/P'
+import { ThingRow } from '@/components/ThingRow'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -11,6 +14,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Separator } from '@/components/ui/separator'
 import {
   QuestionSchemaType,
   ThingSchemaType,
@@ -18,11 +23,6 @@ import {
 } from '@/lib/prisma'
 import Link from 'next/link'
 import React, { useCallback, useEffect, useState } from 'react'
-import { Combobox } from './Combobox'
-import { Headline } from './Headline'
-import { ThingRow } from './ThingRow'
-import { Input } from './ui/input'
-import { Separator } from './ui/separator'
 
 type AnswerButtonsProps = {
   question: QuestionSchemaType

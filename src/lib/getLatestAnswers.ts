@@ -1,6 +1,6 @@
-import { auth } from './auth'
-import { isSignedOut } from './isSignedIn'
-import { AnswerType, prisma } from './prisma'
+import { auth } from '@/lib/auth'
+import { isSignedOut } from '@/lib/isSignedIn'
+import { AnswerType, prisma } from '@/lib/prisma'
 
 export async function getLatestAnswers({
   take = 1,

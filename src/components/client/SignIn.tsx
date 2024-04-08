@@ -1,12 +1,12 @@
 'use client'
 
+import { Headline } from '@/components/Headline'
+import { P } from '@/components/P'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import { signIn } from 'next-auth/react'
 import { useState } from 'react'
-import { Headline } from './Headline'
-import { P } from './P'
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
-import { Input } from './ui/input'
 
 export function SignIn() {
   const [loading, setLoading] = useState(false)

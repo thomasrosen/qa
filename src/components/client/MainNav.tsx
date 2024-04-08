@@ -1,7 +1,7 @@
 'use client'
 
-import { DarkModeToggle } from '@/components/DarkModeToggle'
-import { NavButton } from '@/components/NavButton'
+import { DarkModeToggle } from '@/components/client/DarkModeToggle'
+import { NavButton } from '@/components/client/NavButton'
 import { usePathname } from 'next/navigation'
 
 export function MainNav() {

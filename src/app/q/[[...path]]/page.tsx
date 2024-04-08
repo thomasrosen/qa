@@ -1,10 +1,10 @@
-import { SignIn } from '@/components/SignIn'
+import { AnswerChart } from '@/components/AnswerChart'
+import NextQuestion from '@/components/NextQuestion'
+import { SignIn } from '@/components/client/SignIn'
 import { auth } from '@/lib/auth'
 import { getLatestAnswers } from '@/lib/getLatestAnswers'
 import { isSignedOut } from '@/lib/isSignedIn'
 import { Suspense } from 'react'
-import { AnswerChart } from './AnswerChart'
-import NextQuestion from './NextQuestion'
 
 export const dynamic = 'force-dynamic'
 

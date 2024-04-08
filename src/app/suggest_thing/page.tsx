@@ -1,11 +1,11 @@
 'use client'
 
 import { suggestThing } from '@/actions/suggestThing'
-import { AutoGrowTextarea } from '@/components/AutogrowTextarea'
 import { ComboBoxBadge } from '@/components/ComboBoxBadge'
-import { Combobox } from '@/components/Combobox'
 import { FormInput } from '@/components/FormInput'
 import { Headline } from '@/components/Headline'
+import { AutoGrowTextarea } from '@/components/client/AutogrowTextarea'
+import { Combobox } from '@/components/client/Combobox'
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
 import { DEFAULT_LOCALE, LOCALES } from '@/lib/constants'

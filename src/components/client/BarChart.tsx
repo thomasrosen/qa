@@ -1,7 +1,7 @@
 'use client'
 
-import { chartTheme, getChartColors } from '@/components/charts/theme'
 import { Card, CardDescription, CardHeader } from '@/components/ui/card'
+import { chartTheme, getChartColors } from '@/lib/chartTheme'
 import { BarDatum, ResponsiveBar } from '@nivo/bar'
 
 const formatYAxis = (n: number) => {

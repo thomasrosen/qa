@@ -1,5 +1,5 @@
+import { BarChart } from '@/components/client/BarChart'
 import { P } from '@/components/P'
-import { BarChart } from '@/components/charts/BarChart'
 import {
   Card,
   CardContent,
