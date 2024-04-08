@@ -61,51 +61,49 @@ export async function AnswerChart({ answer }: { answer?: AnswerType | null }) {
   const aboutThing = answer.isAbout
 
   return (
-    <>
-      <Card>
-        <CardHeader>
-          <CardDescription>Results for…</CardDescription>
-          <CardTitle>{answer.isAnswering.question}</CardTitle>
-          {aboutThing && <P className="mb-0">{aboutThing.name}</P>}
-        </CardHeader>
+    <Card className="aspect-square flex flex-col">
+      <CardHeader>
+        <CardDescription>Results for…</CardDescription>
+        <CardTitle>{answer.isAnswering.question}</CardTitle>
+        {aboutThing && <P className="mb-0">{aboutThing.name}</P>}
+      </CardHeader>
 
-        <CardContent className="flex flex-col gap-4">
-          {values.length === 0 ? (
-            <P className="mb-0">
-              You are the first to answer this question. Tell others to also
-              answer questions, so we can graph you the answer as a nice chart.
+      <CardContent className="flex flex-col gap-4 grow">
+        {values.length === 0 ? (
+          <P className="mb-0">
+            You are the first to answer this question. Tell others to also
+            answer questions, so we can graph you the answer as a nice chart.
+          </P>
+        ) : (
+          <>
+            <div className="grow min-h-32">
+              <Suspense fallback={<P>Loading chart...</P>}>
+                <BarChart
+                  data={data}
+                  tickValues={data.map((d) => d.value)}
+                  ariaLabel="Bar Chart"
+                  indexBy="label"
+                />
+              </Suspense>
+            </div>
+            <P type="muted" className="mb-0">
+              This is what people have answered before{' '}
+              {newestValueDate
+                ? new Intl.DateTimeFormat(DEFAULT_LOCALE, {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                  }).format(newestValueDate)
+                : devNull}
+              .
+              <br />
+              Amount of answers: {amountOfAnswers}
             </P>
-          ) : (
-            <>
-              <div className="h-96">
-                <Suspense fallback={<P>Loading chart...</P>}>
-                  <BarChart
-                    data={data}
-                    tickValues={data.map((d) => d.value)}
-                    ariaLabel="Bar Chart"
-                    indexBy="label"
-                  />
-                </Suspense>
-              </div>
-              <P type="muted" className="mb-0">
-                This is what people have answered before{' '}
-                {newestValueDate
-                  ? new Intl.DateTimeFormat(DEFAULT_LOCALE, {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                      hour: 'numeric',
-                      minute: 'numeric',
-                    }).format(newestValueDate)
-                  : devNull}
-                .
-                <br />
-                Amount of answers: {amountOfAnswers}
-              </P>
-            </>
-          )}
-        </CardContent>
-      </Card>
-    </>
+          </>
+        )}
+      </CardContent>
+    </Card>
   )
 }
