@@ -1,21 +1,21 @@
 export const getChartColors = (amount: number) => {
-  const colors: string[] = [];
+  const colors: string[] = []
 
   // generate color strings for hsl()
   // the middle color is hsl(36 100% 50%)
   // evenly generate darker and lighter colors to fit the amount
   // always go 5 percent darker or lighter subtract 4 degrees of the hue for darker and add 4 degrees for lighter colors.
-  const start_hue = 36;
-  const start_saturation = 100;
-  const start_lightness = 50;
+  const start_hue = 36
+  const start_saturation = 100
+  const start_lightness = 50
 
   for (let i = 1; i <= amount; i++) {
-    const hue = start_hue + (i - Math.ceil(amount / 2)) * 4;
-    const saturation = start_saturation;
-    const lightness = start_lightness + (i - Math.ceil(amount / 2)) * 5;
+    const hue = start_hue + (i - Math.ceil(amount / 2)) * 4
+    const saturation = start_saturation
+    const lightness = start_lightness + (i - Math.ceil(amount / 2)) * 5
 
-    const color = `hsl(${hue} ${saturation}% ${lightness}%)`;
-    colors.push(color);
+    const color = `hsl(${hue} ${saturation}% ${lightness}%)`
+    colors.push(color)
   }
 
   // This basically generates these colors (here as hex):
@@ -33,8 +33,8 @@ export const getChartColors = (amount: number) => {
   // #4D0A00
   // #330300
 
-  return colors;
-};
+  return colors
+}
 
 export const chartTheme = {
   background: 'transparent',
@@ -146,4 +146,4 @@ export const chartTheme = {
   //   tableCell: {},
   //   tableCellValue: {},
   // },
-};
+}
