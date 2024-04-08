@@ -76,10 +76,10 @@ function AnswerButtons({ question, answer }: AnswerButtonsProps) {
 
   if (question.answerType === 'Boolean') {
     return (
-      <div className='flex gap-4 w-full'>
+      <div className="flex gap-4 w-full">
         <Button
-          variant='default'
-          className='w-full'
+          variant="default"
+          className="w-full"
           onClick={() =>
             answer({
               value: {
@@ -95,8 +95,8 @@ function AnswerButtons({ question, answer }: AnswerButtonsProps) {
           Yes
         </Button>
         <Button
-          variant='default'
-          className='w-full'
+          variant="default"
+          className="w-full"
           onClick={() =>
             answer({
               value: {
@@ -117,16 +117,16 @@ function AnswerButtons({ question, answer }: AnswerButtonsProps) {
 
   if (question.answerType === 'String') {
     return (
-      <div className='flex gap-4 flex-col w-full'>
+      <div className="flex gap-4 flex-col w-full">
         <Input
-          type='text'
-          placeholder='Type your answer here'
+          type="text"
+          placeholder="Type your answer here"
           value={inputValue}
           onChange={onInputChangeHandler}
         />
         <Button
-          variant='default'
-          className='w-full'
+          variant="default"
+          className="w-full"
           onClick={() =>
             answer({
               value: {
@@ -147,16 +147,16 @@ function AnswerButtons({ question, answer }: AnswerButtonsProps) {
 
   if (question.answerType === 'Number') {
     return (
-      <div className='flex gap-4 flex-col w-full'>
+      <div className="flex gap-4 flex-col w-full">
         <Input
-          type='number'
-          placeholder='Type your answer as a Number here'
+          type="number"
+          placeholder="Type your answer as a Number here"
           value={inputValue}
           onChange={onInputChangeHandler}
         />
         <Button
-          variant='default'
-          className='w-full'
+          variant="default"
+          className="w-full"
           onClick={() =>
             answer({
               value: {
@@ -189,8 +189,8 @@ function AnswerButtons({ question, answer }: AnswerButtonsProps) {
       input = question.answerThingOptions?.map((thing, i) => (
         <Button
           key={`${i}-${thing.thing_id}`}
-          variant='outline'
-          className='w-full h-auto'
+          variant="outline"
+          className="w-full h-auto"
           onClick={() =>
             answer({
               value: {
@@ -203,7 +203,7 @@ function AnswerButtons({ question, answer }: AnswerButtonsProps) {
             })
           }
         >
-          <ThingRow thing={thing} className='text-inherit bg-inherit' />
+          <ThingRow thing={thing} className="text-inherit bg-inherit" />
         </Button>
       ))
     } else if (
@@ -228,8 +228,8 @@ function AnswerButtons({ question, answer }: AnswerButtonsProps) {
 
           <Button
             disabled={thingValue.length === 0}
-            variant='default'
-            className='w-full'
+            variant="default"
+            className="w-full"
             onClick={() => {
               if (thingValue.length > 0) {
                 answer({
@@ -272,8 +272,8 @@ function AnswerButtons({ question, answer }: AnswerButtonsProps) {
 
           <Button
             disabled={thingValue.length === 0}
-            variant='default'
-            className='w-full'
+            variant="default"
+            className="w-full"
             onClick={() => {
               if (thingValue.length > 0) {
                 answer({
@@ -294,7 +294,7 @@ function AnswerButtons({ question, answer }: AnswerButtonsProps) {
       )
     }
 
-    return <div className='flex gap-4 flex-col w-full'>{input}</div>
+    return <div className="flex gap-4 flex-col w-full">{input}</div>
   }
 
   return null
@@ -332,17 +332,17 @@ export function QuestionCard({
 
   return (
     <React.Fragment key={question.question_id}>
-      <Headline type='h2'>
+      <Headline type="h2">
         Answer the question to know what others think…
       </Headline>
       <Card>
         {question && (
           <CardHeader>
             {question.question && (
-              <CardTitle className='text-center'>{question.question}</CardTitle>
+              <CardTitle className="text-center">{question.question}</CardTitle>
             )}
             {question.description && (
-              <CardDescription className='text-center'>
+              <CardDescription className="text-center">
                 {question.description}
               </CardDescription>
             )}
@@ -350,8 +350,8 @@ export function QuestionCard({
         )}
 
         {aboutThing && (
-          <CardContent className='text-center'>
-            <P className='mb-0'>{aboutThing.name}</P>
+          <CardContent className="text-center">
+            <P className="mb-0">{aboutThing.name}</P>
           </CardContent>
         )}
 
@@ -361,26 +361,26 @@ export function QuestionCard({
           <AnswerButtons question={question} answer={answer} />
         </CardFooter>
         {isLoading && (
-          <P type='muted' className='text-center'>
+          <P type="muted" className="text-center">
             Loading…
           </P>
         )}
       </Card>
-      <div className='flex justify-between'>
-        <nav className='text-white flex'>
-          <Button variant='link' asChild className='z-10'>
-            <Link href='/suggest_thing' className='no-underline'>
+      <div className="flex justify-between">
+        <nav className="text-white flex">
+          <Button variant="link" asChild className="z-10">
+            <Link href="/suggest_thing" className="no-underline">
               Suggest a Thing
             </Link>
           </Button>
-          <Separator orientation='vertical' className='my-2 h-auto' />
-          <Button variant='link' asChild className='z-10'>
-            <Link href='/suggest_q' className='no-underline'>
+          <Separator orientation="vertical" className="my-2 h-auto" />
+          <Button variant="link" asChild className="z-10">
+            <Link href="/suggest_q" className="no-underline">
               Suggest a Question
             </Link>
           </Button>
         </nav>
-        <Button variant='outline' onClick={skip}>
+        <Button variant="outline" onClick={skip}>
           Skip
         </Button>
       </div>

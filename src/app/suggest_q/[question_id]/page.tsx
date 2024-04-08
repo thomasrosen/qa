@@ -14,8 +14,8 @@ export default async function SuggestQuestion({
   })
 
   return (
-    <section className='flex flex-col gap-4'>
-      <Headline type='h2'>Edit the Question</Headline>
+    <section className="flex flex-col gap-4">
+      <Headline type="h2">Edit the Question</Headline>
       <InputForm question={question} />
     </section>
   )

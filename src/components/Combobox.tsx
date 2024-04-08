@@ -9,7 +9,11 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import { cn } from '@/lib/utils'
 import { Check, ChevronDown } from 'lucide-react'
 import React, { useState } from 'react'
@@ -49,7 +53,9 @@ export function Combobox({
     )
   }
 
-  const additionalChoosenOptions = choosenOptions.filter((option) => !options.includes(option))
+  const additionalChoosenOptions = choosenOptions.filter(
+    (option) => !options.includes(option)
+  )
 
   const optionsFromSearch: Option[] = [
     {
@@ -59,7 +65,9 @@ export function Combobox({
     (option) =>
       allowCustom === true &&
       option.value !== '' &&
-      additionalChoosenOptions.concat(options).find((o) => o.value === option.value) === undefined
+      additionalChoosenOptions
+        .concat(options)
+        .find((o) => o.value === option.value) === undefined
   )
 
   return (
@@ -76,13 +84,17 @@ export function Combobox({
             {choosenOptions.length > 0 ? (
               typeof renderLabel === 'function' ? (
                 choosenOptions.map((choosenOption, index) => (
-                  <React.Fragment key={index}>{renderLabel(choosenOption)}</React.Fragment>
+                  <React.Fragment key={index}>
+                    {renderLabel(choosenOption)}
+                  </React.Fragment>
                 ))
               ) : (
                 selected.join(', ')
               )
             ) : (
-              <span className="text-foreground/20">{placeholder ?? 'Select…'}</span>
+              <span className="text-foreground/20">
+                {placeholder ?? 'Select…'}
+              </span>
             )}
           </span>
           <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -90,11 +102,19 @@ export function Combobox({
       </PopoverTrigger>
       <PopoverContent className="p-0">
         <Command>
-          <CommandInput value={search} onValueChange={setSearch} placeholder="Search..." />
+          <CommandInput
+            value={search}
+            onValueChange={setSearch}
+            placeholder="Search..."
+          />
           <CommandEmpty>{searchFallback ?? 'Nothing found.'}</CommandEmpty>
           <CommandGroup>
             <CommandList>
-              {[...optionsFromSearch, ...additionalChoosenOptions, ...options].map((option) => (
+              {[
+                ...optionsFromSearch,
+                ...additionalChoosenOptions,
+                ...options,
+              ].map((option) => (
                 <CommandItem
                   key={option.value}
                   value={option.value}
@@ -117,7 +137,9 @@ export function Combobox({
                   <Check
                     className={cn(
                       'mr-2 h-4 w-4',
-                      selected.includes(option.value) ? 'opacity-100' : 'opacity-0'
+                      selected.includes(option.value)
+                        ? 'opacity-100'
+                        : 'opacity-0'
                     )}
                   />
                   {renderLabel?.(option) ?? option.value}

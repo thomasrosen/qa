@@ -1,11 +1,21 @@
 import { TailwindEmail } from '@/components/TailwindEmail'
-import { Body, Button, Container, Head, Html, Link, Preview } from '@react-email/components'
+import {
+  Body,
+  Button,
+  Container,
+  Head,
+  Html,
+  Link,
+  Preview,
+} from '@react-email/components'
 import { Options, render } from '@react-email/render'
 import { Theme } from 'next-auth'
 import { SendVerificationRequestParams } from 'next-auth/providers/email'
 import { createTransport } from 'nodemailer'
 
-export async function sendVerificationRequest(params: SendVerificationRequestParams) {
+export async function sendVerificationRequest(
+  params: SendVerificationRequestParams
+) {
   const { identifier, url, provider, theme } = params
   const { host } = new URL(url)
 
@@ -29,7 +39,9 @@ export async function sendVerificationRequest(params: SendVerificationRequestPar
   })
   const failed = result.rejected.concat(result.pending).filter(Boolean)
   if (failed.length) {
-    throw new Error(`ERROR_zZFjzJlt Email(s) (${failed.join(', ')}) could not be sent`)
+    throw new Error(
+      `ERROR_zZFjzJlt Email(s) (${failed.join(', ')}) could not be sent`
+    )
   }
 }
 

@@ -71,7 +71,7 @@ export const BarChart = ({
       animate={false}
       colors={getChartColors(tickValues.length)}
       theme={chartTheme}
-      colorBy='indexValue'
+      colorBy="indexValue"
       gridYValues={[0, ...new Set(tickValues)]}
       axisBottom={{
         tickSize: 5,
@@ -103,7 +103,7 @@ export const BarChart = ({
       borderRadius={12}
       tooltip={({ value, indexValue, data, ...props }) => (
         <Card>
-          <CardHeader className='p-4'>
+          <CardHeader className="p-4">
             <CardDescription>
               <strong>{data.label}</strong>: {data.value} (
               {Math.round((value / total) * 100)}%)
@@ -135,7 +135,7 @@ export const BarChart = ({
       //     // ],
       //   },
       // ]}
-      role='application'
+      role="application"
       ariaLabel={ariaLabel}
       // barAriaLabel={(e) => e.id + ': ' + e.formattedValue + ', ' + e.indexValue}
     />

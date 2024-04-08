@@ -17,7 +17,7 @@ export default async function AboutYou() {
   const latestAnswers = await getLatestAnswers({ take: 9999 })
 
   return (
-    <section className='flex flex-col gap-4 mb-4 place-content-center'>
+    <section className="flex flex-col gap-4 mb-4 place-content-center">
       <AboutYouCard session={session as SessionSchemaType | null} />
 
       {latestAnswers ? (

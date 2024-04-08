@@ -2,8 +2,16 @@ import { createAnonymousUser } from '@/lib/createAnonymousUser'
 import { UserSchemaType, prisma } from '@/lib/prisma'
 import { sendVerificationRequest } from '@/lib/sendVerificationRequest'
 import { PrismaAdapter } from '@auth/prisma-adapter'
-import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next'
-import { SessionStrategy, getServerSession, type NextAuthOptions } from 'next-auth'
+import {
+  GetServerSidePropsContext,
+  NextApiRequest,
+  NextApiResponse,
+} from 'next'
+import {
+  SessionStrategy,
+  getServerSession,
+  type NextAuthOptions,
+} from 'next-auth'
 import { type Adapter } from 'next-auth/adapters'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import EmailProvider from 'next-auth/providers/email'

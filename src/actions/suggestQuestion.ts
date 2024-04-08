@@ -1,26 +1,26 @@
-'use server';
+'use server'
 
-import { auth } from '@/lib/auth';
-import { isSignedOut } from '@/lib/isSignedIn';
-import { QuestionSchema, prisma, type QuestionSchemaType } from '@/lib/prisma';
-import { revalidatePath } from 'next/cache';
+import { auth } from '@/lib/auth'
+import { isSignedOut } from '@/lib/isSignedIn'
+import { QuestionSchema, prisma, type QuestionSchemaType } from '@/lib/prisma'
+import { revalidatePath } from 'next/cache'
 
 export async function suggestQuestion(data: QuestionSchemaType) {
   try {
-    const session = await auth();
+    const session = await auth()
     if (isSignedOut(session)) {
-      console.error('ERROR_qGzNvYvh', 'user is required');
-      return false;
+      console.error('ERROR_qGzNvYvh', 'user is required')
+      return false
     }
 
-    const validatedFields = QuestionSchema.safeParse(data);
+    const validatedFields = QuestionSchema.safeParse(data)
 
     if (!validatedFields.success) {
-      return false;
+      return false
     }
 
-    const question_id = validatedFields.data.question_id;
-    delete validatedFields.data.question_id;
+    const question_id = validatedFields.data.question_id
+    delete validatedFields.data.question_id
 
     const createDataObj = {
       ...validatedFields.data,
@@ -37,7 +37,7 @@ export async function suggestQuestion(data: QuestionSchemaType) {
           id: session.user.id,
         },
       },
-    };
+    }
 
     if (question_id) {
       await prisma.question.upsert({
@@ -55,21 +55,21 @@ export async function suggestQuestion(data: QuestionSchemaType) {
           },
         },
         create: createDataObj,
-      });
+      })
     } else {
       await prisma.question.create({
         data: createDataObj,
-      });
+      })
     }
 
     if (question_id) {
-      revalidatePath(`/suggest_q/${question_id}`);
+      revalidatePath(`/suggest_q/${question_id}`)
     }
 
-    return true;
+    return true
   } catch (error) {
-    console.error('ERROR_nUhs4oGa', error);
+    console.error('ERROR_nUhs4oGa', error)
   }
 
-  return false;
+  return false
 }

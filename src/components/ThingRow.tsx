@@ -19,7 +19,7 @@ export function ThingRow({
     >
       <strong>{thing.name}</strong>
       <br />
-      <span className='font-normal'>{thing.type}</span>
+      <span className="font-normal">{thing.type}</span>
     </div>
   )
 }

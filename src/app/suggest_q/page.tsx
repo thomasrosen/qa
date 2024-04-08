@@ -100,7 +100,7 @@ export function InputForm({
       router.refresh()
       toast('You submitted the following values:', {
         description: (
-          <pre className='mt-2'>
+          <pre className="mt-2">
             <code>{JSON.stringify(data, null, 2)}</code>
           </pre>
         ),
@@ -112,38 +112,38 @@ export function InputForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormInput
           form={form}
-          name='question'
-          label='Question'
+          name="question"
+          label="Question"
           input={(field) => (
             <AutoGrowTextarea
               {...field}
               autoFocus
               value={field.value || ''}
-              placeholder='What / When / Where / Who / …'
+              placeholder="What / When / Where / Who / …"
             />
           )}
         />
 
         <FormInput
           form={form}
-          name='description'
-          label='Description'
+          name="description"
+          label="Description"
           input={(field) => (
             <AutoGrowTextarea
               {...field}
               value={field.value || ''}
-              placeholder='Information that are needed to understand the question.'
+              placeholder="Information that are needed to understand the question."
             />
           )}
         />
 
         <FormInput
           form={form}
-          name='locale'
-          label='Locale of the question and description.'
+          name="locale"
+          label="Locale of the question and description."
           inputHasFormControl={true}
           input={(field) => (
             <Combobox
@@ -156,7 +156,7 @@ export function InputForm({
                   intlDisplayNamesLanguage(option, option) || '',
                 ].filter(Boolean),
               }))}
-              placeholder='Select a Locale…'
+              placeholder="Select a Locale…"
               renderLabel={(option) => (
                 <ComboBoxBadge>{option.label || option.value}</ComboBoxBadge>
               )}
@@ -167,23 +167,23 @@ export function InputForm({
 
         <FormInput
           form={form}
-          name='asProperty'
-          label='asProperty'
+          name="asProperty"
+          label="asProperty"
           input={(field) => (
             <Input
-              type='text'
+              type="text"
               {...field}
               value={field.value || ''}
-              placeholder='knows / likes / …'
+              placeholder="knows / likes / …"
             />
           )}
         />
 
-        <Headline type='h3'>About</Headline>
+        <Headline type="h3">About</Headline>
         <FormInput
           form={form}
-          name='aboutThingTypes'
-          label='What type of data is the question about?'
+          name="aboutThingTypes"
+          label="What type of data is the question about?"
           inputHasFormControl={true}
           input={(field) => (
             <Combobox
@@ -191,7 +191,7 @@ export function InputForm({
               options={SchemaTypeSchema.options.map((option) => ({
                 value: option,
               }))}
-              placeholder='Select a SchemaType…'
+              placeholder="Select a SchemaType…"
               renderLabel={(option) => (
                 <ComboBoxBadge>{option.value}</ComboBoxBadge>
               )}
@@ -201,11 +201,11 @@ export function InputForm({
           )}
         />
 
-        <Headline type='h3'>Answer</Headline>
+        <Headline type="h3">Answer</Headline>
         <FormInput
           form={form}
-          name='answerType'
-          label='With which type of data can the question be answered?'
+          name="answerType"
+          label="With which type of data can the question be answered?"
           inputHasFormControl={true}
           input={(field) => (
             <Select
@@ -222,7 +222,7 @@ export function InputForm({
                 <SelectTrigger>
                   <SelectValue
                     placeholder={
-                      <span className='text-foreground/20'>
+                      <span className="text-foreground/20">
                         Select a DataType…
                       </span>
                     }
@@ -244,7 +244,7 @@ export function InputForm({
           <>
             <FormInput
               form={form}
-              name='answerThingTypes'
+              name="answerThingTypes"
               label="If it's a thing, which types are allowed?"
               inputHasFormControl={true}
               input={(field) => (
@@ -253,7 +253,7 @@ export function InputForm({
                   options={SchemaTypeSchema.options.map((option) => ({
                     value: option,
                   }))}
-                  placeholder='Select a SchemaType…'
+                  placeholder="Select a SchemaType…"
                   renderLabel={(option) => (
                     <ComboBoxBadge>{option.value}</ComboBoxBadge>
                   )}
@@ -270,8 +270,8 @@ export function InputForm({
             {thingOptions.length > 0 && (
               <FormInput
                 form={form}
-                name='answerThingOptions'
-                label='Which things are allowed? (leave empty for all)'
+                name="answerThingOptions"
+                label="Which things are allowed? (leave empty for all)"
                 inputHasFormControl={true}
                 input={(field) => (
                   <Combobox
@@ -285,7 +285,7 @@ export function InputForm({
                       ] as string[],
                       data: option,
                     }))}
-                    placeholder='Select a SchemaType…'
+                    placeholder="Select a SchemaType…"
                     renderLabel={(option) => <ThingRow thing={option.data} />}
                     multiple={true}
                     onChange={(values) => field.onChange(values)}
@@ -296,7 +296,7 @@ export function InputForm({
           </>
         ) : null}
 
-        <Button type='submit' disabled={isSubmitting}>
+        <Button type="submit" disabled={isSubmitting}>
           Suggest Question
         </Button>
         {isSubmitting ? <P>Sending your suggestion…</P> : null}
@@ -307,8 +307,8 @@ export function InputForm({
 
 export default function SuggestQuestion() {
   return (
-    <section className='flex flex-col gap-4'>
-      <Headline type='h2'>Suggest a Question</Headline>
+    <section className="flex flex-col gap-4">
+      <Headline type="h2">Suggest a Question</Headline>
       <InputForm />
     </section>
   )

@@ -10,7 +10,11 @@ import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
 import { DEFAULT_LOCALE, LOCALES } from '@/lib/constants'
 import { intlDisplayNamesLanguage } from '@/lib/intlDisplayNamesLanguage'
-import { SchemaTypeSchema, ThingSchema, type ThingSchemaType } from '@/lib/prisma'
+import {
+  SchemaTypeSchema,
+  ThingSchema,
+  type ThingSchemaType,
+} from '@/lib/prisma'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -55,9 +59,13 @@ function InputForm() {
           input={(field) => (
             <Combobox
               selected={[field.value].filter(Boolean)}
-              options={SchemaTypeSchema.options.map((option) => ({ value: option }))}
+              options={SchemaTypeSchema.options.map((option) => ({
+                value: option,
+              }))}
               placeholder="Select a SchemaType…"
-              renderLabel={(option) => <ComboBoxBadge>{option.value}</ComboBoxBadge>}
+              renderLabel={(option) => (
+                <ComboBoxBadge>{option.value}</ComboBoxBadge>
+              )}
               onChange={(values) => field.onChange(values[0])}
             />
           )}
@@ -88,7 +96,10 @@ function InputForm() {
               options={LOCALES.sort().map((option) => ({
                 value: option,
                 label: intlDisplayNamesLanguage(DEFAULT_LOCALE, option),
-                keywords: [option, intlDisplayNamesLanguage(option, option) || ''].filter(Boolean),
+                keywords: [
+                  option,
+                  intlDisplayNamesLanguage(option, option) || '',
+                ].filter(Boolean),
               }))}
               placeholder="Select a Locale…"
               renderLabel={(option) => (
@@ -123,10 +134,14 @@ function InputForm() {
             return [...new Array(values.length + 1)]
               .map((_, i) => {
                 const value = values[i] || ''
-                const onChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+                const onChange = (
+                  event: React.ChangeEvent<HTMLTextAreaElement>
+                ) => {
                   const newValue = event.target.value
                   values.splice(i, 1, newValue)
-                  const uniqueValues = Array.from(new Set(values)).filter(Boolean)
+                  const uniqueValues = Array.from(new Set(values)).filter(
+                    Boolean
+                  )
                   field.onChange(uniqueValues)
                 }
 

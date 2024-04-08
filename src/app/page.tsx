@@ -10,8 +10,8 @@ export default function Home() {
           <CardTitle>Curious minds thrive on answers. 🧠💡🌱</CardTitle>
         </CardHeader>
         <CardContent>
-          While a quick poll might determine the best ice cream flavour, deeper inquiries require a
-          bit more insight. That‘s where you come in!
+          While a quick poll might determine the best ice cream flavour, deeper
+          inquiries require a bit more insight. That‘s where you come in!
         </CardContent>
       </Card>
       <br />
@@ -20,8 +20,8 @@ export default function Home() {
           <CardTitle>Go deeper than ice cream... 🍦🌊</CardTitle>
         </CardHeader>
         <CardContent>
-          Join me in gathering insights by answering questions that go beyond a simple socialmedia
-          poll.
+          Join me in gathering insights by answering questions that go beyond a
+          simple socialmedia poll.
         </CardContent>
       </Card>
       <br />
@@ -30,7 +30,8 @@ export default function Home() {
           <CardTitle>Let’s go! 🚀</CardTitle>
         </CardHeader>
         <CardContent>
-          I am starting this dataset with a simple question: Who knows which words?
+          I am starting this dataset with a simple question: Who knows which
+          words?
         </CardContent>
       </Card>
       <br />

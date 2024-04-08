@@ -22,8 +22,8 @@ export function SignIn() {
           </CardHeader>
           <CardContent>
             <P>
-              The anonymous identifier is a random string. Your answers can not easily traced back
-              to you.
+              The anonymous identifier is a random string. Your answers can not
+              easily traced back to you.
             </P>
             <Button
               variant="secondary"
@@ -42,9 +42,9 @@ export function SignIn() {
           </CardHeader>
           <CardContent>
             <P>
-              The email option allows login on other devices and future deletion of your answers. In
-              the published dataset, your email is replaced by an anonymous-id. Your email address
-              will never be published.
+              The email option allows login on other devices and future deletion
+              of your answers. In the published dataset, your email is replaced
+              by an anonymous-id. Your email address will never be published.
             </P>
             <div className="flex gap-4">
               <Input

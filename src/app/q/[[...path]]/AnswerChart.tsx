@@ -66,28 +66,28 @@ export async function AnswerChart({ answer }: { answer?: AnswerType | null }) {
         <CardHeader>
           <CardDescription>Results for…</CardDescription>
           <CardTitle>{answer.isAnswering.question}</CardTitle>
-          {aboutThing && <P className='mb-0'>{aboutThing.name}</P>}
+          {aboutThing && <P className="mb-0">{aboutThing.name}</P>}
         </CardHeader>
 
-        <CardContent className='flex flex-col gap-4'>
+        <CardContent className="flex flex-col gap-4">
           {values.length === 0 ? (
-            <P className='mb-0'>
+            <P className="mb-0">
               You are the first to answer this question. Tell others to also
               answer questions, so we can graph you the answer as a nice chart.
             </P>
           ) : (
             <>
-              <div className='h-96'>
+              <div className="h-96">
                 <Suspense fallback={<P>Loading chart...</P>}>
                   <BarChart
                     data={data}
                     tickValues={data.map((d) => d.value)}
-                    ariaLabel='Bar Chart'
-                    indexBy='label'
+                    ariaLabel="Bar Chart"
+                    indexBy="label"
                   />
                 </Suspense>
               </div>
-              <P type='muted' className='mb-0'>
+              <P type="muted" className="mb-0">
                 This is what people have answered before{' '}
                 {newestValueDate
                   ? new Intl.DateTimeFormat(DEFAULT_LOCALE, {

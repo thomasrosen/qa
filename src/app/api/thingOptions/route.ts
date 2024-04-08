@@ -4,7 +4,8 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
 
   const schemaTypesFromGet = searchParams.getAll('t')
-  const validatedDataFields = SchemaTypeArraySchema.safeParse(schemaTypesFromGet)
+  const validatedDataFields =
+    SchemaTypeArraySchema.safeParse(schemaTypesFromGet)
   if (!validatedDataFields.success) {
     return Response.json({
       things: [],
