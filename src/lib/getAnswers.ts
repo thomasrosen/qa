@@ -1,6 +1,6 @@
 // import { auth } from '@/lib/auth';
 // import { isSignedOut } from '@/lib/isSignedIn';
-import { ExtendedValueSchemaType, ThingSchemaType, prisma } from '@/lib/prisma'
+import { ExtendedValueSchemaType, prisma } from '@/lib/prisma'
 
 export async function getAnswers({
   question_id,
@@ -69,28 +69,16 @@ export async function getAnswers({
       },
     })
 
-    const typedValues = values as ExtendedValueSchemaType[]
-    // as {
-    //   valueType?: string
-    //   valueAsString?: string
-    //   valueAsNumber?: number
-    //   valueAsBoolean?: boolean
-    //   valueAsThing_id?: string
-    //   _count: {
-    //     _all: number
-    //   }
-    // }[]
-
-    const thing_ids = typedValues
+    const thing_ids = values
       .filter(
-        (value: ExtendedValueSchemaType) =>
+        (value) =>
           value.valueType === 'Thing' &&
           typeof value.valueAsThing_id === 'string'
       )
-      .map((value: ExtendedValueSchemaType) => value.valueAsThing_id)
+      .map((value) => value.valueAsThing_id)
 
-    const mappedValues: ExtendedValueSchemaType[] = typedValues
-      .map((value: ExtendedValueSchemaType) => ({
+    const mappedValues: ExtendedValueSchemaType[] = values
+      .map((value) => ({
         ...value,
         valueAsThing: undefined,
       }))
@@ -116,10 +104,10 @@ export async function getAnswers({
         },
       })
 
-      mappedValues.forEach((value: ExtendedValueSchemaType) => {
+      mappedValues.forEach((value) => {
         if (value.valueType === 'Thing') {
           const thing = things.find(
-            (thing: ThingSchemaType) => thing.thing_id === value.valueAsThing_id
+            (thing) => thing.thing_id === value.valueAsThing_id
           )
           if (thing) {
             value.valueAsThing = thing
@@ -129,7 +117,7 @@ export async function getAnswers({
     }
 
     const amountOfAnswers = values.reduce(
-      (acc: number, value: ExtendedValueSchemaType) => acc + value._count._all,
+      (acc, value) => acc + value._count._all,
       0
     )
 
