@@ -4,17 +4,21 @@
 
 @layer base {
   :root {
-    --primary: 266 87% 41%;
+    --h: 266;
+    --s: 87%;
+    --l: 41%;
+    --hs: var(--h) var(--s);
+    --primary: var(--hs) var(--l);
     --primary-foreground: 0 0% 100%;
-    --secondary: 267 94% 6%;
-    --secondary-foreground: 275 86% 95%;
-    --background: 277 100% 95%;
+    --secondary: var(--hs) 6%;
+    --secondary-foreground: var(--hs) 95%;
+    --background: var(--hs) 93%;
     --foreground: var(--primary);
-    --card: 270 71% 89%;
+    --card: var(--hs) 89%;
     --card-foreground: var(--primary);
-    --popover: 270 71% 89%;
+    --popover: var(--hs) 89%;
     --popover-foreground: var(--primary);
-    --muted: 270 71% 89%;
+    --muted: var(--hs) 89%;
     --muted-foreground: var(--primary);
     --accent: var(--primary);
     --accent-foreground: 0 0% 100%;
@@ -28,17 +32,21 @@
 }
 
 .dark {
-  --primary: 266 87% 41%;
+  --h: 266;
+  --s: 87%;
+  --l: 41%;
+  --hs: var(--h) var(--s);
+  --primary: var(--hs) var(--l);
   --primary-foreground: 0 0% 100%;
   --secondary: 0 0% 100%;
-  --secondary-foreground: 267 94% 6%;
-  --background: 270 100% 7%;
+  --secondary-foreground: var(--hs) 6%;
+  --background: var(--hs) 7%;
   --foreground: 0 0% 100%;
-  --card: 267 94% 13%;
+  --card: var(--hs) 13%;
   --card-foreground: 0 0% 100%;
-  --popover: 267 94% 13%;
+  --popover: var(--hs) 13%;
   --popover-foreground: 0 0% 100%;
-  --muted: 267 94% 13%;
+  --muted: var(--hs) 13%;
   --muted-foreground: 0 0% 100%;
   --accent: var(--primary);
   --accent-foreground: 0 0% 100%;
