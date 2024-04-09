@@ -2,7 +2,12 @@
 
 import { auth } from '@/lib/auth'
 import { isSignedOut } from '@/lib/isSignedIn'
-import { SaveAnswerSchema, SaveAnswerSchemaType, prisma } from '@/lib/prisma'
+import {
+  SaveAnswerSchema,
+  SaveAnswerSchemaType,
+  prisma,
+  type PrismaType,
+} from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 
 export async function saveAnswer(data: SaveAnswerSchemaType) {
@@ -12,7 +17,7 @@ export async function saveAnswer(data: SaveAnswerSchemaType) {
     // check if logged in
     const session = await auth()
     if (isSignedOut(session)) {
-      console.error('ERROR_2e8d3f', 'user is required')
+      console.error('ERROR_dGIy7X8s', 'user is required')
       return false
     }
     // @ts-ignore already checked in isSignedOut()
@@ -38,55 +43,35 @@ export async function saveAnswer(data: SaveAnswerSchemaType) {
           question_id: validatedDataFields.data.isAnswering_id,
         },
       },
-      context: {
-        create: validatedDataFields.data.context.map((context) => ({
-          ...context,
-          createdBy_id: userId,
-        })),
-      },
-      values: {
-        create: validatedDataFields.data.values.map((value) => ({
-          ...value,
-          createdBy_id: userId,
-        })),
-        // create: validatedDataFields.data.values.map((value) => {
-        //   if (value.valueAsThing_id) {
-        //     return {
-        //       ...value,
-        //       valueAsThing_id: undefined,
-        //       valueAsThing: {
-        //         connect: {
-        //           thing_id: value.valueAsThing_id,
-        //         },
-        //       },
-        //       // createdBy: {
-        //       //   connect: {
-        //       //     id: userId,
-        //       //   },
-        //       // },
-        //     }
-        //   }
-        //
-        //   return {
-        //     ...value,
-        //     valueAsThing_id: undefined,
-        //     // createdBy: {
-        //     //   connect: {
-        //     //     id: userId,
-        //     //   },
-        //     // },
-        //   }
-        // }),
-      },
     }
 
-    ;(async () => {
-      await prisma.answer.create({
-        relationLoadStrategy: 'join', // or 'query'
-        data: dataObj as any,
-      })
-      revalidatePath('/q', 'page')
-    })()
+    const answerResponse = await prisma.answer.create({
+      relationLoadStrategy: 'join', // or 'query'
+      data: dataObj as any,
+    })
+    revalidatePath('/q', 'page')
+
+    if (answerResponse && answerResponse.answer_id) {
+      ;(async () => {
+        await prisma.context.createMany({
+          data: validatedDataFields.data.context.map((context) => ({
+            ...context,
+            createdBy_id: userId,
+            isContextFor_id: answerResponse.answer_id,
+          })) as PrismaType.ContextCreateManyInput[],
+        })
+
+        await prisma.value.createMany({
+          data: validatedDataFields.data.values.map((value) => ({
+            ...value,
+            createdBy_id: userId,
+            isValueFor_id: answerResponse.answer_id,
+          })) as PrismaType.ValueCreateManyInput[],
+        })
+
+        revalidatePath('/q', 'page')
+      })()
+    }
 
     return true
   } catch (error) {
