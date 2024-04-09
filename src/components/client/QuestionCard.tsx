@@ -22,6 +22,7 @@ import {
   ValueSchemaType,
 } from '@/lib/prisma'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useState } from 'react'
 
 type AnswerButtonsProps = {
@@ -308,28 +309,27 @@ export function QuestionCard({
   aboutThing?: ThingSchemaType
 }) {
   const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
 
   const answer = useCallback(
     async ({ value }: { value: ValueSchemaType }) => {
       setIsLoading(true)
 
-      // don't await the function, to be faster. saving to the db takes about 1-2 seconds. thats too long of a wait time.
-      ;(async () => {
-        await saveAnswer({
-          isAnswering_id: question.question_id,
-          values: [value],
-          context: [
-            {
-              time: new Date(),
-              aboutThing_id: aboutThing ? aboutThing.thing_id : null,
-            },
-          ],
-        })
-      })()
+      await saveAnswer({
+        isAnswering_id: question.question_id,
+        values: [value],
+        context: [
+          {
+            time: new Date(),
+            aboutThing_id: aboutThing ? aboutThing.thing_id : null,
+          },
+        ],
+      })
 
-      window.location.reload()
+      router.refresh()
+      setIsLoading(false)
     },
-    [question.question_id, aboutThing]
+    [question.question_id, aboutThing, router]
   )
 
   const skip = useCallback(() => {
@@ -339,7 +339,7 @@ export function QuestionCard({
 
   return (
     <React.Fragment key={question.question_id}>
-      <Headline type="h2" className="border-0 opacity-30">
+      <Headline type="h2" className="border-0">
         Answer the question to know what others think…
       </Headline>
       <Card>
