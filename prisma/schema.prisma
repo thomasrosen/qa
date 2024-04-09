@@ -116,25 +116,25 @@ enum SchemaType {
 
 model Thing {
   /// similar to the schema.org Thing
-  thing_id        String      @id @default(cuid())
-  index           Int         @default(autoincrement())
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
-  createdBy       User        @relation("Thing.createdBy", fields: [createdBy_id], references: [id])
-  createdBy_id    String
+  thing_id           String      @id @default(cuid())
+  index              Int         @default(autoincrement())
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+  createdBy          User        @relation("Thing.createdBy", fields: [createdBy_id], references: [id])
+  createdBy_id       String
   //
-  type            SchemaType? /// empty is just a generic thing
-  name            String?
-  locale          String? /// any locale string
-  sameAs          String[] /// could a wikidata-url
-  jsonld          Json? /// JSON-LD: For a word/DefinedTerm this could contain a wikidata-id as the termCode. Or an email for a person.
-  canBeUsed       Boolean?    @default(false) /// if this thing can be used in anywhere in the app
+  type               SchemaType? /// empty is just a generic thing
+  name               String?
+  locale             String? /// any locale string
+  sameAs             String[] /// could a wikidata-url
+  jsonld             Json? /// JSON-LD: For a word/DefinedTerm this could contain a wikidata-id as the termCode. Or an email for a person.
+  canBeUsed          Boolean?    @default(false) /// if this thing can be used in anywhere in the app
   // publishedBy    User       @relation("Thing.publishedBy", fields: [publishedBy_id], references: [id])
   // publishedBy_id String
   //
   Context_aboutThing Context[]   @relation("Context.aboutThing")
-  isUsedInValues  Value[]     @relation("Value.thing")
-  isOptionFor     Question[]  @relation("Thing.isOptionFor")
+  isUsedInValues     Value[]     @relation("Value.thing")
+  isOptionFor        Question[]  @relation("Thing.isOptionFor")
 }
 
 /// @zod.refine(schema => schema.expectedValueType === 'Thing' ? schema.expectedThingTypes.length > 0 : true, { path: ['expectedThingTypes'], message: 'expectedThingTypes must be set when expectedValueType is Thing' })
@@ -212,8 +212,8 @@ model Context {
   //
   time            DateTime? @default(now()) /// could be different from the createdAt
   geoJson         Json? /// any GeoJSON (point, polygon, etc)
-  aboutThing         Thing?    @relation("Context.aboutThing", fields: [aboutThing_id], references: [thing_id]) /// could be a defined term or a person if answering about themselves
-  aboutThing_id      String?
+  aboutThing      Thing?    @relation("Context.aboutThing", fields: [aboutThing_id], references: [thing_id]) /// could be a defined term or a person if answering about themselves
+  aboutThing_id   String?
   //
   isContextFor    Answer    @relation("Context.isContextFor", fields: [isContextFor_id], references: [answer_id])
   isContextFor_id String
