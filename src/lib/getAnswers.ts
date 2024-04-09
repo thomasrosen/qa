@@ -1,13 +1,13 @@
 // import { auth } from '@/lib/auth';
 // import { isSignedOut } from '@/lib/isSignedIn';
-import { ExtendedValueSchemaType, prisma } from '@/lib/prisma'
+import { ExtendedValueSchemaType, prisma, PrismaType } from '@/lib/prisma'
 
 export async function getAnswers({
   question_id,
-  isAbout_id,
+  aboutThing_id,
 }: {
   question_id: string
-  isAbout_id?: string
+  aboutThing_id?: string
 }) {
   const defaultReturn = {
     amountOfAnswers: 0,
@@ -27,19 +27,14 @@ export async function getAnswers({
       return defaultReturn
     }
 
-    const where: {
-      isValueFor: {
-        isAnswering_id: string
-        isAbout_id?: string
-      }
-    } = {
+    const where: PrismaType.ValueWhereInput = {
       isValueFor: {
         isAnswering_id: question_id,
       },
     }
 
-    if (isAbout_id) {
-      where.isValueFor.isAbout_id = isAbout_id
+    if (aboutThing_id && where.isValueFor) {
+      where.isValueFor.context = { some: { aboutThing_id } }
     }
 
     const newestValue = await prisma.value.findFirst({

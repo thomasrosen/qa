@@ -313,12 +313,19 @@ export function QuestionCard({
     async ({ value }: { value: ValueSchemaType }) => {
       setIsLoading(true)
 
-      // await to be after the revalidation
-      await saveAnswer({
-        isAnswering_id: question.question_id,
-        values: [value],
-        isAbout_id: aboutThing ? aboutThing.thing_id : null,
-      })
+      // don't await the function, to be faster. saving to the db takes about 1-2 seconds. thats too long of a wait time.
+      ;(async () => {
+        await saveAnswer({
+          isAnswering_id: question.question_id,
+          values: [value],
+          context: [
+            {
+              time: new Date(),
+              aboutThing_id: aboutThing ? aboutThing.thing_id : null,
+            },
+          ],
+        })
+      })()
 
       window.location.reload()
     },
@@ -332,7 +339,7 @@ export function QuestionCard({
 
   return (
     <React.Fragment key={question.question_id}>
-      <Headline type="h2">
+      <Headline type="h2" className="border-0 opacity-30">
         Answer the question to know what others think…
       </Headline>
       <Card>

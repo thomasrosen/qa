@@ -52,15 +52,15 @@ datasource db {
 // }
 
 model User {
-  id               String     @id @default(cuid())
-  index            Int        @default(autoincrement())
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime   @updatedAt
+  id              String     @id @default(cuid())
+  index           Int        @default(autoincrement())
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
   //
-  name             String?
-  email            String?    @unique
-  emailVerified    DateTime?
-  image            String?
+  name            String?
+  email           String?    @unique
+  emailVerified   DateTime?
+  image           String?
   //
   // accounts      Account[]
   // sessions      Session[]
@@ -69,10 +69,11 @@ model User {
   // publishedThings    Thing[]    @relation("Thing.publishedBy")
   // publishedQuestions Question[] @relation("Question.publishedBy")
   //
-  createdQuestions Question[] @relation("Question.createdBy")
-  createdThings    Thing[]    @relation("Thing.createdBy")
-  createdAnswers   Answer[]   @relation("Answer.createdBy")
-  createdValues    Value[]    @relation("Value.createdBy")
+  createdQuestion Question[] @relation("Question.createdBy")
+  createdThing    Thing[]    @relation("Thing.createdBy")
+  createdAnswer   Answer[]   @relation("Answer.createdBy")
+  createdValue    Value[]    @relation("Value.createdBy")
+  createdContext  Context[]  @relation("Context.createdBy")
 }
 
 model VerificationToken {
@@ -115,25 +116,25 @@ enum SchemaType {
 
 model Thing {
   /// similar to the schema.org Thing
-  thing_id       String      @id @default(cuid())
-  index          Int         @default(autoincrement())
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
-  createdBy      User        @relation("Thing.createdBy", fields: [createdBy_id], references: [id])
-  createdBy_id   String
+  thing_id        String      @id @default(cuid())
+  index           Int         @default(autoincrement())
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  createdBy       User        @relation("Thing.createdBy", fields: [createdBy_id], references: [id])
+  createdBy_id    String
   //
-  type           SchemaType? /// empty is just a generic thing
-  name           String?
-  locale         String? /// any locale string
-  sameAs         String[] /// could a wikidata-url
-  jsonld         Json? /// JSON-LD: For a word/DefinedTerm this could contain a wikidata-id as the termCode. Or an email for a person.
-  canBeUsed      Boolean?    @default(false) /// if this thing can be used in anywhere in the app
+  type            SchemaType? /// empty is just a generic thing
+  name            String?
+  locale          String? /// any locale string
+  sameAs          String[] /// could a wikidata-url
+  jsonld          Json? /// JSON-LD: For a word/DefinedTerm this could contain a wikidata-id as the termCode. Or an email for a person.
+  canBeUsed       Boolean?    @default(false) /// if this thing can be used in anywhere in the app
   // publishedBy    User       @relation("Thing.publishedBy", fields: [publishedBy_id], references: [id])
   // publishedBy_id String
   //
-  Answer_isAbout Answer[]    @relation("Answer.isAbout")
-  isUsedInValues Value[]     @relation("Value.thing")
-  isOptionFor    Question[]  @relation("Thing.isOptionFor")
+  Context_aboutThing Context[]   @relation("Context.aboutThing")
+  isUsedInValues  Value[]     @relation("Value.thing")
+  isOptionFor     Question[]  @relation("Thing.isOptionFor")
 }
 
 /// @zod.refine(schema => schema.expectedValueType === 'Thing' ? schema.expectedThingTypes.length > 0 : true, { path: ['expectedThingTypes'], message: 'expectedThingTypes must be set when expectedValueType is Thing' })
@@ -163,18 +164,21 @@ model Question {
 
 model Answer {
   /// similar to the schema.org FindAction
-  answer_id      String   @id @default(cuid())
-  index          Int      @default(autoincrement())
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  createdBy      User     @relation("Answer.createdBy", fields: [createdBy_id], references: [id])
+  answer_id      String    @id @default(cuid())
+  index          Int       @default(autoincrement())
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  createdBy      User      @relation("Answer.createdBy", fields: [createdBy_id], references: [id])
   createdBy_id   String
   //
-  values         Value[]  @relation("Value.isValueFor")
-  isAnswering    Question @relation("Answer.isAnswering", fields: [isAnswering_id], references: [question_id])
+  isAnswering    Question  @relation("Answer.isAnswering", fields: [isAnswering_id], references: [question_id])
   isAnswering_id String
-  isAbout        Thing?   @relation("Answer.isAbout", fields: [isAbout_id], references: [thing_id]) /// could be a defined term or a person if answering about themselves
-  isAbout_id     String?
+  //
+  context        Context[] @relation("Context.isContextFor") /// 
+  values         Value[]   @relation("Value.isValueFor") /// the actual answers
+  //
+  // isAbout        Thing?   @relation("Answer.isAbout", fields: [isAbout_id], references: [thing_id]) /// could be a defined term or a person if answering about themselves
+  // isAbout_id     String?
   // isAnsweredByAgent    User     @relation("Answer.isAnsweredByAgent", fields: [isAnsweredByAgent_id], references: [id]) /// the person who answered
   // isAnsweredByAgent_id String
 }
@@ -196,4 +200,21 @@ model Value {
   //
   isValueFor      Answer   @relation("Value.isValueFor", fields: [isValueFor_id], references: [answer_id])
   isValueFor_id   String
+}
+
+model Context {
+  context_id      String    @id @default(cuid())
+  index           Int       @default(autoincrement())
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  createdBy       User?     @relation("Context.createdBy", fields: [createdBy_id], references: [id])
+  createdBy_id    String?
+  //
+  time            DateTime? @default(now()) /// could be different from the createdAt
+  geoJson         Json? /// any GeoJSON (point, polygon, etc)
+  aboutThing         Thing?    @relation("Context.aboutThing", fields: [aboutThing_id], references: [thing_id]) /// could be a defined term or a person if answering about themselves
+  aboutThing_id      String?
+  //
+  isContextFor    Answer    @relation("Context.isContextFor", fields: [isContextFor_id], references: [answer_id])
+  isContextFor_id String
 }

@@ -1,6 +1,8 @@
 import { Prisma, PrismaClient, type Prisma as PrismaType } from '@prisma/client'
 import { z } from 'zod'
 
+export { PrismaType }
+
 const prismaClientSingleton = () => {
   // source: https://www.prisma.io/docs/orm/more/help-and-troubleshooting/help-articles/nextjs-prisma-client-dev-practices
   return new PrismaClient()
@@ -121,9 +123,23 @@ export const ValueSchema = z.object({
   createdBy_id: z.string().nullable().optional(),
 })
 export type ValueSchemaType = z.input<typeof ValueSchema>
-
 export type ExtendedValueSchemaType = ValueSchemaType & {
   valueAsThing?: any
+  _count: {
+    _all: number
+  }
+}
+
+export const ContextSchema = z.object({
+  time: z.date().nullable(),
+  geoJson: z.any(),
+  aboutThing: ThingSchema.nullable().optional(),
+  aboutThing_id: z.string().nullable().optional(),
+  createdBy: UserSchema.nullable().optional(),
+  createdBy_id: z.string().nullable().optional(),
+})
+export type ContextSchemaType = z.input<typeof ContextSchema>
+export type ExtendedContextSchemaType = ContextSchemaType & {
   _count: {
     _all: number
   }
@@ -132,14 +148,14 @@ export type ExtendedValueSchemaType = ValueSchemaType & {
 export type AnswerType = {
   answer_id?: string
   isAnswering?: QuestionSchemaType | null
+  context?: ContextSchemaType[]
   values?: ValueSchemaType[]
-  isAbout?: ThingSchemaType | null
   isAnsweredByAgent?: UserSchemaType | null
 }
 
 export const SaveAnswerSchema = z.object({
   isAnswering_id: z.string().nullable().optional(),
   values: ValueSchema.array(),
-  isAbout_id: z.string().nullable().optional(),
+  context: ContextSchema.array(),
 })
 export type SaveAnswerSchemaType = z.input<typeof SaveAnswerSchema>

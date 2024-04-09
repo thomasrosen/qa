@@ -38,6 +38,12 @@ export async function saveAnswer(data: SaveAnswerSchemaType) {
           question_id: validatedDataFields.data.isAnswering_id,
         },
       },
+      context: {
+        create: validatedDataFields.data.context.map((context) => ({
+          ...context,
+          createdBy_id: userId,
+        })),
+      },
       values: {
         create: validatedDataFields.data.values.map((value) => ({
           ...value,
@@ -72,14 +78,6 @@ export async function saveAnswer(data: SaveAnswerSchemaType) {
         //   }
         // }),
       },
-    }
-
-    if (validatedDataFields.data.isAbout_id) {
-      dataObj.isAbout = {
-        connect: {
-          thing_id: validatedDataFields.data.isAbout_id,
-        },
-      }
     }
 
     ;(async () => {

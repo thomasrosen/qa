@@ -29,6 +29,13 @@ function getLabel(value: ExtendedValueSchemaType) {
   return 'Unknown'
 }
 
+function getFirstValue(value: unknown[] | undefined): unknown {
+  if (!value || value.length === 0) {
+    return undefined
+  }
+  return value[0]
+}
+
 export async function AnswerChart({ answer }: { answer?: AnswerType | null }) {
   if (!answer) {
     return null
@@ -42,7 +49,7 @@ export async function AnswerChart({ answer }: { answer?: AnswerType | null }) {
 
   const { amountOfAnswers, newestValueDate, values } = await getAnswers({
     question_id: answer.isAnswering.question_id,
-    isAbout_id: answer.isAbout?.thing_id,
+    aboutThing_id: (getFirstValue(answer.context) as any)?.aboutThing?.thing_id, // TODO fix type
   })
 
   let data: {
@@ -58,7 +65,7 @@ export async function AnswerChart({ answer }: { answer?: AnswerType | null }) {
     }))
   }
 
-  const aboutThing = answer.isAbout
+  const aboutThing = (getFirstValue(answer.context) as any)?.aboutThing // TODO fix type
 
   return (
     <Card className="aspect-square flex flex-col">

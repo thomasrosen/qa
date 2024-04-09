@@ -23,13 +23,13 @@ export async function getLatestAnswers({
       where: {
         createdBy_id: user_id,
       },
-      distinct: ['createdBy_id', 'isAnswering_id', 'isAbout_id'],
+      distinct: ['createdBy_id', 'isAnswering_id'], // TODO about is missing here
       orderBy: {
         updatedAt: 'desc',
       },
       include: {
         isAnswering: true,
-        isAbout: true,
+        context: true,
       },
       take,
     })
