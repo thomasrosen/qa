@@ -31,5 +31,13 @@ export function ScreenshotElement({
     }
   }
 
-  return <div {...props} ref={wrapperRef} onClick={takeScreenshot} />
+  return (
+    <div
+      {...props}
+      ref={wrapperRef}
+      onClick={takeScreenshot}
+      title="Take a Screenshot"
+      aria-label="Take a Screenshot"
+    />
+  )
 }
