@@ -86,7 +86,7 @@ export const QuestionSchema = z
     answerThingTypes: SchemaTypeSchema.array(),
     answerThingOptions: z.any().array().optional(), // TODO can the any be removed?
     answerStringOptions: z.string().array().optional(),
-    allowCreateNewOption: z.boolean().optional(),
+    allowCreateNewOption: z.boolean().nullable().optional(),
   })
   .refine(
     (schema) =>
@@ -110,7 +110,7 @@ export const ThingSchema = z.object({
     .min(2, { message: 'Locale must be at least 2 characters long.' })
     .nullable(),
   sameAs: z.string().array(),
-  jsonld: JsonValueSchema.optional(),
+  jsonld: z.any().nullable().optional(), // JsonValueSchema.optional(),
 })
 export type ThingSchemaType = z.input<typeof ThingSchema>
 

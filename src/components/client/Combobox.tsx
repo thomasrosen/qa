@@ -34,7 +34,7 @@ type ComboboxProps = {
   onChange?: (value: string[]) => void
   multiple?: boolean
   selected: string[]
-  allowCustom?: boolean
+  allowCustom?: boolean | null
 }
 export function Combobox({
   options,
@@ -109,7 +109,9 @@ export function Combobox({
           <CommandInput
             value={search}
             onValueChange={setSearch}
-            placeholder={allowCustom ? 'Search or create new…' : 'Search...'}
+            placeholder={
+              allowCustom === true ? 'Search or create new…' : 'Search...'
+            }
           />
           <CommandEmpty>{searchFallback ?? 'Nothing found.'}</CommandEmpty>
           <CommandGroup>
