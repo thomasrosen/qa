@@ -104,7 +104,7 @@ export const BarChart = ({
       tooltip={({ value, indexValue, data, ...props }) => (
         <Card>
           <CardHeader className="p-4">
-            <CardDescription>
+            <CardDescription className="p-0 m-0">
               <strong>{data.label}</strong>: {data.value} (
               {Math.round((value / total) * 100)}%)
             </CardDescription>
