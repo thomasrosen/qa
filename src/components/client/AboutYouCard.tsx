@@ -57,8 +57,11 @@ export function AboutYouCard({
         <CardTitle>About You</CardTitle>
 
         <CardDescription>
-          This answer will be grouped together with your other answers.{' '}
-          <Link href="/imprint">Learn more…</Link>
+          Your answers will be grouped together under the following identifier.
+          You can reset this identifier at any time.{' '}
+          <Link href="/imprint" className="inline-block">
+            Learn more…
+          </Link>
         </CardDescription>
       </CardHeader>
 
