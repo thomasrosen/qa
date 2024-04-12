@@ -2,9 +2,11 @@ import { AnswerChart } from '@/components/AnswerChart'
 import { Headline } from '@/components/Headline'
 import NextQuestion from '@/components/NextQuestion'
 import { SignIn } from '@/components/client/SignIn'
+import { Button } from '@/components/ui/button'
 import { auth } from '@/lib/auth'
 import { getLatestAnswers } from '@/lib/getLatestAnswers'
 import { isSignedOut } from '@/lib/isSignedIn'
+import Link from 'next/link'
 import { Suspense } from 'react'
 
 export const dynamic = 'force-dynamic'
@@ -18,9 +20,14 @@ async function LatestAnswerWrapper() {
 
   return (
     <section className="flex flex-col gap-4 mb-4 place-content-center">
-      <Headline type="h2" className="border-0 p-0 mt-8 mb-2">
-        Recent Answers
-      </Headline>
+      <div className="mb-2 mt-8 flex justify-between items-center">
+        <Headline type="h2" className="border-0 p-0 m-0">
+          Your most recent answer
+        </Headline>
+        <Link href="/you">
+          <Button variant="outline">All Answers</Button>
+        </Link>
+      </div>
       {latestAnswers.filter(Boolean).map((latestAnswer) => (
         <AnswerChart key={latestAnswer.answer_id} answer={latestAnswer} />
       ))}
