@@ -15,6 +15,7 @@ type InputProps = {
   description?: string
   input?: (field: ControllerRenderProps<FieldValues, string>) => React.ReactNode
   inputHasFormControl?: boolean
+  className?: string
 }
 export function FormInput({
   form,
@@ -23,13 +24,14 @@ export function FormInput({
   description,
   input,
   inputHasFormControl = false,
+  className,
 }: InputProps) {
   return (
     <FormField
       control={form.control}
       name={name}
       render={({ field }) => (
-        <FormItem>
+        <FormItem className={className}>
           {label && <FormLabel>{label}</FormLabel>}
           {inputHasFormControl ? (
             input && input(field)
@@ -44,5 +46,3 @@ export function FormInput({
     />
   )
 }
-
-// <Input placeholder="" {...field} value={field.value ?? defaultValue} />

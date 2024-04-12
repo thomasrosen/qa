@@ -93,7 +93,7 @@ export async function AnswerChart({ answer }: { answer?: AnswerType | null }) {
                 />
               </Suspense>
             </div>
-            <P type="muted" className="mb-0">
+            <P type="ghost" className="mb-0">
               This is what people have answered before{' '}
               {newestValueDate
                 ? new Intl.DateTimeFormat(DEFAULT_LOCALE, {

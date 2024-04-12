@@ -3,6 +3,7 @@ import { QuestionCard } from '@/components/client/QuestionCard'
 import { getQuestion } from '@/lib/getQuestion'
 import { getRandomQuestion } from '@/lib/getRandomQuestion'
 import { getRandomThing } from '@/lib/getRandomThing'
+import { Headline } from './Headline'
 
 export default async function NextQuestion({ id }: { id?: string }) {
   let question = null
@@ -46,6 +47,9 @@ export default async function NextQuestion({ id }: { id?: string }) {
   return (
     <>
       <section className="flex flex-col gap-4 mb-4 place-content-center">
+        <Headline type="h2" className="border-0 p-0 mt-8 mb-2">
+          Answer the question to know what others think…
+        </Headline>
         <QuestionCard
           question={question}
           aboutThing={aboutThing ?? undefined}

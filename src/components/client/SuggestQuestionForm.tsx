@@ -32,8 +32,9 @@ import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
+import { Checkbox } from '../ui/checkbox'
 
-export function InputForm({
+export function SuggestQuestionForm({
   question,
 }: {
   question?: QuestionSchemaType | null
@@ -56,6 +57,8 @@ export function InputForm({
       aboutThingTypes: [],
       answerType: undefined,
       answerThingTypes: [],
+      answerStringOptions: [],
+      allowCreateNewOption: true, // not for things or booleans
       ...question,
       answerThingOptions:
         (question?.answerThingOptions || []).map((thing) => thing.thing_id) ||
@@ -157,9 +160,7 @@ export function InputForm({
                 ].filter(Boolean),
               }))}
               placeholder="Select a Locale…"
-              renderLabel={(option) => (
-                <ComboBoxBadge>{option.label || option.value}</ComboBoxBadge>
-              )}
+              renderLabel={(option) => option.label || option.value}
               onChange={(values) => field.onChange(values[0])}
             />
           )}
@@ -192,9 +193,13 @@ export function InputForm({
                 value: option,
               }))}
               placeholder="Select a SchemaType…"
-              renderLabel={(option) => (
-                <ComboBoxBadge>{option.value}</ComboBoxBadge>
-              )}
+              renderLabel={(option, { place }) =>
+                place === 'button' ? (
+                  <ComboBoxBadge>{option.value}</ComboBoxBadge>
+                ) : (
+                  option.value
+                )
+              }
               multiple={true}
               onChange={(values) => field.onChange(values)}
             />
@@ -254,9 +259,13 @@ export function InputForm({
                     value: option,
                   }))}
                   placeholder="Select a SchemaType…"
-                  renderLabel={(option) => (
-                    <ComboBoxBadge>{option.value}</ComboBoxBadge>
-                  )}
+                  renderLabel={(option, { place }) =>
+                    place === 'button' ? (
+                      <ComboBoxBadge>{option.value}</ComboBoxBadge>
+                    ) : (
+                      option.value
+                    )
+                  }
                   multiple={true}
                   onChange={(values) => {
                     field.onChange(values)
@@ -295,6 +304,47 @@ export function InputForm({
             )}
           </>
         ) : null}
+        {answerType === 'String' ? (
+          <FormInput
+            form={form}
+            name="answerStringOptions"
+            label="Text Options"
+            input={(field) => (
+              <Combobox
+                allowCustom={true}
+                multiple={true}
+                selected={
+                  Array.isArray(field.value) ? field.value.filter(Boolean) : []
+                }
+                options={[]}
+                placeholder="Create a Text…"
+                renderLabel={(option, { place }) =>
+                  place === 'button' ? (
+                    <ComboBoxBadge>{option.value}</ComboBoxBadge>
+                  ) : (
+                    option.value
+                  )
+                }
+                onChange={(values) => field.onChange(values)}
+              />
+            )}
+          />
+        ) : null}
+        {answerType === 'String' ? (
+          <FormInput
+            className="flex flex-row-reverse items-center justify-end gap-4"
+            form={form}
+            name="allowCreateNewOption"
+            label="Can users create new options?"
+            input={(field) => (
+              <Checkbox
+                className="!my-0"
+                checked={field.value}
+                onCheckedChange={field.onChange}
+              />
+            )}
+          />
+        ) : null}
 
         <Button type="submit" disabled={isSubmitting}>
           Suggest Question
@@ -302,14 +352,5 @@ export function InputForm({
         {isSubmitting ? <P>Sending your suggestion…</P> : null}
       </form>
     </Form>
-  )
-}
-
-export default function SuggestQuestion() {
-  return (
-    <section className="flex flex-col gap-4">
-      <Headline type="h2">Suggest a Question</Headline>
-      <InputForm />
-    </section>
   )
 }

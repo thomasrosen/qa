@@ -1,7 +1,16 @@
-export function ComboBoxBadge({ children }: { children: React.ReactNode }) {
+import { cn } from '@/lib/utils'
+
+export function ComboBoxBadge({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <span className="bg-card text-card-foreground rounded-xs -ms-1 px-3 py-1">
-      {children}
-    </span>
+    <div
+      className={cn(
+        'bg-card text-card-foreground rounded-xs -ms-1 px-3 py-1 whitespace-normal',
+        className
+      )}
+      {...props}
+    />
   )
 }

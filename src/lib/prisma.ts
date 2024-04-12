@@ -84,7 +84,9 @@ export const QuestionSchema = z
     aboutThingTypes: SchemaTypeSchema.array(),
     answerType: DataTypeSchema,
     answerThingTypes: SchemaTypeSchema.array(),
-    answerThingOptions: z.any().array().optional(),
+    answerThingOptions: z.any().array().optional(), // TODO can the any be removed?
+    answerStringOptions: z.string().array().optional(),
+    allowCreateNewOption: z.boolean().optional(),
   })
   .refine(
     (schema) =>

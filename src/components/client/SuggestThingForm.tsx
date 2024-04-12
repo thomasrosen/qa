@@ -3,7 +3,6 @@
 import { suggestThing } from '@/actions/suggestThing'
 import { ComboBoxBadge } from '@/components/ComboBoxBadge'
 import { FormInput } from '@/components/FormInput'
-import { Headline } from '@/components/Headline'
 import { AutoGrowTextarea } from '@/components/client/AutogrowTextarea'
 import { Combobox } from '@/components/client/Combobox'
 import { Button } from '@/components/ui/button'
@@ -19,15 +18,20 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
-function InputForm() {
+export function SuggestThingForm({
+  thing,
+}: {
+  thing?: ThingSchemaType | null
+}) {
   const form = useForm<ThingSchemaType>({
     resolver: zodResolver(ThingSchema),
     defaultValues: {
-      type: 'DefinedTerm',
+      type: undefined,
       name: '',
-      locale: 'en',
+      locale: '',
       sameAs: [],
       jsonld: null,
+      ...thing,
     },
   })
 
@@ -162,14 +166,5 @@ function InputForm() {
         <Button type="submit">Suggest Thing</Button>
       </form>
     </Form>
-  )
-}
-
-export default function SuggestThing() {
-  return (
-    <section className="flex flex-col gap-4">
-      <Headline type="h2">Suggest a Thing</Headline>
-      <InputForm />
-    </section>
   )
 }

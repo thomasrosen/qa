@@ -12,6 +12,8 @@ export async function suggestQuestion(data: QuestionSchemaType) {
       console.error('ERROR_qGzNvYvh', 'user is required')
       return false
     }
+    // @ts-ignore Is already checked in isSignedOut()
+    const user_id = session.user.id
 
     const validatedFields = QuestionSchema.safeParse(data)
 
@@ -33,8 +35,7 @@ export async function suggestQuestion(data: QuestionSchemaType) {
       },
       createdBy: {
         connect: {
-          // @ts-ignore Is already checked in isSignedOut()
-          id: session.user.id,
+          id: user_id,
         },
       },
     }
@@ -43,6 +44,9 @@ export async function suggestQuestion(data: QuestionSchemaType) {
       await prisma.question.upsert({
         where: {
           question_id,
+          createdBy: {
+            id: user_id,
+          },
         },
         update: {
           ...validatedFields.data,

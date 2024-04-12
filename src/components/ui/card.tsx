@@ -1,6 +1,8 @@
 import * as React from 'react'
 
 import { cn } from '@/lib/utils'
+import { Headline } from '../Headline'
+import { P } from '../P'
 
 const Card = React.forwardRef<
   HTMLDivElement,
@@ -32,28 +34,13 @@ CardHeader.displayName = 'CardHeader'
 const CardTitle = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLHeadingElement>
->(({ className, ...props }, ref) => (
-  <h3
-    ref={ref}
-    className={cn(
-      'text-2xl font-semibold leading-none tracking-tight',
-      className
-    )}
-    {...props}
-  />
-))
+>((props, ref) => <Headline type="h3" ref={ref} {...props} />)
 CardTitle.displayName = 'CardTitle'
 
 const CardDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
->(({ className, ...props }, ref) => (
-  <p
-    ref={ref}
-    className={cn('text-sm text-muted-foreground', className)}
-    {...props}
-  />
-))
+>((props, ref) => <P type="muted" ref={ref} {...props} />)
 CardDescription.displayName = 'CardDescription'
 
 const CardContent = React.forwardRef<

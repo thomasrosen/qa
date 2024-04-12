@@ -3,7 +3,7 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["relationJoins"]
+  previewFeatures = ["relationJoins","postgresqlExtensions"]
 }
 
 // generator zod {
@@ -14,6 +14,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  extensions = [vector]
 }
 
 // model Account {
@@ -155,6 +156,11 @@ model Question {
   answerType         DataType
   answerThingTypes   SchemaType[] /// if the expectedAnswerType is Thing, this would be the possible types of this thing
   answerThingOptions Thing[]      @relation("Thing.isOptionFor") /// if the expectedAnswerType is Thing, this would be the possible options of this thing
+  
+  answerStringOptions String[] /// if the expectedAnswerType is String, this would be the possible options of this
+  allowCreateNewOption     Boolean?     @default(false) /// if the user can answer with their own answer
+  //allowMultipleAnswers Boolean?   @default(false) /// if the user can answer with multiple answers
+
   canBeUsed          Boolean?     @default(false) /// if this thing can be used in anywhere in the app
   // publishedBy        User        @relation("Question.publishedBy", fields: [publishedBy_id], references: [id])
   // publishedBy_id     String
@@ -217,4 +223,15 @@ model Context {
   //
   isContextFor    Answer    @relation("Context.isContextFor", fields: [isContextFor_id], references: [answer_id])
   isContextFor_id String
+}
+
+model OpenAiIndex {
+  index     Int                    @default(autoincrement())
+  createdAt DateTime               @default(now())
+  id        String                 @id @default(cuid())
+  content   String
+  embedding Unsupported("vector(1536)")?
+  metadata  Json?
+
+  @@map("OpenAiIndex")
 }

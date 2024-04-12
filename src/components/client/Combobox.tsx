@@ -26,7 +26,10 @@ type Option = {
 type ComboboxProps = {
   options: Option[]
   searchFallback?: React.ReactNode
-  renderLabel?: (choosenOption: Option) => React.ReactNode
+  renderLabel?: (
+    chosenOption: Option,
+    infos: { place: 'button' | 'list' }
+  ) => React.ReactNode
   placeholder?: string
   onChange?: (value: string[]) => void
   multiple?: boolean
@@ -46,14 +49,14 @@ export function Combobox({
   const [open, setOpen] = useState(false)
   const [search, setSearch] = useState('')
 
-  let choosenOptions: Option[] = []
+  let chosenOptions: Option[] = []
   if (Array.isArray(selected)) {
-    choosenOptions = selected.map(
+    chosenOptions = selected.map(
       (value) => options.find((option) => option.value === value) ?? { value }
     )
   }
 
-  const additionalChoosenOptions = choosenOptions.filter(
+  const additionalChosenOptions = chosenOptions.filter(
     (option) => !options.includes(option)
   )
 
@@ -65,7 +68,7 @@ export function Combobox({
     (option) =>
       allowCustom === true &&
       option.value !== '' &&
-      additionalChoosenOptions
+      additionalChosenOptions
         .concat(options)
         .find((o) => o.value === option.value) === undefined
   )
@@ -80,21 +83,22 @@ export function Combobox({
           aria-expanded={open}
           className="w-full justify-between font-normal text-start flex"
         >
-          <span className="gap-2 flex flex-wrap items-center grow-1">
-            {choosenOptions.length > 0 ? (
+          <span className="gap-2 flex flex-wrap items-center grow-1 w-full">
+            {chosenOptions.length > 0 ? (
               typeof renderLabel === 'function' ? (
-                choosenOptions.map((choosenOption, index) => (
+                chosenOptions.map((chosenOption, index) => (
                   <React.Fragment key={index}>
-                    {renderLabel(choosenOption)}
+                    {renderLabel(chosenOption, {
+                      place: 'button',
+                    })}
                   </React.Fragment>
                 ))
               ) : (
                 selected.join(', ')
               )
             ) : (
-              <span className="text-foreground/20">
-                {placeholder ?? 'Select…'}
-              </span>
+              // text-foreground/20
+              <span className="opacity-30">{placeholder ?? 'Select…'}</span>
             )}
           </span>
           <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -105,14 +109,14 @@ export function Combobox({
           <CommandInput
             value={search}
             onValueChange={setSearch}
-            placeholder="Search..."
+            placeholder={allowCustom ? 'Search or create new…' : 'Search...'}
           />
           <CommandEmpty>{searchFallback ?? 'Nothing found.'}</CommandEmpty>
           <CommandGroup>
             <CommandList>
               {[
                 ...optionsFromSearch,
-                ...additionalChoosenOptions,
+                ...additionalChosenOptions,
                 ...options,
               ].map((option) => (
                 <CommandItem
@@ -142,7 +146,9 @@ export function Combobox({
                         : 'opacity-0'
                     )}
                   />
-                  {renderLabel?.(option) ?? option.value}
+                  {renderLabel?.(option, {
+                    place: 'list',
+                  }) ?? option.value}
                 </CommandItem>
               ))}
             </CommandList>

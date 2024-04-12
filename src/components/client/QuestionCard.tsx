@@ -1,7 +1,6 @@
 'use client'
 
 import { saveAnswer } from '@/actions/saveAnswer'
-import { Headline } from '@/components/Headline'
 import { P } from '@/components/P'
 import { ThingRow } from '@/components/ThingRow'
 import { Combobox } from '@/components/client/Combobox'
@@ -15,7 +14,6 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Separator } from '@/components/ui/separator'
 import {
   QuestionSchemaType,
   ThingSchemaType,
@@ -33,9 +31,16 @@ function AnswerButtons({ question, answer }: AnswerButtonsProps) {
   const [thingValue, setThingValue] = useState<string[]>([])
   const [thingOptions, setThingOptions] = useState<ThingSchemaType[]>([])
 
-  const [inputValue, setInputValue] = useState('')
+  const [inputValue, setInputValue] = useState<string>('')
   const onInputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value)
+  }
+
+  const [stringValue, setStringValue] = useState<string[]>([])
+  const onStringInputChangeHandler = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setStringValue([e.target.value])
   }
 
   const answerType: string = question.answerType || ''
@@ -116,23 +121,57 @@ function AnswerButtons({ question, answer }: AnswerButtonsProps) {
     )
   }
 
+  // if (question.answerType === 'String') {
+  //   return (
+  //     <div className="flex gap-4 flex-col w-full">
+  //       <Input
+  //         type="text"
+  //         placeholder="Type your answer here"
+  //         value={inputValue}
+  //         onChange={onInputChangeHandler}
+  //       />
+  //       <Button
+  //         variant="default"
+  //         className="w-full"
+  //         onClick={() =>
+  //           answer({
+  //             value: {
+  //               valueType: 'String',
+  //               valueAsString: inputValue,
+  //               valueAsNumber: null,
+  //               valueAsBoolean: null,
+  //               valueAsThing_id: null,
+  //             },
+  //           })
+  //         }
+  //       >
+  //         Submit Answer
+  //       </Button>
+  //     </div>
+  //   )
+  // }
+
   if (question.answerType === 'String') {
-    return (
-      <div className="flex gap-4 flex-col w-full">
-        <Input
-          type="text"
-          placeholder="Type your answer here"
-          value={inputValue}
-          onChange={onInputChangeHandler}
-        />
+    const hasOptions = Array.isArray(question.answerStringOptions)
+    const cutoff = 5
+
+    let input: React.JSX.Element[] | React.JSX.Element = <P>loading...</P>
+    if (
+      hasOptions &&
+      question.answerStringOptions &&
+      question.answerStringOptions.length > 0 &&
+      question.answerStringOptions.length <= cutoff
+    ) {
+      input = question.answerStringOptions?.map((string, i) => (
         <Button
-          variant="default"
-          className="w-full"
+          key={`${i}-${string}`}
+          variant="outline"
+          className="w-full h-auto"
           onClick={() =>
             answer({
               value: {
                 valueType: 'String',
-                valueAsString: inputValue,
+                valueAsString: string,
                 valueAsNumber: null,
                 valueAsBoolean: null,
                 valueAsThing_id: null,
@@ -140,10 +179,91 @@ function AnswerButtons({ question, answer }: AnswerButtonsProps) {
             })
           }
         >
-          Submit Answer
+          {string}
         </Button>
-      </div>
-    )
+      ))
+    } else if (
+      hasOptions &&
+      question.answerStringOptions &&
+      (question.answerStringOptions.length === 0 ||
+        question.answerStringOptions.length > cutoff)
+    ) {
+      input = (
+        <>
+          <Combobox
+            selected={stringValue.filter(Boolean)}
+            options={question.answerStringOptions.map((string) => ({
+              value: string || '',
+            }))}
+            renderLabel={(option) => option.value}
+            multiple={false}
+            onChange={(values) => setStringValue(values)}
+            allowCustom={question.allowCreateNewOption}
+            placeholder={
+              question.allowCreateNewOption
+                ? 'Select or type your answer…'
+                : undefined
+            }
+          />
+
+          <Button
+            disabled={stringValue.length === 0}
+            variant="default"
+            className="w-full"
+            onClick={() => {
+              if (stringValue.length > 0) {
+                answer({
+                  value: {
+                    valueType: 'String',
+                    valueAsString: stringValue[0],
+                    valueAsNumber: null,
+                    valueAsBoolean: null,
+                    valueAsThing_id: null,
+                  },
+                })
+              }
+            }}
+          >
+            Submit Answer
+          </Button>
+        </>
+      )
+    } else if (!hasOptions) {
+      // all things that are as options
+      input = (
+        <>
+          <Input
+            type="text"
+            placeholder="Type your answer here"
+            value={stringValue?.[0] || ''}
+            onChange={onStringInputChangeHandler}
+          />
+
+          <Button
+            disabled={stringValue.length === 0}
+            variant="default"
+            className="w-full"
+            onClick={() => {
+              if (stringValue.length > 0) {
+                answer({
+                  value: {
+                    valueType: 'String',
+                    valueAsString: stringValue[0],
+                    valueAsNumber: null,
+                    valueAsBoolean: null,
+                    valueAsThing_id: null,
+                  },
+                })
+              }
+            }}
+          >
+            Submit Answer
+          </Button>
+        </>
+      )
+    }
+
+    return <div className="flex gap-4 flex-col w-full">{input}</div>
   }
 
   if (question.answerType === 'Number') {
@@ -177,12 +297,12 @@ function AnswerButtons({ question, answer }: AnswerButtonsProps) {
   }
 
   if (question.answerType === 'Thing') {
-    const hasThingOptions = Array.isArray(question.answerThingOptions)
+    const hasOptions = Array.isArray(question.answerThingOptions)
     const cutoff = 5
 
     let input: React.JSX.Element[] | React.JSX.Element = <P>loading...</P>
     if (
-      hasThingOptions &&
+      hasOptions &&
       question.answerThingOptions &&
       question.answerThingOptions.length > 0 &&
       question.answerThingOptions.length <= cutoff
@@ -208,7 +328,7 @@ function AnswerButtons({ question, answer }: AnswerButtonsProps) {
         </Button>
       ))
     } else if (
-      hasThingOptions &&
+      hasOptions &&
       question.answerThingOptions &&
       (question.answerThingOptions.length === 0 ||
         question.answerThingOptions.length > cutoff)
@@ -249,7 +369,7 @@ function AnswerButtons({ question, answer }: AnswerButtonsProps) {
           </Button>
         </>
       )
-    } else if (!hasThingOptions) {
+    } else if (!hasOptions) {
       // all things that are as options
       input = (
         <>
@@ -339,9 +459,6 @@ export function QuestionCard({
 
   return (
     <React.Fragment key={question.question_id}>
-      <Headline type="h2" className="border-0">
-        Answer the question to know what others think…
-      </Headline>
       <Card>
         {question && (
           <CardHeader>
@@ -368,19 +485,21 @@ export function QuestionCard({
           <AnswerButtons question={question} answer={answer} />
         </CardFooter>
         {isLoading && (
-          <P type="muted" className="text-center">
+          <P type="ghost" className="text-center">
             Loading…
           </P>
         )}
       </Card>
       <div className="flex justify-between">
         <nav className="text-white flex">
+          {/*
           <Button variant="link" asChild className="z-10">
             <Link href="/suggest_thing" className="no-underline">
               Suggest a Thing
             </Link>
           </Button>
           <Separator orientation="vertical" className="my-2 h-auto" />
+          */}
           <Button variant="link" asChild className="z-10">
             <Link href="/suggest_q" className="no-underline">
               Suggest a Question

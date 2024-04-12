@@ -19,6 +19,7 @@ export async function GET(request: Request) {
       type: {
         in: validatedDataFields.data,
       },
+      canBeUsed: true,
     },
   })
 
