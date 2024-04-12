@@ -30,8 +30,8 @@ export default function Home() {
           <CardTitle>Let’s go! 🚀</CardTitle>
         </CardHeader>
         <CardContent>
-          I am starting this dataset with a simple question: Who knows which
-          words?
+          I am starting this dataset with some simple questions. So just answer
+          some and let’s see where this goes.
         </CardContent>
       </Card>
       <br />
