@@ -157,16 +157,16 @@ model Question {
   answerType         DataType
   answerThingTypes   SchemaType[] /// if the expectedAnswerType is Thing, this would be the possible types of this thing
   answerThingOptions Thing[]      @relation("Thing.isOptionFor") /// if the expectedAnswerType is Thing, this would be the possible options of this thing
-  
-  answerStringOptions String[] /// if the expectedAnswerType is String, this would be the possible options of this
-  allowCreateNewOption     Boolean?     @default(false) /// if the user can answer with their own answer
+
+  answerStringOptions  String[] /// if the expectedAnswerType is String, this would be the possible options of this
+  allowCreateNewOption Boolean? @default(false) /// if the user can answer with their own answer
   //allowMultipleAnswers Boolean?   @default(false) /// if the user can answer with multiple answers
 
-  canBeUsed          Boolean?     @default(false) /// if this thing can be used in anywhere in the app
+  canBeUsed          Boolean? @default(false) /// if this thing can be used in anywhere in the app
   // publishedBy        User        @relation("Question.publishedBy", fields: [publishedBy_id], references: [id])
   // publishedBy_id     String
   //
-  Answer_isAnswering Answer[]     @relation("Answer.isAnswering")
+  Answer_isAnswering Answer[] @relation("Answer.isAnswering")
 }
 
 model Answer {
@@ -227,9 +227,9 @@ model Context {
 }
 
 model OpenAiIndex {
-  index     Int                    @default(autoincrement())
-  createdAt DateTime               @default(now())
-  id        String                 @id @default(cuid())
+  index     Int                          @default(autoincrement())
+  createdAt DateTime                     @default(now())
+  id        String                       @id @default(cuid())
   content   String
   embedding Unsupported("vector(1536)")?
   metadata  Json?
