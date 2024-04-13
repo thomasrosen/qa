@@ -57,20 +57,11 @@ export default async function NextQuestion({ id }: { id?: string }) {
   }
 
   return (
-    <>
-      <section className="flex flex-col gap-4 mb-4 place-content-center">
-        <Headline type="h2" className="border-0 p-0 mt-8 mb-2">
-          Answer the question to know what others think…
-        </Headline>
-        <QuestionCard
-          question={question}
-          aboutThing={aboutThing ?? undefined}
-        />
-      </section>
-
-      {/* <hr className='mt-40 my-8' />
-      <pre>question = {JSON.stringify(question, null, 2)}</pre>
-      <pre>aboutThing = {JSON.stringify(aboutThing, null, 2)}</pre> */}
-    </>
+    <section className="flex flex-col gap-4 mb-4 place-content-center">
+      <Headline type="h2" className="border-0 p-0 mt-8 mb-2">
+        Answer the question to know what others think…
+      </Headline>
+      <QuestionCard question={question} aboutThing={aboutThing ?? undefined} />
+    </section>
   )
 }
