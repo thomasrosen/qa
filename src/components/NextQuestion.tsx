@@ -21,7 +21,13 @@ export default async function NextQuestion({ id }: { id?: string }) {
   if (!question) {
     return (
       <P className="text-center">
-        There are no questions available at the moment.
+        <strong>
+          There are no questions available to answer at the moment.
+        </strong>
+        <br />
+        Every question can be answered only once every year.
+        <br />
+        Check back later when we’ve added more questions.
       </P>
     )
   }
@@ -38,7 +44,13 @@ export default async function NextQuestion({ id }: { id?: string }) {
     if (!aboutThing) {
       return (
         <P className="text-center">
-          There are no things to ask questions about at the moment.
+          <strong>
+            There are no questions available to answer at the moment.
+          </strong>
+          <br />
+          Every question can be answered only once every year.
+          <br />
+          Check back later when we’ve added more questions.
         </P>
       )
     }
