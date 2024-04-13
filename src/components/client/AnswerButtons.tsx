@@ -11,6 +11,7 @@ import {
   ValueSchemaType,
 } from '@/lib/prisma'
 import React, { useCallback, useEffect, useState } from 'react'
+import { Separator } from '../ui/separator'
 
 type AnswerButtonsProps = {
   question: QuestionSchemaType
@@ -110,36 +111,6 @@ export function AnswerButtons({ question, answer }: AnswerButtonsProps) {
     )
   }
 
-  // if (question.answerType === 'String') {
-  //   return (
-  //     <div className="flex gap-4 flex-col w-full">
-  //       <Input
-  //         type="text"
-  //         placeholder="Type your answer here"
-  //         value={inputValue}
-  //         onChange={onInputChangeHandler}
-  //       />
-  //       <Button
-  //         variant="default"
-  //         className="w-full"
-  //         onClick={() =>
-  //           answer({
-  //             value: {
-  //               valueType: 'String',
-  //               valueAsString: inputValue,
-  //               valueAsNumber: null,
-  //               valueAsBoolean: null,
-  //               valueAsThing_id: null,
-  //             },
-  //           })
-  //         }
-  //       >
-  //         Submit Answer
-  //       </Button>
-  //     </div>
-  //   )
-  // }
-
   if (question.answerType === 'String') {
     const hasOptions = Array.isArray(question.answerStringOptions)
     const cutoff = 5
@@ -151,26 +122,64 @@ export function AnswerButtons({ question, answer }: AnswerButtonsProps) {
       question.answerStringOptions.length > 0 &&
       question.answerStringOptions.length <= cutoff
     ) {
-      input = question.answerStringOptions?.map((string, i) => (
-        <Button
-          key={`${i}-${string}`}
-          variant="outline"
-          className="w-full h-auto"
-          onClick={() =>
-            answer({
-              value: {
-                valueType: 'String',
-                valueAsString: string,
-                valueAsNumber: null,
-                valueAsBoolean: null,
-                valueAsThing_id: null,
-              },
-            })
-          }
-        >
-          {string}
-        </Button>
-      ))
+      input = (
+        <>
+          {question.answerStringOptions?.map((string, i) => (
+            <Button
+              key={`${i}-${string}`}
+              variant="outline"
+              className="w-full h-auto"
+              onClick={() =>
+                answer({
+                  value: {
+                    valueType: 'String',
+                    valueAsString: string,
+                    valueAsNumber: null,
+                    valueAsBoolean: null,
+                    valueAsThing_id: null,
+                  },
+                })
+              }
+            >
+              {string}
+            </Button>
+          ))}
+
+          {question.allowCreateNewOption ? (
+            <>
+              <Separator className="my-3" />
+
+              <Input
+                type="text"
+                placeholder="Or type your answer here…"
+                value={stringValue?.[0] || ''}
+                onChange={onStringInputChangeHandler}
+              />
+
+              <Button
+                disabled={stringValue.length === 0}
+                variant="default"
+                className="w-full"
+                onClick={() => {
+                  if (stringValue.length > 0) {
+                    answer({
+                      value: {
+                        valueType: 'String',
+                        valueAsString: stringValue[0],
+                        valueAsNumber: null,
+                        valueAsBoolean: null,
+                        valueAsThing_id: null,
+                      },
+                    })
+                  }
+                }}
+              >
+                Submit Answer
+              </Button>
+            </>
+          ) : null}
+        </>
+      )
     } else if (
       hasOptions &&
       question.answerStringOptions &&
