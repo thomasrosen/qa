@@ -1,11 +1,12 @@
 import { Prisma, PrismaClient, type Prisma as PrismaType } from '@prisma/client'
+import { withAccelerate } from '@prisma/extension-accelerate'
 import { z } from 'zod'
 
 export { PrismaType }
 
 const prismaClientSingleton = () => {
   // source: https://www.prisma.io/docs/orm/more/help-and-troubleshooting/help-articles/nextjs-prisma-client-dev-practices
-  return new PrismaClient()
+  return new PrismaClient().$extends(withAccelerate())
 }
 declare global {
   var prismaGlobal: undefined | ReturnType<typeof prismaClientSingleton>
