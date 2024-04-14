@@ -95,15 +95,14 @@ enum DataType {
   Number
   Boolean
   Thing /// a reference to a Thing
+  // Country /// is saved as a String (country-code) but is treated special in the UI
 }
 
 enum SchemaType {
   /// allowed/used schema.org types
-  /// Thing /// is the default. just leave it empty
-  Person /// for a user
+  Thing /// is the default. just leave it empty
+  /// Person /// for a user
   DefinedTerm /// for a word / job title / etc
-  Country
-  City
 }
 
 // model Backup {
