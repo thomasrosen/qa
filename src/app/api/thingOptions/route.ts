@@ -5,6 +5,7 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
 
   const schemaTypesFromGet = searchParams.getAll('t')
+
   const validatedDataFields =
     SchemaTypeArraySchema.safeParse(schemaTypesFromGet)
   if (!validatedDataFields.success) {
@@ -21,6 +22,9 @@ export async function GET(request: Request) {
         in: validatedDataFields.data,
       },
       canBeUsed: true,
+    },
+    orderBy: {
+      name: 'asc',
     },
   })
 

@@ -8,6 +8,7 @@ export const SchemaTypeSchema = z.enum([
   'Thing',
   'DefinedTerm',
   'Country',
+  'Certification',
 ])
 export type SchemaTypeSchemaType = z.input<typeof SchemaTypeSchema>
 

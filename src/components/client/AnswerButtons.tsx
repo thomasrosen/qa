@@ -295,7 +295,9 @@ export function AnswerButtons({ question, answer }: AnswerButtonsProps) {
   }
 
   if (question.answerType === 'Thing') {
-    const hasOptions = Array.isArray(question.answerThingOptions)
+    const hasOptions =
+      Array.isArray(question.answerThingOptions) &&
+      question.answerThingOptions.length > 0
     const cutoff = 5
 
     let input: React.JSX.Element[] | React.JSX.Element = <P>loading...</P>
@@ -335,11 +337,16 @@ export function AnswerButtons({ question, answer }: AnswerButtonsProps) {
         <>
           <Combobox
             selected={thingValue.filter(Boolean)}
-            options={question.answerThingOptions.map((option) => ({
-              value: option.thing_id || '', // should always be set. just to make types happy
-              keywords: [option.name, option.type, option.thing_id] as string[],
-              data: option,
-            }))}
+            options={question.answerThingOptions.map((thing) => {
+              const description = JSON.parse(thing.jsonld)?.description
+              return {
+                value: thing.thing_id || '', // should always be set. just to make types happy
+                keywords: [thing.name, thing.thing_id, description].filter(
+                  Boolean
+                ) as string[],
+                data: thing,
+              }
+            })}
             renderLabel={(option) => <ThingRow thing={option.data} />}
             multiple={false}
             onChange={(values) => setThingValue(values)}
@@ -374,15 +381,16 @@ export function AnswerButtons({ question, answer }: AnswerButtonsProps) {
           {thingOptions.length > 0 && (
             <Combobox
               selected={thingValue.filter(Boolean)}
-              options={thingOptions.map((option) => ({
-                value: option.thing_id || '', // should always be set. just to make types happy
-                keywords: [
-                  option.name,
-                  option.type,
-                  option.thing_id,
-                ] as string[],
-                data: option,
-              }))}
+              options={thingOptions.map((thing) => {
+                const description = JSON.parse(thing.jsonld)?.description
+                return {
+                  value: thing.thing_id || '', // should always be set. just to make types happy
+                  keywords: [thing.name, thing.thing_id, description].filter(
+                    Boolean
+                  ) as string[],
+                  data: thing,
+                }
+              })}
               renderLabel={(option) => <ThingRow thing={option.data} />}
               multiple={false}
               onChange={(values) => setThingValue(values)}

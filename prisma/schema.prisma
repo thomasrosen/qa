@@ -104,6 +104,7 @@ enum SchemaType {
   /// Person /// for a user
   DefinedTerm /// for a word / job title / etc
   Country
+  Certification
 }
 
 // model Backup {
