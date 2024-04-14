@@ -1,5 +1,5 @@
 import { P } from '@/components/P'
-import { BarChart } from '@/components/client/BarChart'
+import { BarChart } from '@/components/client/charts/BarChart'
 import {
   Card,
   CardContent,
@@ -14,6 +14,7 @@ import { CameraIcon } from '@radix-ui/react-icons'
 import { devNull } from 'os'
 import { Suspense } from 'react'
 import { ScreenshotElement } from './client/ScreenshotElement'
+import { ScatterPlot } from './client/charts/ScatterPlot'
 
 function getLabel(value: ExtendedValueSchemaType) {
   if (value.valueType === 'String') {
@@ -31,8 +32,8 @@ function getLabel(value: ExtendedValueSchemaType) {
   return 'Unknown'
 }
 
-function getFirstValue(value: unknown[] | undefined): unknown {
-  if (!value || value.length === 0) {
+function getFirstValue(value: any[] | undefined) {
+  if (!value || value.length === 0 || !Array.isArray(value)) {
     return undefined
   }
   return value[0]
@@ -53,18 +54,45 @@ export async function AnswerChart({ answer }: { answer?: AnswerType | null }) {
     question_id: answer.isAnswering.question_id,
     aboutThing_id: (getFirstValue(answer.context) as any)?.aboutThing?.thing_id, // TODO fix type
   })
+  const typedValues: ExtendedValueSchemaType[] = values
 
-  let data: {
+  let barChartData: {
     label: string
     value: number
     [key: string]: unknown
   }[] = []
-  if (values.length > 0) {
-    data = values.map((value, index) => ({
-      label: getLabel(value),
-      value: value._count._all,
-      valueAsThing: value.valueAsThing,
-    }))
+  let scatterPlotData: {
+    label: string
+    x: number
+    y: number
+    [key: string]: unknown
+  }[] = []
+
+  const hasValues = values.length > 0
+  let valueType = undefined
+
+  if (hasValues) {
+    const firstValue: ExtendedValueSchemaType = getFirstValue(typedValues)
+    valueType = firstValue?.valueType
+
+    if (values.length > 0) {
+      if (valueType === 'Number') {
+        scatterPlotData = values.map((value, index) => ({
+          label: getLabel(value),
+          // x: value._count._all,
+          y: 0,
+          x: value.valueAsNumber ?? 0,
+          z: value._count._all ?? 1,
+          valueAsNumber: value.valueAsNumber ?? 0,
+        }))
+      } else {
+        barChartData = values.map((value, index) => ({
+          label: getLabel(value),
+          value: value._count._all,
+          valueAsThing: value.valueAsThing,
+        }))
+      }
+    }
   }
 
   const aboutThing = (getFirstValue(answer.context) as any)?.aboutThing // TODO fix type
@@ -83,7 +111,7 @@ export async function AnswerChart({ answer }: { answer?: AnswerType | null }) {
         </CardHeader>
 
         <CardContent className="flex flex-col gap-2 grow">
-          {values.length === 0 ? (
+          {!hasValues ? (
             <P className="mb-0">
               You are the first to answer this question. Tell others to also
               answer questions, so we can graph you the answer as a nice chart.
@@ -92,12 +120,20 @@ export async function AnswerChart({ answer }: { answer?: AnswerType | null }) {
             <>
               <div className="grow min-h-32">
                 <Suspense fallback={<P>Loading chart...</P>}>
-                  <BarChart
-                    data={data}
-                    tickValues={data.map((d) => d.value)}
-                    ariaLabel="Bar Chart"
-                    indexBy="label"
-                  />
+                  {valueType === 'Number' ? (
+                    <ScatterPlot
+                      data={scatterPlotData}
+                      ariaLabel="Scatter Plot"
+                      indexBy="label"
+                    />
+                  ) : (
+                    <BarChart
+                      data={barChartData}
+                      tickValues={barChartData.map((d) => d.value)}
+                      ariaLabel="Bar Chart"
+                      indexBy="label"
+                    />
+                  )}
                 </Suspense>
               </div>
               <P type="ghost" className="mb-0">

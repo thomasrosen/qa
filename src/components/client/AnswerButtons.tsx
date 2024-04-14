@@ -9,7 +9,7 @@ import {
   QuestionSchemaType,
   ThingSchemaType,
   ValueSchemaType,
-} from '@/lib/prisma'
+} from '@/lib/types'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Separator } from '../ui/separator'
 

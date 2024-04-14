@@ -2,7 +2,8 @@
 
 import { auth } from '@/lib/auth'
 import { isSignedOut } from '@/lib/isSignedIn'
-import { QuestionSchema, prisma, type QuestionSchemaType } from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
+import { QuestionSchema, type QuestionSchemaType } from '@/lib/types'
 import { revalidatePath } from 'next/cache'
 
 export async function suggestQuestion(data: QuestionSchemaType) {

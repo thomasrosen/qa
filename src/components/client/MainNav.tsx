@@ -22,11 +22,11 @@ export function MainNav() {
         Questions
       </NavButton>
       <NavButton startsWith={true} href="/you">
-        About You
+        About You / Answers
       </NavButton>
-      <NavButton startsWith={true} href="/insights">
+      {/* <NavButton startsWith={true} href="/insights">
         Insights
-      </NavButton>
+      </NavButton> */}
       <NavButton startsWith={true} href="/imprint">
         Imprint + Privacy
       </NavButton>

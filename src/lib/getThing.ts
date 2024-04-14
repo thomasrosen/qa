@@ -1,7 +1,8 @@
-import { ThingSchemaType, prisma, type Prisma } from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
+import { ThingSchemaType, type PrismaType } from '@/lib/types'
 
 type FunctionArgs = {
-  where?: Prisma.ThingWhereInput
+  where?: PrismaType.ThingWhereInput
 }
 export async function getThing({
   where = {},

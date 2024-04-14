@@ -1,4 +1,5 @@
-import { SchemaTypeArraySchema, prisma } from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
+import { SchemaTypeArraySchema } from '@/lib/types'
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)

@@ -1,4 +1,4 @@
-import { ThingSchemaType } from '@/lib/prisma'
+import { ThingSchemaType } from '@/lib/types'
 import { cn } from '@/lib/utils'
 
 export function ThingRow({

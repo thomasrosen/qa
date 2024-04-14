@@ -24,9 +24,9 @@ import {
   DataTypeSchema,
   QuestionSchema,
   SchemaTypeSchema,
-  ThingSchemaType,
   type QuestionSchemaType,
-} from '@/lib/prisma'
+  type ThingSchemaType,
+} from '@/lib/types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'

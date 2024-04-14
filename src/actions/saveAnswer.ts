@@ -2,12 +2,12 @@
 
 import { auth } from '@/lib/auth'
 import { isSignedOut } from '@/lib/isSignedIn'
+import { prisma } from '@/lib/prisma'
 import {
   SaveAnswerSchema,
   SaveAnswerSchemaType,
-  prisma,
   type PrismaType,
-} from '@/lib/prisma'
+} from '@/lib/types'
 import { revalidatePath } from 'next/cache'
 
 export async function saveAnswer(data: SaveAnswerSchemaType) {

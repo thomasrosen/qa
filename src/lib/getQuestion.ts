@@ -1,4 +1,5 @@
-import { QuestionSchemaType, prisma, type Prisma } from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
+import { QuestionSchemaType, type Prisma } from '@/lib/types'
 import { auth } from './auth'
 import { isSignedOut } from './isSignedIn'
 

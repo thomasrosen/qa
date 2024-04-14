@@ -1,6 +1,7 @@
 // import { auth } from '@/lib/auth';
 // import { isSignedOut } from '@/lib/isSignedIn';
-import { ExtendedValueSchemaType, prisma, PrismaType } from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
+import { ExtendedValueSchemaType, PrismaType } from '@/lib/types'
 
 export async function getAnswers({
   question_id,

@@ -36,10 +36,12 @@ export const getChartColors = (amount: number) => {
   return colors
 }
 
+const fontSize = 14
+
 export const chartTheme = {
   background: 'transparent',
   text: {
-    fontSize: 14,
+    fontSize,
     fill: 'currentColor',
     outlineWidth: 4,
     outlineColor: 'currentColor',
@@ -53,7 +55,7 @@ export const chartTheme = {
     },
     legend: {
       text: {
-        fontSize: 14,
+        fontSize,
         fill: 'currentColor',
         outlineWidth: 0,
         outlineColor: 'transparent',
@@ -66,7 +68,7 @@ export const chartTheme = {
         opacity: 0.2,
       },
       text: {
-        fontSize: 14,
+        fontSize,
         fill: 'currentColor',
         outlineWidth: 0,
         outlineColor: 'transparent',
@@ -83,14 +85,14 @@ export const chartTheme = {
   legends: {
     title: {
       text: {
-        fontSize: 14,
+        fontSize,
         fill: 'currentColor',
         outlineWidth: 0,
         outlineColor: 'transparent',
       },
     },
     text: {
-      fontSize: 14,
+      fontSize,
       fill: 'currentColor',
       outlineWidth: 0,
       outlineColor: 'transparent',
@@ -98,7 +100,7 @@ export const chartTheme = {
     ticks: {
       line: {},
       text: {
-        fontSize: 14,
+        fontSize,
         fill: 'currentColor',
         outlineWidth: 0,
         outlineColor: 'transparent',
@@ -107,7 +109,7 @@ export const chartTheme = {
   },
   annotations: {
     text: {
-      fontSize: 14,
+      fontSize,
       fill: 'currentColor',
       outlineWidth: 2,
       outlineColor: 'currentColor',
@@ -138,7 +140,7 @@ export const chartTheme = {
   //   container: {
   //     background: 'hsl(266 87% 41%)',
   //     color: '#fff',
-  //     fontSize: 14,
+  //     fontSize,
   //   },
   //   basic: {},
   //   chip: {},
