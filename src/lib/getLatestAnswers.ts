@@ -1,11 +1,13 @@
 import { auth } from '@/lib/auth'
 import { isSignedOut } from '@/lib/isSignedIn'
-import { AnswerType, prisma } from '@/lib/prisma'
+import { AnswerType, prisma, PrismaType } from '@/lib/prisma'
 
 export async function getLatestAnswers({
   take = 1,
+  where = {},
 }: {
   take?: number
+  where?: PrismaType.AnswerWhereInput | undefined
 }): Promise<AnswerType[]> {
   try {
     // check if logged in
@@ -22,6 +24,7 @@ export async function getLatestAnswers({
       relationLoadStrategy: 'join', // or 'query'
       where: {
         createdBy_id: user_id,
+        ...where,
       },
       orderBy: {
         updatedAt: 'desc',
