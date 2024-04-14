@@ -10,7 +10,7 @@ import { signIn } from 'next-auth/react'
 import { useState } from 'react'
 
 export function SignIn() {
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState('')
 
   return (
