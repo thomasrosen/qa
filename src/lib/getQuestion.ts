@@ -1,10 +1,10 @@
 import { prisma } from '@/lib/prisma'
-import { QuestionSchemaType, type Prisma } from '@/lib/types'
+import { QuestionSchemaType, type PrismaType } from '@/lib/types'
 import { auth } from './auth'
 import { isSignedOut } from './isSignedIn'
 
 type FunctionArgs = {
-  where?: Prisma.QuestionWhereInput
+  where?: PrismaType.QuestionWhereInput
 }
 export async function getQuestion({
   where = {},
