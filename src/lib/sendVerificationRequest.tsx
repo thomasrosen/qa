@@ -1,4 +1,6 @@
 import { TailwindEmail } from '@/components/TailwindEmail'
+import { NodemailerConfig } from '@auth/core/providers/nodemailer'
+import { Theme } from '@auth/core/types'
 import {
   Body,
   Button,
@@ -9,9 +11,17 @@ import {
   Preview,
 } from '@react-email/components'
 import { Options, render } from '@react-email/render'
-import { Theme } from 'next-auth'
-import { SendVerificationRequestParams } from 'next-auth/providers/email'
 import { createTransport } from 'nodemailer'
+
+type SendVerificationRequestParams = {
+  identifier: string
+  url: string
+  expires: Date
+  provider: NodemailerConfig
+  token: string
+  theme: Theme
+  request: Request
+}
 
 export async function sendVerificationRequest(
   params: SendVerificationRequestParams

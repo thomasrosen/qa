@@ -1,22 +1,12 @@
 import { createAnonymousUser } from '@/lib/createAnonymousUser'
 import { UserSchemaType, prisma } from '@/lib/prisma'
 import { sendVerificationRequest } from '@/lib/sendVerificationRequest'
+import { type Adapter } from '@auth/core/adapters'
+import CredentialsProvider from '@auth/core/providers/credentials'
+import EmailProvider from '@auth/core/providers/nodemailer'
 import { PrismaAdapter } from '@auth/prisma-adapter'
-import {
-  GetServerSidePropsContext,
-  NextApiRequest,
-  NextApiResponse,
-} from 'next'
-import {
-  SessionStrategy,
-  getServerSession,
-  type NextAuthOptions,
-} from 'next-auth'
-import { type Adapter } from 'next-auth/adapters'
-import CredentialsProvider from 'next-auth/providers/credentials'
-import EmailProvider from 'next-auth/providers/email'
+import NextAuth, { NextAuthConfig } from 'next-auth'
 
-// You'll need to import and pass this to `NextAuth` in `app/api/auth/[...nextauth]/route.ts`
 export const authOptions = {
   adapter: PrismaAdapter(prisma) as Adapter,
   providers: [
@@ -128,21 +118,13 @@ export const authOptions = {
   },
   session: {
     // use default, an encrypted JWT (JWE) store in the session cookie
-    strategy: 'jwt' as SessionStrategy,
+    strategy: 'jwt',
   },
   theme: {
     colorScheme: 'auto',
     brandColor: '#6600CC',
     buttonText: '#fff',
   },
-} satisfies NextAuthOptions
+} satisfies NextAuthConfig
 
-// Use it in server contexts
-export function auth(
-  ...args:
-    | [GetServerSidePropsContext['req'], GetServerSidePropsContext['res']]
-    | [NextApiRequest, NextApiResponse]
-    | []
-) {
-  return getServerSession(...args, authOptions)
-}
+export const { auth, handlers, signIn, signOut } = NextAuth(authOptions)
