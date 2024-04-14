@@ -7,7 +7,7 @@ export function P({
   ref,
 }: {
   children?: React.ReactNode
-  type?: string
+  type?: 'lead' | 'large' | 'small' | 'muted' | 'ghost' | undefined
   className?: string
   ref?: React.Ref<HTMLParagraphElement>
 }) {
