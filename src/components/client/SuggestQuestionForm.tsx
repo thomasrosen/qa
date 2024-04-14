@@ -180,6 +180,7 @@ export function SuggestQuestionForm({
           )}
         />
 
+        {/*
         <Headline type="h3">About</Headline>
         <FormInput
           form={form}
@@ -205,6 +206,7 @@ export function SuggestQuestionForm({
             />
           )}
         />
+        */}
 
         <Headline type="h3">Answer</Headline>
         <FormInput
