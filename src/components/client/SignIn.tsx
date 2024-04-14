@@ -60,7 +60,7 @@ export function SignIn() {
                 variant="secondary"
                 onClick={() => {
                   setLoading(true)
-                  signIn('email', { email })
+                  signIn('nodemailer', { email })
                 }}
               >
                 Group by Email
