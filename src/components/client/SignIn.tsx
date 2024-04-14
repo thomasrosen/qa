@@ -5,17 +5,23 @@ import { P } from '@/components/P'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { cn } from '@/lib/utils'
 import { signIn } from 'next-auth/react'
 import { useState } from 'react'
 
 export function SignIn() {
-  const [loading, setLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const [email, setEmail] = useState('')
 
   return (
     <section>
       <Headline type="h2">How should your answers be grouped?</Headline>
-      <div className="flex gap-4 flex-col">
+      <div
+        className={cn(
+          'flex gap-4 flex-col',
+          isLoading ? 'motion-safe:animate-pulse pointer-events-none' : ''
+        )}
+      >
         <Card>
           <CardHeader>
             <CardTitle>Anonymously</CardTitle>
@@ -28,7 +34,7 @@ export function SignIn() {
             <Button
               variant="secondary"
               onClick={() => {
-                setLoading(true)
+                setIsLoading(true)
                 signIn('credentials', {})
               }}
             >
@@ -59,7 +65,7 @@ export function SignIn() {
               <Button
                 variant="secondary"
                 onClick={() => {
-                  setLoading(true)
+                  setIsLoading(true)
                   signIn('nodemailer', { email })
                 }}
               >
@@ -68,7 +74,11 @@ export function SignIn() {
             </div>
           </CardContent>
         </Card>
-        {loading && <P>Loading...</P>}
+        {isLoading && (
+          <P type="large" className="text-center">
+            Loading...
+          </P>
+        )}
       </div>
     </section>
   )
