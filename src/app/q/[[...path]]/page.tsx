@@ -40,11 +40,11 @@ export default async function Questions({
 }: {
   params: { path: string[] }
 }) {
-  let id: string | undefined = undefined
+  let question_id: string | undefined = undefined
   if (Array.isArray(path)) {
-    id = path[0]
+    question_id = path[0]
   } else if (typeof path === 'string') {
-    id = path
+    question_id = path
   }
 
   const session = await auth()
@@ -55,7 +55,7 @@ export default async function Questions({
   return (
     <>
       <Suspense>
-        <NextQuestion id={id} />
+        <NextQuestion question_id={question_id} />
       </Suspense>
 
       <Suspense>

@@ -5,12 +5,16 @@ import { getRandomQuestion } from '@/lib/getRandomQuestion'
 import { getRandomThing } from '@/lib/getRandomThing'
 import { Headline } from './Headline'
 
-export default async function NextQuestion({ id }: { id?: string }) {
+export default async function NextQuestion({
+  question_id,
+}: {
+  question_id?: string
+}) {
   let question = null
-  if (id) {
+  if (question_id) {
     question = await getQuestion({
       where: {
-        question_id: id,
+        question_id,
       },
     })
   } else {
@@ -19,17 +23,27 @@ export default async function NextQuestion({ id }: { id?: string }) {
   let aboutThing = null
 
   if (!question) {
-    return (
-      <P className="text-center">
-        <strong>
-          There are no questions available to answer at the moment.
-        </strong>
-        <br />
-        Every question can be answered only once every year.
-        <br />
-        Check back later when we’ve added more questions.
-      </P>
-    )
+    if (question_id) {
+      return (
+        <P className="text-center">
+          <strong>Thanks for already answering this question!</strong>
+          <br />
+          Every question can be answered only once every 12 month.
+        </P>
+      )
+    } else {
+      return (
+        <P className="text-center">
+          <strong>
+            There are no questions available to answer at the moment.
+          </strong>
+          <br />
+          Every question can be answered only once every 12 month.
+          <br />
+          Check back later when we’ve added more questions.
+        </P>
+      )
+    }
   }
 
   if (question.aboutThingTypes && question.aboutThingTypes.length > 0) {
@@ -48,7 +62,7 @@ export default async function NextQuestion({ id }: { id?: string }) {
             There are no questions available to answer at the moment.
           </strong>
           <br />
-          Every question can be answered only once every year.
+          Every question can be answered only once every 12 month.
           <br />
           Check back later when we’ve added more questions.
         </P>
