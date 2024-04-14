@@ -4,7 +4,11 @@ import { z } from 'zod'
 export { PrismaType }
 
 export const DataTypeSchema = z.enum(['String', 'Number', 'Boolean', 'Thing'])
-export const SchemaTypeSchema = z.enum(['Thing', 'DefinedTerm'])
+export const SchemaTypeSchema = z.enum([
+  'Thing',
+  'DefinedTerm',
+  'Country',
+])
 export type SchemaTypeSchemaType = z.input<typeof SchemaTypeSchema>
 
 export const SchemaTypeArraySchema = z
