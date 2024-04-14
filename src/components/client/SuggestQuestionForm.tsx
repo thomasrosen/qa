@@ -99,7 +99,9 @@ export function SuggestQuestionForm({
     setIsSubmitting(false)
 
     if (submitted) {
-      // form.reset()
+      if (!question) {
+        form.reset()
+      }
       router.refresh()
       toast('You submitted the following values:', {
         description: (
