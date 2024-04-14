@@ -1,2 +1,2 @@
-export const LOCALES = 'de en'.split(' ')
-export const DEFAULT_LOCALE = 'en-DE'
+export const LOCALES = 'de-DE en-DE'.split(' ')
+export const DEFAULT_LOCALE = 'de-DE'
