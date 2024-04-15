@@ -10,7 +10,7 @@ import { AutoGrowTextarea } from '@/components/client/AutogrowTextarea'
 import { Combobox } from '@/components/client/Combobox'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
+// import { Input } from '@/components/ui/input'
 import {
   Select,
   SelectContent,
@@ -18,8 +18,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { DEFAULT_LOCALE, LOCALES } from '@/lib/constants'
-import { intlDisplayNamesLanguage } from '@/lib/intlDisplayNamesLanguage'
+// import { DEFAULT_LOCALE, LOCALES } from '@/lib/constants'
+// import { intlDisplayNamesLanguage } from '@/lib/intlDisplayNamesLanguage'
 import {
   DataTypeSchema,
   QuestionSchema,
@@ -145,6 +145,7 @@ export function SuggestQuestionForm({
           )}
         />
 
+        {/*
         <FormInput
           form={form}
           name="locale"
@@ -182,7 +183,6 @@ export function SuggestQuestionForm({
           )}
         />
 
-        {/*
         <Headline type="h3">About</Headline>
         <FormInput
           form={form}
