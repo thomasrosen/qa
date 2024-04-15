@@ -62,7 +62,8 @@ export const QuestionSchema = z
     locale: z
       .string()
       .min(2, { message: 'Locale must be at least 2 characters long.' })
-      .nullable(),
+      .nullable()
+      .optional(),
     asProperty: z
       .string()
       .regex(/^([a-z]+(?:[A-Z][a-z]*)*)?$/, {
