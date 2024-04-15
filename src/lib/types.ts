@@ -56,7 +56,7 @@ export const QuestionSchema = z
     question_id: z.string().optional(),
     question: z
       .string()
-      .min(10, { message: 'Question must be at least 10 characters long.' })
+      .min(1, { message: 'Please enter a real question.' })
       .nullable(),
     description: z.string().nullable(),
     locale: z
