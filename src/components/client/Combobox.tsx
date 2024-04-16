@@ -83,7 +83,7 @@ export function Combobox({
           aria-expanded={open}
           className="w-full justify-between font-normal text-start flex"
         >
-          <span className="gap-2 flex flex-wrap items-center grow-1 w-full">
+          <div className="gap-2 flex flex-wrap items-center grow-1 w-full -ms-1">
             {chosenOptions.length > 0 ? (
               typeof renderLabel === 'function' ? (
                 chosenOptions.map((chosenOption, index) => (
@@ -100,7 +100,7 @@ export function Combobox({
               // text-foreground/20
               <span className="opacity-30">{placeholder ?? 'Select…'}</span>
             )}
-          </span>
+          </div>
           <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
