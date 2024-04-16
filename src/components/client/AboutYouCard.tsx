@@ -59,6 +59,10 @@ export function AboutYouCard({
         <CardDescription>
           Your answers will be grouped together under the following identifier.
           You can reset this identifier at any time.{' '}
+          <strong>
+            When publishing any data, your identifier will be randomized to keep
+            your anonymity.
+          </strong>{' '}
           <Link href="/imprint" className="inline-block">
             Learn more…
           </Link>
