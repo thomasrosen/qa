@@ -36,8 +36,10 @@ import { toast } from 'sonner'
 
 export function SuggestQuestionForm({
   question,
+  tagOptions = [],
 }: {
   question?: QuestionSchemaType | null
+  tagOptions: ThingSchemaType[]
 }) {
   const [thingOptions, setThingOptions] = useState<ThingSchemaType[]>([])
   const [answerType, setAnswerType] = useState<string | null>(
@@ -63,6 +65,9 @@ export function SuggestQuestionForm({
       answerThingOptions:
         (question?.answerThingOptions || []).map((thing) => thing.thing_id) ||
         [],
+      tags: (question?.tags || [])
+        .filter(Boolean)
+        .map((thing) => thing.thing_id),
     },
   })
 
@@ -141,6 +146,32 @@ export function SuggestQuestionForm({
               {...field}
               value={field.value || ''}
               placeholder="Information that are needed to understand the question."
+            />
+          )}
+        />
+
+        <FormInput
+          form={form}
+          name="tags"
+          label="Categories"
+          inputHasFormControl={true}
+          input={(field) => (
+            <Combobox
+              multiple={true}
+              selected={field.value}
+              options={tagOptions.map((thing) => ({
+                value: thing.thing_id || '',
+                label: thing.name,
+                thing,
+              }))}
+              placeholder="Select Categories…"
+              renderLabel={(option) => (
+                <ThingRow
+                  className="inline-block w-auto"
+                  thing={option.thing}
+                />
+              )}
+              onChange={(values) => field.onChange(values)}
             />
           )}
         />

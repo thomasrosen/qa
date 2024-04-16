@@ -17,13 +17,6 @@ export async function getAnswers({
   }
 
   try {
-    // // check if logged in
-    // const session = await auth();
-    // if (isSignedOut(session)) {
-    //   console.error('ERROR_MqRzPEiZ', 'user is required');
-    //   return [];
-    // }
-
     if (!question_id) {
       return defaultReturn
     }

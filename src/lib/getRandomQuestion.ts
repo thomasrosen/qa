@@ -55,6 +55,7 @@ export async function getRandomQuestion({ where = {} }: FunctionArgs = {}) {
     where: questionWhere,
     include: {
       answerThingOptions: true,
+      tags: true,
     },
   })
 

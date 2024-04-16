@@ -6,6 +6,7 @@ import { Combobox } from '@/components/client/Combobox'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
+import { getJsonLdValueAsString } from '@/lib/getJsonLdValue'
 import {
   QuestionSchemaType,
   ThingSchemaType,
@@ -338,7 +339,11 @@ export function AnswerButtons({ question, answer }: AnswerButtonsProps) {
           <Combobox
             selected={thingValue.filter(Boolean)}
             options={question.answerThingOptions.map((thing) => {
-              const description = JSON.parse(thing.jsonld)?.description
+              const description = getJsonLdValueAsString(
+                thing.jsonld,
+                'description'
+              )
+
               return {
                 value: thing.thing_id || '', // should always be set. just to make types happy
                 keywords: [thing.name, thing.thing_id, description].filter(
@@ -382,7 +387,11 @@ export function AnswerButtons({ question, answer }: AnswerButtonsProps) {
             <Combobox
               selected={thingValue.filter(Boolean)}
               options={thingOptions.map((thing) => {
-                const description = JSON.parse(thing.jsonld)?.description
+                const description = getJsonLdValueAsString(
+                  thing.jsonld,
+                  'description'
+                )
+
                 return {
                   value: thing.thing_id || '', // should always be set. just to make types happy
                   keywords: [thing.name, thing.thing_id, description].filter(

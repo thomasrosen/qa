@@ -9,6 +9,7 @@ export const SchemaTypeSchema = z.enum([
   'DefinedTerm',
   'Country',
   'Certification',
+  'CategoryCode',
 ])
 export type SchemaTypeSchemaType = z.input<typeof SchemaTypeSchema>
 
@@ -34,14 +35,19 @@ export const JsonValueSchema: z.ZodType<PrismaType.JsonValue> = z.lazy(() =>
 )
 
 export const UserSchema = z.object({
-  id: z.string().refine((val) => val.length > 0, { message: 'id is required' }),
-  index: z.number().nullable(),
-  createdAt: z.date().nullable(),
-  updatedAt: z.date().nullable(),
-  name: z.string().nullable(),
-  email: z.string().email().nullable(),
-  emailVerified: z.date().nullable(),
-  image: z.string().nullable(),
+  id: z
+    .string()
+    .refine((val) => val.length > 0, { message: 'id is required' })
+    .optional(),
+  index: z.number().nullable().optional(),
+  createdAt: z.date().nullable().optional(),
+  updatedAt: z.date().nullable().optional(),
+  name: z.string().nullable().optional(),
+  email: z.string().email().nullable().optional(),
+  emailVerified: z.date().nullable().optional(),
+  image: z.string().nullable().optional(),
+  preferredTags: z.any().array().nullable().optional(),
+  isAdmin: z.boolean().nullable().optional(),
 })
 export type UserSchemaType = z.input<typeof UserSchema>
 
@@ -64,6 +70,7 @@ export const QuestionSchema = z
       .min(2, { message: 'Locale must be at least 2 characters long.' })
       .nullable()
       .optional(),
+    tags: z.any().array().optional(),
     asProperty: z
       .string()
       .regex(/^([a-z]+(?:[A-Z][a-z]*)*)?$/, {
@@ -97,10 +104,11 @@ export const ThingSchema = z.object({
     .nullable(),
   locale: z
     .string()
-    .min(2, { message: 'Locale must be at least 2 characters long.' })
-    .nullable(),
+    // .min(2, { message: 'Locale must be at least 2 characters long.' })
+    .nullable()
+    .optional(),
   sameAs: z.string().array(),
-  jsonld: z.any().nullable().optional(), // JsonValueSchema.optional(),
+  jsonld: z.any().nullable().optional(),
 })
 export type ThingSchemaType = z.input<typeof ThingSchema>
 

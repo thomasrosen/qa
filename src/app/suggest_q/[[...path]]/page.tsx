@@ -1,6 +1,7 @@
 import { Headline } from '@/components/Headline'
 import { SuggestQuestionForm } from '@/components/client/SuggestQuestionForm'
 import { getQuestion } from '@/lib/getQuestion'
+import { getThings } from '@/lib/getThings'
 
 export default async function SuggestQuestion({
   params: { path },
@@ -19,16 +20,21 @@ export default async function SuggestQuestion({
         where: {
           question_id,
           canBeUsed: undefined,
+          Answer_isAnswering: undefined,
         },
       })
     : null
+
+  const tagOptions = await getThings({
+    schemaTypes: ['CategoryCode'],
+  })
 
   return (
     <section className="flex flex-col gap-4">
       <Headline type="h2">
         {question ? 'Edit the Question' : 'Suggest a Question'}
       </Headline>
-      <SuggestQuestionForm question={question} />
+      <SuggestQuestionForm question={question} tagOptions={tagOptions} />
     </section>
   )
 }

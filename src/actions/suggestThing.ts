@@ -1,9 +1,10 @@
 'use server'
 
 import { auth } from '@/lib/auth'
+import { getUser } from '@/lib/getUser'
 import { isSignedOut } from '@/lib/isSignedIn'
 import { prisma } from '@/lib/prisma'
-import { ThingSchema, type ThingSchemaType } from '@/lib/types'
+import { PrismaType, ThingSchema, type ThingSchemaType } from '@/lib/types'
 import { revalidatePath } from 'next/cache'
 
 export async function suggestThing(data: ThingSchemaType) {
@@ -15,6 +16,12 @@ export async function suggestThing(data: ThingSchemaType) {
     }
     // @ts-ignore Is already checked in isSignedOut()
     const user_id = session.user.id
+    const user = await getUser({
+      select: {
+        isAdmin: true,
+      },
+    })
+    const isAdmin = user?.isAdmin || false
 
     const validatedFields = ThingSchema.safeParse(data)
 
@@ -35,13 +42,17 @@ export async function suggestThing(data: ThingSchemaType) {
     }
 
     if (thing_id) {
+      const where: PrismaType.ThingWhereUniqueInput = {
+        thing_id,
+      }
+      if (isAdmin === false) {
+        where.createdBy = {
+          id: user_id,
+        }
+      }
+
       await prisma.thing.upsert({
-        where: {
-          thing_id,
-          createdBy: {
-            id: user_id,
-          },
-        },
+        where,
         update: validatedFields.data,
         create: createDataObj,
       })

@@ -2,6 +2,7 @@
 
 import { saveAnswer } from '@/actions/saveAnswer'
 import { P } from '@/components/P'
+import { ThingRow } from '@/components/ThingRow'
 import { AnswerButtons } from '@/components/client/AnswerButtons'
 import { Button } from '@/components/ui/button'
 import {
@@ -57,11 +58,24 @@ export function QuestionCard({
     window.location.reload()
   }, [])
 
+  const tags = question.tags || []
+
   return (
     <React.Fragment key={question.question_id}>
       <Card>
         {question && (
           <CardHeader>
+            {tags.length > 0 && (
+              <div className="flex flex-wrap gap-4 -mt-1 justify-center">
+                {tags.map((thing) => (
+                  <ThingRow
+                    key={thing.thing_id}
+                    thing={thing}
+                    className="w-auto inline-block p-0"
+                  />
+                ))}
+              </div>
+            )}
             {question.question && (
               <CardTitle className="text-center">{question.question}</CardTitle>
             )}

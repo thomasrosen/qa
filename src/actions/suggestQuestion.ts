@@ -1,9 +1,14 @@
 'use server'
 
 import { auth } from '@/lib/auth'
+import { getUser } from '@/lib/getUser'
 import { isSignedOut } from '@/lib/isSignedIn'
 import { prisma } from '@/lib/prisma'
-import { QuestionSchema, type QuestionSchemaType } from '@/lib/types'
+import {
+  PrismaType,
+  QuestionSchema,
+  type QuestionSchemaType,
+} from '@/lib/types'
 import { revalidatePath } from 'next/cache'
 
 export async function suggestQuestion(data: QuestionSchemaType) {
@@ -15,6 +20,12 @@ export async function suggestQuestion(data: QuestionSchemaType) {
     }
     // @ts-ignore Is already checked in isSignedOut()
     const user_id = session.user.id
+    const user = await getUser({
+      select: {
+        isAdmin: true,
+      },
+    })
+    const isAdmin = user?.isAdmin || false
 
     const validatedFields = QuestionSchema.safeParse(data)
 
@@ -27,6 +38,11 @@ export async function suggestQuestion(data: QuestionSchemaType) {
 
     const createDataObj = {
       ...validatedFields.data,
+      tags: {
+        connect: (validatedFields.data.tags || []).map((thing_id) => ({
+          thing_id,
+        })),
+      },
       answerThingOptions: {
         connect: (validatedFields.data.answerThingOptions || []).map(
           (thing_id) => ({
@@ -42,15 +58,24 @@ export async function suggestQuestion(data: QuestionSchemaType) {
     }
 
     if (question_id) {
+      const where: PrismaType.QuestionWhereUniqueInput = {
+        question_id,
+      }
+      if (isAdmin === false) {
+        where.createdBy = {
+          id: user_id,
+        }
+      }
+
       await prisma.question.upsert({
-        where: {
-          question_id,
-          createdBy: {
-            id: user_id,
-          },
-        },
+        where,
         update: {
           ...validatedFields.data,
+          tags: {
+            set: (validatedFields.data.tags || []).map((thing_id) => ({
+              thing_id,
+            })),
+          },
           answerThingOptions: {
             set: (validatedFields.data.answerThingOptions || []).map(
               (thing_id) => ({

@@ -7,22 +7,31 @@ import { AutoGrowTextarea } from '@/components/client/AutogrowTextarea'
 import { Combobox } from '@/components/client/Combobox'
 import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
-import { DEFAULT_LOCALE, LOCALES } from '@/lib/constants'
-import { intlDisplayNamesLanguage } from '@/lib/intlDisplayNamesLanguage'
+// import { DEFAULT_LOCALE, LOCALES } from '@/lib/constants'
+// import { intlDisplayNamesLanguage } from '@/lib/intlDisplayNamesLanguage'
 import {
   SchemaTypeSchema,
   ThingSchema,
   type ThingSchemaType,
 } from '@/lib/types'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
+
+function stringifyJsonLd(jsonld: unknown) {
+  return jsonld ? JSON.stringify(jsonld, null, 2) : ''
+}
 
 export function SuggestThingForm({
   thing,
 }: {
   thing?: ThingSchemaType | null
 }) {
+  const [jsonldValue, setJsonldValue] = useState<string>(
+    stringifyJsonLd(thing?.jsonld)
+  ) // save value in an extra state, to allow editing while having errors
+
   const form = useForm<ThingSchemaType>({
     resolver: zodResolver(ThingSchema),
     defaultValues: {
@@ -89,6 +98,7 @@ export function SuggestThingForm({
           )}
         />
 
+        {/*
         <FormInput
           form={form}
           name="locale"
@@ -113,6 +123,7 @@ export function SuggestThingForm({
             />
           )}
         />
+        */}
 
         <FormInput
           form={form}
@@ -122,8 +133,26 @@ export function SuggestThingForm({
             <AutoGrowTextarea
               className="font-mono"
               {...field}
-              value={field.value || ''}
+              value={jsonldValue}
               placeholder={`{ "@context": "https://schema.org", … }`}
+              onChange={(event) => {
+                const newValue = event.target.value
+                setJsonldValue(newValue) // save value in an extra state, to allow editing while having errors
+
+                let parsedSuccessfully = false
+                try {
+                  field.onChange(JSON.parse(newValue) || null)
+                  parsedSuccessfully = true
+                } catch (error) {
+                  form.setError('jsonld', {
+                    message: String(error),
+                  })
+                }
+
+                if (parsedSuccessfully) {
+                  form.clearErrors('jsonld')
+                }
+              }}
             />
           )}
         />

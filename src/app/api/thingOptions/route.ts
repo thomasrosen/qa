@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma'
+import { getThings } from '@/lib/getThings'
 import { SchemaTypeArraySchema } from '@/lib/types'
 
 export async function GET(request: Request) {
@@ -15,16 +15,11 @@ export async function GET(request: Request) {
     })
   }
 
-  // load all things with the datatypes
-  const things = await prisma.thing.findMany({
+  const things = await getThings({
     where: {
       type: {
         in: validatedDataFields.data,
       },
-      canBeUsed: true,
-    },
-    orderBy: {
-      name: 'asc',
     },
   })
 

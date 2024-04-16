@@ -64,6 +64,9 @@ model User {
   emailVerified   DateTime?
   image           String?
   //
+  preferredTags   Thing[] @relation("User.preferredTags")
+  isAdmin         Boolean? @default(false)
+  //
   // accounts      Account[]
   // sessions      Session[]
   //
@@ -105,6 +108,7 @@ enum SchemaType {
   DefinedTerm /// for a word / job title / etc
   Country
   Certification
+  CategoryCode
 }
 
 // model Backup {
@@ -138,6 +142,8 @@ model Thing {
   Context_aboutThing Context[]   @relation("Context.aboutThing")
   isUsedInValues     Value[]     @relation("Value.thing")
   isOptionFor        Question[]  @relation("Thing.isOptionFor")
+  isPreferredTagFor  User[]      @relation("User.preferredTags")
+  isTagFor           Question[]  @relation("Question.preferredTags")
 }
 
 /// @zod.refine(schema => schema.expectedValueType === 'Thing' ? schema.expectedThingTypes.length > 0 : true, { path: ['expectedThingTypes'], message: 'expectedThingTypes must be set when expectedValueType is Thing' })
@@ -153,6 +159,7 @@ model Question {
   question           String? /// @zod.string.min(10, { message: 'Question must be at least 10 characters long.' })
   description        String?
   locale             String? /// any locale string /// @zod.string.min(2, { message: 'Locale must be at least 2 characters long.' })
+  tags               Thing[] @relation("Question.preferredTags")
   asProperty         String? /// if this question is a schema property, this would be the schema.org property name /// @zod.string.regex(/^([a-z]+(?:[A-Z][a-z]*)*)?$/, { message: 'asProperty must be a valid schema.org property name. These must be lowerCamelCase and only a-Z and A-Z are allowed.' })
   aboutThingTypes    SchemaType[]
   answerType         DataType

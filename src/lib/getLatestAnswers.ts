@@ -46,7 +46,7 @@ export async function getLatestAnswers({
     }
     return lastAnswers.filter((answer) => answer && answer.isAnswering)
   } catch (error) {
-    console.error(error)
+    console.error('ERROR_B7C6ZYsW', error)
   }
 
   return []

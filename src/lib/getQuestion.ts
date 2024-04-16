@@ -49,6 +49,7 @@ export async function getQuestion({
     where: questionWhere,
     include: {
       answerThingOptions: true,
+      tags: true,
     },
   })
 
