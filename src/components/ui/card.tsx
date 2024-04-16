@@ -1,8 +1,8 @@
 import * as React from 'react'
 
+import { Headline } from '@/components/Headline'
+import { P } from '@/components/P'
 import { cn } from '@/lib/utils'
-import { Headline } from '../Headline'
-import { P } from '../P'
 
 const Card = React.forwardRef<
   HTMLDivElement,

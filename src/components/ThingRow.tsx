@@ -1,6 +1,6 @@
+import { P } from '@/components/P'
 import { ThingSchemaType } from '@/lib/types'
 import { cn } from '@/lib/utils'
-import { P } from './P'
 
 export function ThingRow({
   thing,

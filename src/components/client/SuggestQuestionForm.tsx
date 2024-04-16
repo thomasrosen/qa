@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/select'
 // import { DEFAULT_LOCALE, LOCALES } from '@/lib/constants'
 // import { intlDisplayNamesLanguage } from '@/lib/intlDisplayNamesLanguage'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   DataTypeSchema,
   QuestionSchema,
@@ -32,7 +33,6 @@ import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { Checkbox } from '../ui/checkbox'
 
 export function SuggestQuestionForm({
   question,

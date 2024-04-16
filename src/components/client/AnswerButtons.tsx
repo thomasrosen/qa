@@ -5,13 +5,13 @@ import { ThingRow } from '@/components/ThingRow'
 import { Combobox } from '@/components/client/Combobox'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Separator } from '@/components/ui/separator'
 import {
   QuestionSchemaType,
   ThingSchemaType,
   ValueSchemaType,
 } from '@/lib/types'
 import React, { useCallback, useEffect, useState } from 'react'
-import { Separator } from '../ui/separator'
 
 type AnswerButtonsProps = {
   question: QuestionSchemaType

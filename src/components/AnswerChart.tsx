@@ -1,5 +1,7 @@
 import { P } from '@/components/P'
+import { ScreenshotElement } from '@/components/client/ScreenshotElement'
 import { BarChart } from '@/components/client/charts/BarChart'
+import { ScatterPlot } from '@/components/client/charts/ScatterPlot'
 import {
   Card,
   CardContent,
@@ -13,8 +15,6 @@ import { AnswerType, ExtendedValueSchemaType } from '@/lib/prisma'
 import { CameraIcon } from '@radix-ui/react-icons'
 import { devNull } from 'os'
 import { Suspense } from 'react'
-import { ScreenshotElement } from './client/ScreenshotElement'
-import { ScatterPlot } from './client/charts/ScatterPlot'
 
 function getLabel(value: ExtendedValueSchemaType) {
   if (value.valueType === 'String') {

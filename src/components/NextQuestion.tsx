@@ -1,9 +1,9 @@
+import { Headline } from '@/components/Headline'
 import { P } from '@/components/P'
 import { QuestionCard } from '@/components/client/QuestionCard'
 import { getQuestion } from '@/lib/getQuestion'
 import { getRandomQuestion } from '@/lib/getRandomQuestion'
 import { getRandomThing } from '@/lib/getRandomThing'
-import { Headline } from './Headline'
 
 export default async function NextQuestion({
   question_id,

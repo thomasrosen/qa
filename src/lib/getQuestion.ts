@@ -1,7 +1,7 @@
+import { auth } from '@/lib/auth'
+import { isSignedOut } from '@/lib/isSignedIn'
 import { prisma } from '@/lib/prisma'
 import { QuestionSchemaType, type PrismaType } from '@/lib/types'
-import { auth } from './auth'
-import { isSignedOut } from './isSignedIn'
 
 type FunctionArgs = {
   where?: PrismaType.QuestionWhereInput

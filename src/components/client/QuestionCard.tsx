@@ -2,6 +2,7 @@
 
 import { saveAnswer } from '@/actions/saveAnswer'
 import { P } from '@/components/P'
+import { AnswerButtons } from '@/components/client/AnswerButtons'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -19,7 +20,6 @@ import {
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React, { useCallback, useState } from 'react'
-import { AnswerButtons } from './AnswerButtons'
 
 export function QuestionCard({
   question,

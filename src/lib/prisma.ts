@@ -12,4 +12,4 @@ const prisma = globalThis.prismaGlobal ?? prismaClientSingleton()
 export { Prisma, prisma }
 if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma
 
-export * from './types'
+export * from '@/lib/types'
