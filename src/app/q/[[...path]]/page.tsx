@@ -24,7 +24,7 @@ async function LatestAnswerWrapper() {
         <Headline type="h2" className="border-0 p-0 m-0">
           Your most recent answer
         </Headline>
-        <Link href="/you">
+        <Link href="/answers">
           <Button variant="outline">All Answers</Button>
         </Link>
       </div>
@@ -51,7 +51,7 @@ async function SpecificAnswerWrapper({ question_id }: { question_id: string }) {
         <Headline type="h2" className="border-0 p-0 m-0">
           Results for this question
         </Headline>
-        <Link href="/you">
+        <Link href="/answers">
           <Button variant="outline">All Answers</Button>
         </Link>
       </div>

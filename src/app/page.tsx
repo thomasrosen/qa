@@ -41,7 +41,7 @@ export default function Home() {
           Start collecting Answers
         </NavButton>
         <div className="flex gap-4 flex-wrap justify-center">
-          {/* <NavButton href="/insights">Insights</NavButton> */}
+          {/* <NavButton href="/answers">Answers</NavButton> */}
           <NavButton href="/imprint">Imprint + Privacy</NavButton>
           <DarkModeToggle />
         </div>
