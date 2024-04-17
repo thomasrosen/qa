@@ -31,7 +31,6 @@ export async function suggestQuestion(data: QuestionSchemaType) {
     const isAdmin = user?.isAdmin || false
 
     const validatedFields = QuestionSchema.safeParse(data)
-
     if (!validatedFields.success) {
       return false
     }
