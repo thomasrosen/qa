@@ -67,7 +67,7 @@ export const QuestionSchema = z
     description: z.string().nullable(),
     locale: z
       .string()
-      .min(2, { message: 'Locale must be at least 2 characters long.' })
+      // .min(2, { message: 'Locale must be at least 2 characters long.' })
       .nullable()
       .optional(),
     tags: z.any().array().optional(),
