@@ -84,7 +84,6 @@ export async function getQuestion({
       tags: true,
     },
   })
-  console.log('question', question)
 
   if (question.length === 0) {
     return null
