@@ -84,6 +84,7 @@ export const QuestionSchema = z
     answerThingOptions: z.any().array().optional(), // TODO can the any be removed?
     answerStringOptions: z.string().array().optional(),
     allowCreateNewOption: z.boolean().nullable().optional(),
+    canBeUsed: z.boolean().nullable().optional(),
   })
   .refine(
     (schema) =>
@@ -115,6 +116,7 @@ export const ThingSchema = z.object({
       isTagFor: z.number().optional(),
     })
     .optional(),
+  canBeUsed: z.boolean().nullable().optional(),
 })
 export type ThingSchemaType = z.input<typeof ThingSchema>
 

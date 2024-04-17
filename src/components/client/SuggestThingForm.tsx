@@ -18,14 +18,17 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
+import { Checkbox } from '../ui/checkbox'
 
 function stringifyJsonLd(jsonld: unknown) {
   return jsonld ? JSON.stringify(jsonld, null, 2) : ''
 }
 
 export function SuggestThingForm({
+  isAdmin = false,
   thing,
 }: {
+  isAdmin: boolean
   thing?: ThingSchemaType | null
 }) {
   const [jsonldValue, setJsonldValue] = useState<string>(
@@ -40,6 +43,7 @@ export function SuggestThingForm({
       locale: '',
       sameAs: [],
       jsonld: null,
+      canBeUsed: false,
       ...thing,
     },
   })
@@ -191,6 +195,22 @@ export function SuggestThingForm({
               .filter(Boolean)
           }}
         />
+
+        {isAdmin === true ? (
+          <FormInput
+            className="flex flex-row-reverse items-center justify-end gap-4"
+            form={form}
+            name="canBeUsed"
+            label="Is this allowed to be used?"
+            input={(field) => (
+              <Checkbox
+                className="!my-0"
+                checked={field.value}
+                onCheckedChange={field.onChange}
+              />
+            )}
+          />
+        ) : null}
 
         <Button type="submit">Suggest Thing</Button>
       </form>

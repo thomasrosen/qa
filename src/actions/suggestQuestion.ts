@@ -30,6 +30,11 @@ export async function suggestQuestion(data: QuestionSchemaType) {
     })
     const isAdmin = user?.isAdmin || false
 
+    if (isAdmin === false) {
+      // this setting should only be changed by admins
+      delete data.canBeUsed
+    }
+
     const validatedFields = QuestionSchema.safeParse(data)
     if (!validatedFields.success) {
       return false

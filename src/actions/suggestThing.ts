@@ -26,8 +26,12 @@ export async function suggestThing(data: ThingSchemaType) {
     })
     const isAdmin = user?.isAdmin || false
 
-    const validatedFields = ThingSchema.safeParse(data)
+    if (isAdmin === false) {
+      // this setting should only be changed by admins
+      delete data.canBeUsed
+    }
 
+    const validatedFields = ThingSchema.safeParse(data)
     if (!validatedFields.success) {
       return false
     }

@@ -8,6 +8,7 @@ import { getUser } from '@/lib/getUser'
 import { isSignedOut } from '@/lib/isSignedIn'
 import { prisma } from '@/lib/prisma'
 import { stringToColor } from '@/lib/stringToColour'
+import { cn } from '@/lib/utils'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
@@ -50,7 +51,13 @@ export default async function Things() {
         return (
           <div key={thing.thing_id} className="flex gap-4 justify-between">
             <div className="w-full">
-              <ThingRow thing={thing} className="bg-transparent p-0 m-0" />
+              <ThingRow
+                thing={thing}
+                className={cn(
+                  'bg-transparent p-0 m-0',
+                  thing.canBeUsed ? '' : 'line-through opacity-60'
+                )}
+              />
               <P type="ghost" className="m-0" style={{ color: typeColor }}>
                 {[
                   thing.updatedAt.toLocaleString(DEFAULT_LOCALE),

@@ -35,9 +35,11 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
 export function SuggestQuestionForm({
+  isAdmin = false,
   question,
   tagOptions = [],
 }: {
+  isAdmin: boolean
   question?: QuestionSchemaType | null
   tagOptions: ThingSchemaType[]
 }) {
@@ -61,6 +63,7 @@ export function SuggestQuestionForm({
       answerThingTypes: [],
       answerStringOptions: [],
       allowCreateNewOption: true, // not for things or booleans
+      canBeUsed: false,
       ...question,
       answerThingOptions:
         (question?.answerThingOptions || []).map((thing) => thing.thing_id) ||
@@ -175,6 +178,22 @@ export function SuggestQuestionForm({
             />
           )}
         />
+
+        {isAdmin === true ? (
+          <FormInput
+            className="flex flex-row-reverse items-center justify-end gap-4"
+            form={form}
+            name="canBeUsed"
+            label="Is this allowed to be used?"
+            input={(field) => (
+              <Checkbox
+                className="!my-0"
+                checked={field.value}
+                onCheckedChange={field.onChange}
+              />
+            )}
+          />
+        ) : null}
 
         {/*
         <FormInput
