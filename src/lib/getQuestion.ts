@@ -1,4 +1,5 @@
 import { auth } from '@/lib/auth'
+import { getUser } from '@/lib/getUser'
 import { isSignedOut } from '@/lib/isSignedIn'
 import { prisma } from '@/lib/prisma'
 import { QuestionSchemaType, type PrismaType } from '@/lib/types'
@@ -16,6 +17,20 @@ export async function getQuestion({
   }
   // @ts-ignore Is already checked in isSignedOut()
   const user_id = session.user.id
+  const user = await getUser({
+    where: {
+      id: user_id,
+    },
+    select: {
+      preferredTags: {
+        select: {
+          thing_id: true,
+        },
+      },
+    },
+  })
+  const preferredTags =
+    (user?.preferredTags || []).map((thing) => thing.thing_id) || []
 
   const answerWhere = {
     OR: [
@@ -40,6 +55,23 @@ export async function getQuestion({
     Answer_isAnswering: {
       every: answerWhere,
     },
+    tags: {
+      some: {
+        OR: [
+          {
+            thing_id: {
+              in: preferredTags,
+            },
+          },
+          {
+            jsonld: {
+              path: ['termCode'],
+              equals: 'default',
+            },
+          },
+        ],
+      },
+    },
     ...where,
   }
 
@@ -52,6 +84,7 @@ export async function getQuestion({
       tags: true,
     },
   })
+  console.log('question', question)
 
   if (question.length === 0) {
     return null

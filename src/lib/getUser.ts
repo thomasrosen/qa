@@ -1,5 +1,3 @@
-import { auth } from '@/lib/auth'
-import { isSignedOut } from '@/lib/isSignedIn'
 import { prisma } from '@/lib/prisma'
 import { UserSchemaType, type PrismaType } from '@/lib/types'
 
@@ -13,21 +11,10 @@ export async function getUser({
   select,
   include,
 }: FunctionArgs = {}): Promise<UserSchemaType | null> {
-  const session = await auth()
-  if (isSignedOut(session)) {
-    console.error('ERROR_tw1oVNOf', 'user is required')
-    return null
-  }
-  // @ts-ignore Is already checked in isSignedOut()
-  const user_id = session.user.id
-
   const user = await prisma.user.findMany({
     relationLoadStrategy: 'join', // or 'query'
     take: 1,
-    where: {
-      id: user_id,
-      ...where,
-    },
+    where,
     include,
     select,
   })

@@ -14,7 +14,12 @@ export default async function Questions() {
   if (isSignedOut(session)) {
     notFound()
   }
+  // @ts-ignore Is already checked in isSignedOut()
+  const user_id = session.user.id
   const user = await getUser({
+    where: {
+      id: user_id,
+    },
     select: {
       isAdmin: true,
     },
@@ -30,7 +35,15 @@ export default async function Questions() {
       updatedAt: 'desc',
     },
     include: {
-      tags: true,
+      tags: {
+        include: {
+          _count: {
+            select: {
+              isTagFor: true,
+            },
+          },
+        },
+      },
       createdBy: true,
     },
   })

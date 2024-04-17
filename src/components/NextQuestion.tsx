@@ -1,9 +1,79 @@
 import { Headline } from '@/components/Headline'
 import { P } from '@/components/P'
 import { QuestionCard } from '@/components/client/QuestionCard'
+import { auth } from '@/lib/auth'
 import { getQuestion } from '@/lib/getQuestion'
 import { getRandomQuestion } from '@/lib/getRandomQuestion'
 import { getRandomThing } from '@/lib/getRandomThing'
+import { getThings } from '@/lib/getThings'
+import { getUser } from '@/lib/getUser'
+import { Prisma } from '@/lib/prisma'
+import { PreferredTagsChooser } from './client/PreferredTagsChooser'
+
+async function NoQuestionsFallback() {
+  const session = await auth()
+  const user_id = session?.user?.id
+
+  if (!user_id) {
+    return null
+  }
+
+  const user = await getUser({
+    where: {
+      id: user_id,
+    },
+    include: {
+      preferredTags: {
+        where: {
+          canBeUsed: true,
+        },
+      },
+    },
+  })
+
+  const tagOptions = await getThings({
+    schemaTypes: ['CategoryCode'],
+    where: {
+      OR: [
+        {
+          jsonld: {
+            path: ['termCode'],
+            not: 'default',
+          },
+        },
+        {
+          jsonld: {
+            path: ['termCode'],
+            equals: Prisma.DbNull,
+          },
+        },
+      ],
+    },
+  })
+
+  if (!user) {
+    return null
+  }
+
+  return (
+    <>
+      <P className="text-center">
+        <strong>
+          There are no questions available to answer in the chosen categories at
+          the moment.
+        </strong>
+        <br />
+        Every question can be answered only once every 12 month.
+        <br />
+        Check back later when we’ve added more questions.
+      </P>
+      <P className="text-center">
+        <strong>Try adding more categories, to get more questions.</strong>
+      </P>
+      <PreferredTagsChooser user={user} tagOptions={tagOptions} />
+    </>
+  )
+}
 
 export default async function NextQuestion({
   question_id,
@@ -32,17 +102,7 @@ export default async function NextQuestion({
         </P>
       )
     } else {
-      return (
-        <P className="text-center">
-          <strong>
-            There are no questions available to answer at the moment.
-          </strong>
-          <br />
-          Every question can be answered only once every 12 month.
-          <br />
-          Check back later when we’ve added more questions.
-        </P>
-      )
+      return <NoQuestionsFallback />
     }
   }
 
@@ -56,17 +116,7 @@ export default async function NextQuestion({
     })
 
     if (!aboutThing) {
-      return (
-        <P className="text-center">
-          <strong>
-            There are no questions available to answer at the moment.
-          </strong>
-          <br />
-          Every question can be answered only once every 12 month.
-          <br />
-          Check back later when we’ve added more questions.
-        </P>
-      )
+      return <NoQuestionsFallback />
     }
   }
 

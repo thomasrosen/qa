@@ -48,14 +48,8 @@ export function PreferredTagsChooser({
     setIsSubmitting(false)
 
     if (submitted) {
+      toast.success('Your preferred categories have been saved.')
       router.refresh()
-      toast('You submitted the following values:', {
-        description: (
-          <pre className="mt-2">
-            <code>{JSON.stringify(data, null, 2)}</code>
-          </pre>
-        ),
-      })
     } else {
       toast.error('An error occurred while submitting your suggestion.')
     }

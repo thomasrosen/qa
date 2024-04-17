@@ -21,6 +21,9 @@ export async function suggestQuestion(data: QuestionSchemaType) {
     // @ts-ignore Is already checked in isSignedOut()
     const user_id = session.user.id
     const user = await getUser({
+      where: {
+        id: user_id,
+      },
       select: {
         isAdmin: true,
       },

@@ -38,7 +38,12 @@ export function ThingRow({
             style={dotStyle}
           />
         )}
-        <strong>{thing.name}</strong>
+        <strong>
+          {thing.name}
+          {thing.type === 'CategoryCode' && thing?._count?.isTagFor
+            ? ` (${thing?._count?.isTagFor})`
+            : ''}
+        </strong>
       </div>
       {description && (
         <P type="muted" className="m-0 p-0">

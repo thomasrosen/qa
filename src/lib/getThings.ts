@@ -32,6 +32,13 @@ export async function getThings({
     orderBy: {
       name: 'asc',
     },
+    include: {
+      _count: {
+        select: {
+          isTagFor: true,
+        },
+      },
+    },
   })
 
   return things

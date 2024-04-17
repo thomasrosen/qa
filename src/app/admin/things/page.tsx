@@ -16,7 +16,12 @@ export default async function Things() {
   if (isSignedOut(session)) {
     notFound()
   }
+  // @ts-ignore Is already checked in isSignedOut()
+  const user_id = session.user.id
   const user = await getUser({
+    where: {
+      id: user_id,
+    },
     select: {
       isAdmin: true,
     },

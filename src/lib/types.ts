@@ -109,6 +109,12 @@ export const ThingSchema = z.object({
     .optional(),
   sameAs: z.string().array(),
   jsonld: z.any().nullable().optional(),
+  isTagFor: z.any().nullable().optional(),
+  _count: z
+    .object({
+      isTagFor: z.number().optional(),
+    })
+    .optional(),
 })
 export type ThingSchemaType = z.input<typeof ThingSchema>
 
