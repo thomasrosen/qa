@@ -21,6 +21,8 @@ import {
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React, { useCallback, useState } from 'react'
+import Markdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 export function QuestionCard({
   question,
@@ -66,7 +68,7 @@ export function QuestionCard({
         {question && (
           <CardHeader>
             {tags.length > 0 && (
-              <div className="flex flex-wrap gap-4 -mt-1 justify-center">
+              <div className="flex flex-wrap gap-4 -mt-1 justify-start">
                 {tags.map((thing) => (
                   <ThingRow
                     key={thing.thing_id}
@@ -77,11 +79,29 @@ export function QuestionCard({
               </div>
             )}
             {question.question && (
-              <CardTitle className="text-center">{question.question}</CardTitle>
+              <CardTitle className="text-start">{question.question}</CardTitle>
             )}
             {question.description && (
-              <CardDescription className="text-center">
-                {question.description}
+              <CardDescription className="text-start">
+                <Markdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    p(props) {
+                      return <P type="ghost" className="mb-2" {...props} />
+                    },
+                    a(props) {
+                      return (
+                        <Link
+                          {...props}
+                          target="_blank"
+                          href={props.href as string}
+                        />
+                      )
+                    },
+                  }}
+                >
+                  {question.description}
+                </Markdown>
               </CardDescription>
             )}
           </CardHeader>
