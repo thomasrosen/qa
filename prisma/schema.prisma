@@ -64,8 +64,8 @@ model User {
   emailVerified   DateTime?
   image           String?
   //
-  preferredTags   Thing[] @relation("User.preferredTags")
-  isAdmin         Boolean? @default(false)
+  preferredTags   Thing[]    @relation("User.preferredTags")
+  isAdmin         Boolean?   @default(false)
   //
   // accounts      Account[]
   // sessions      Session[]
@@ -159,7 +159,7 @@ model Question {
   question           String? /// @zod.string.min(10, { message: 'Question must be at least 10 characters long.' })
   description        String?
   locale             String? /// any locale string /// @zod.string.min(2, { message: 'Locale must be at least 2 characters long.' })
-  tags               Thing[] @relation("Question.preferredTags")
+  tags               Thing[]      @relation("Question.preferredTags")
   asProperty         String? /// if this question is a schema property, this would be the schema.org property name /// @zod.string.regex(/^([a-z]+(?:[A-Z][a-z]*)*)?$/, { message: 'asProperty must be a valid schema.org property name. These must be lowerCamelCase and only a-Z and A-Z are allowed.' })
   aboutThingTypes    SchemaType[]
   answerType         DataType
