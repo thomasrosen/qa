@@ -104,7 +104,7 @@ export function PreferredTagsChooser({
             </Button>
 
             {isSubmitting && (
-              <P type="ghost" className="m-0">
+              <P type="ghost" className="m-0 text-center">
                 Loading…
               </P>
             )}
