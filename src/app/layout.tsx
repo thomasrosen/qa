@@ -15,7 +15,7 @@ const fontSans = Ubuntu({
 })
 
 export const metadata: Metadata = {
-  title: 'Qroudsourced Answers',
+  title: 'Qrowdsourced Answers',
   description: 'What is the question?',
 }
 
@@ -39,7 +39,7 @@ export default function RootLayout({
           <div className="min-h-screen max-w-full text-foreground flex flex-col items-center p-8 lg:p-16">
             <header>
               <Headline type="h1" className="mb-8 text-center">
-                Qroudsourced Answers
+                Qrowdsourced Answers
               </Headline>
 
               <MainNav />
