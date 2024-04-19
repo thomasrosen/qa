@@ -18,6 +18,7 @@ const Label = React.forwardRef<
   <LabelPrimitive.Root
     ref={ref}
     className={cn(labelVariants(), className)}
+    dir="auto"
     {...props}
   />
 ))
