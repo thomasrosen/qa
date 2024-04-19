@@ -237,7 +237,9 @@ export async function getTranslationWithParts({
           translatedBy: '',
         })
 
-        console.info('Getting new translation...')
+        if (process.env.NODE_ENV === 'development') {
+          console.info('INFO_WIPlPMiN', 'Getting new translation...')
+        }
         const newTranslation = await translateReactWithOpenAi(
           text,
           outputOptions
@@ -249,12 +251,16 @@ export async function getTranslationWithParts({
           outputOptions: outputOptionsAsKey,
           translatedBy: 'OpenAI',
         })
-        console.info('Saved new translation.')
+        if (process.env.NODE_ENV === 'development') {
+          console.info('INFO_Fi3J3OFQ', 'Saved new translation.')
+        }
         await deleteEmptyTranslations({
           originalText: text,
           outputOptions: outputOptionsAsKey,
         })
-        console.info('Deleted empty duplicates.')
+        if (process.env.NODE_ENV === 'development') {
+          console.info('INFO_kqVjJ8dn', 'Deleted empty duplicates.')
+        }
       } catch (error) {
         console.error('ERROR_HNC9ly5W', error)
       }
