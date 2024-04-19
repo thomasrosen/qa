@@ -1,6 +1,7 @@
 import { AnswerChart } from '@/components/AnswerChart'
 import { Headline } from '@/components/Headline'
 import { P } from '@/components/P'
+import { TS } from '@/components/translate/TServer'
 import { auth } from '@/lib/auth'
 import { getLatestAnswers } from '@/lib/getLatestAnswers'
 import { isSignedOut } from '@/lib/isSignedIn'
@@ -18,7 +19,9 @@ export default async function Answers() {
 
   return (
     <>
-      <Headline type="h2">Question you already answers</Headline>
+      <Headline type="h2">
+        <TS>Question you already answers</TS>
+      </Headline>
 
       {latestAnswers ? (
         latestAnswers.filter(Boolean).map((latestAnswer) => (
@@ -27,7 +30,9 @@ export default async function Answers() {
           </Suspense>
         ))
       ) : (
-        <P>Answer questions to see what others think!</P>
+        <P>
+          <TS>Answer questions to see what others think!</TS>
+        </P>
       )}
     </>
   )

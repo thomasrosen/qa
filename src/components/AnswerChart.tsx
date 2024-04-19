@@ -1,7 +1,9 @@
+import { HideFromTranslation } from '@/components/HideFromTranslation'
 import { P } from '@/components/P'
 import { ScreenshotElement } from '@/components/client/ScreenshotElement'
 import { BarChart } from '@/components/client/charts/BarChart'
 import { ScatterPlot } from '@/components/client/charts/ScatterPlot'
+import { TS, tServer } from '@/components/translate/TServer'
 import {
   Card,
   CardContent,
@@ -16,20 +18,20 @@ import { CameraIcon } from '@radix-ui/react-icons'
 import { devNull } from 'os'
 import { Suspense } from 'react'
 
-function getLabel(value: ExtendedValueSchemaType) {
-  if (value.valueType === 'String') {
-    return value.valueAsString
-  }
+async function getTranslatedLabel(
+  value: ExtendedValueSchemaType
+): Promise<string> {
+  let label = 'Unknown'
   if (value.valueType === 'Number') {
-    return value.valueAsNumber
+    return String(value.valueAsNumber) // numbers don't need translation (maybe when they are formatted)
+  } else if (value.valueType === 'String' && value.valueAsString) {
+    label = value.valueAsString
+  } else if (value.valueType === 'Boolean') {
+    label = value.valueAsBoolean ? 'Yes' : 'No'
+  } else if (value.valueType === 'Thing') {
+    label = value.valueAsThing.name
   }
-  if (value.valueType === 'Boolean') {
-    return value.valueAsBoolean ? 'Yes' : 'No'
-  }
-  if (value.valueType === 'Thing') {
-    return value.valueAsThing.name
-  }
-  return 'Unknown'
+  return (await tServer({ text: label })) || ''
 }
 
 function getFirstValue(value: any[] | undefined) {
@@ -77,20 +79,24 @@ export async function AnswerChart({ answer }: { answer?: AnswerType | null }) {
 
     if (values.length > 0) {
       if (valueType === 'Number') {
-        scatterPlotData = values.map((value, index) => ({
-          label: getLabel(value),
-          // x: value._count._all,
-          y: 0,
-          x: value.valueAsNumber ?? 0,
-          z: value._count._all ?? 1,
-          valueAsNumber: value.valueAsNumber ?? 0,
-        }))
+        scatterPlotData = await Promise.all(
+          values.map(async (value, index) => ({
+            label: await getTranslatedLabel(value),
+            // x: value._count._all,
+            y: 0,
+            x: value.valueAsNumber ?? 0,
+            z: value._count._all ?? 1,
+            valueAsNumber: value.valueAsNumber ?? 0,
+          }))
+        )
       } else {
-        barChartData = values.map((value, index) => ({
-          label: getLabel(value),
-          value: value._count._all,
-          valueAsThing: value.valueAsThing,
-        }))
+        barChartData = await Promise.all(
+          values.map(async (value, index) => ({
+            label: await getTranslatedLabel(value),
+            value: value._count._all,
+            valueAsThing: value.valueAsThing,
+          }))
+        )
       }
     }
   }
@@ -103,23 +109,38 @@ export async function AnswerChart({ answer }: { answer?: AnswerType | null }) {
     <div id={randomScreenshotId} className="p-2 -m-2 bg-background">
       <Card className="aspect-square flex flex-col relative">
         <CardHeader>
-          <CardDescription className="p-0 m-0">Results for…</CardDescription>
+          <CardDescription className="p-0 m-0">
+            <TS>Results for…</TS>
+          </CardDescription>
           <CardTitle className="p-0 m-0">
-            {answer.isAnswering.question}
+            <TS>{answer.isAnswering.question}</TS>
           </CardTitle>
-          {aboutThing && <P className="mb-0">{aboutThing.name}</P>}
+          {aboutThing && (
+            <P className="mb-0">
+              <TS>{aboutThing.name}</TS>
+            </P>
+          )}
         </CardHeader>
 
         <CardContent className="flex flex-col gap-2 grow">
           {!hasValues ? (
             <P className="mb-0">
-              You are the first to answer this question. Tell others to also
-              answer questions, so we can graph you the answer as a nice chart.
+              <TS>
+                You are the first to answer this question. Tell others to also
+                answer questions, so we can graph you the answer as a nice
+                chart.
+              </TS>
             </P>
           ) : (
             <>
               <div className="grow min-h-32">
-                <Suspense fallback={<P>Loading chart...</P>}>
+                <Suspense
+                  fallback={
+                    <P>
+                      <TS>Loading chart…</TS>
+                    </P>
+                  }
+                >
                   {valueType === 'Number' ? (
                     <ScatterPlot
                       data={scatterPlotData}
@@ -137,24 +158,39 @@ export async function AnswerChart({ answer }: { answer?: AnswerType | null }) {
                 </Suspense>
               </div>
               <P type="ghost" className="mb-0">
-                This is what people have answered before{' '}
-                {newestValueDate
-                  ? new Intl.DateTimeFormat(DEFAULT_LOCALE, {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                      hour: 'numeric',
-                      minute: 'numeric',
-                    }).format(newestValueDate)
-                  : devNull}
-                .
+                <TS>
+                  This is what people have answered before{' '}
+                  <HideFromTranslation
+                    real={
+                      newestValueDate
+                        ? new Intl.DateTimeFormat(DEFAULT_LOCALE, {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                            hour: 'numeric',
+                            minute: 'numeric',
+                          }).format(newestValueDate)
+                        : devNull
+                    }
+                  >
+                    April 19, 2024 at 5:11 PM
+                  </HideFromTranslation>
+                  .
+                </TS>
                 <br />
-                Amount of answers: {amountOfAnswers}
+                <TS>
+                  Amount of answers:{' '}
+                  <HideFromTranslation real={amountOfAnswers}>
+                    123
+                  </HideFromTranslation>
+                </TS>
                 <br />
-                Collected at{' '}
-                <a href="https://qa.thomasrosen.me/" className="no-underline">
-                  qa.thomasrosen.me
-                </a>
+                <TS>
+                  Collected at{' '}
+                  <a href="https://qa.thomasrosen.me/" className="no-underline">
+                    qa.thomasrosen.me
+                  </a>
+                </TS>
               </P>
             </>
           )}

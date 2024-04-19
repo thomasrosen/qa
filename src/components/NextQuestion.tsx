@@ -1,6 +1,8 @@
 import { Headline } from '@/components/Headline'
 import { P } from '@/components/P'
+import { PreferredTagsChooser } from '@/components/client/PreferredTagsChooser'
 import { QuestionCard } from '@/components/client/QuestionCard'
+import { TS } from '@/components/translate/TServer'
 import { auth } from '@/lib/auth'
 import { getQuestion } from '@/lib/getQuestion'
 import { getRandomQuestion } from '@/lib/getRandomQuestion'
@@ -8,7 +10,6 @@ import { getRandomThing } from '@/lib/getRandomThing'
 import { getThings } from '@/lib/getThings'
 import { getUser } from '@/lib/getUser'
 import { Prisma } from '@/lib/prisma'
-import { PreferredTagsChooser } from './client/PreferredTagsChooser'
 
 async function NoQuestionsFallback() {
   const session = await auth()
@@ -58,17 +59,21 @@ async function NoQuestionsFallback() {
   return (
     <>
       <P className="text-center">
-        <strong>
-          There are no questions available to answer in the chosen categories at
-          the moment.
-        </strong>
-        <br />
-        Every question can be answered only once every 12 month.
-        <br />
-        Check back later when we’ve added more questions.
+        <TS>
+          <strong>
+            There are no questions available to answer in the chosen categories
+            at the moment.
+          </strong>
+          <br />
+          Every question can be answered only once every 12 month.
+          <br />
+          Check back later when we’ve added more questions.
+        </TS>
       </P>
       <P className="text-center">
-        <strong>Try adding more categories, to get more questions.</strong>
+        <strong>
+          <TS>Try adding more categories, to get more questions.</TS>
+        </strong>
       </P>
       <PreferredTagsChooser user={user} tagOptions={tagOptions} />
     </>
@@ -96,9 +101,11 @@ export default async function NextQuestion({
     if (question_id) {
       return (
         <P className="text-center">
-          <strong>Thanks for already answering this question!</strong>
-          <br />
-          Every question can be answered only once every 12 month.
+          <TS>
+            <strong>Thanks for already answering this question!</strong>
+            <br />
+            Every question can be answered only once every 12 month.
+          </TS>
         </P>
       )
     } else {
@@ -123,7 +130,7 @@ export default async function NextQuestion({
   return (
     <section className="flex flex-col gap-4 mb-4 place-content-center">
       <Headline type="h2" className="border-0 p-0 mt-8 mb-2">
-        Answer the question to know what others think…
+        <TS>Answer the question to know what others think…</TS>
       </Headline>
       <QuestionCard question={question} aboutThing={aboutThing ?? undefined} />
     </section>

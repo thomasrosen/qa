@@ -2,6 +2,7 @@ import { AnswerChart } from '@/components/AnswerChart'
 import { Headline } from '@/components/Headline'
 import NextQuestion from '@/components/NextQuestion'
 import { SignIn } from '@/components/client/SignIn'
+import { TS } from '@/components/translate/TServer'
 import { Button } from '@/components/ui/button'
 import { auth } from '@/lib/auth'
 import { getLatestAnswers } from '@/lib/getLatestAnswers'
@@ -22,10 +23,12 @@ async function LatestAnswerWrapper() {
     <section className="flex flex-col gap-4 mb-4 place-content-center">
       <div className="mb-2 mt-8 flex justify-between items-center">
         <Headline type="h2" className="border-0 p-0 m-0">
-          Your most recent answer
+          <TS>Your most recent answer</TS>
         </Headline>
         <Link href="/answers">
-          <Button variant="outline">All Answers</Button>
+          <Button variant="outline">
+            <TS>All Answers</TS>
+          </Button>
         </Link>
       </div>
       {latestAnswers.filter(Boolean).map((latestAnswer) => (
@@ -49,10 +52,12 @@ async function SpecificAnswerWrapper({ question_id }: { question_id: string }) {
     <section className="flex flex-col gap-4 mb-4 place-content-center">
       <div className="mb-2 mt-8 flex justify-between items-center">
         <Headline type="h2" className="border-0 p-0 m-0">
-          Results for this question
+          <TS>Results for this question</TS>
         </Headline>
         <Link href="/answers">
-          <Button variant="outline">All Answers</Button>
+          <Button variant="outline">
+            <TS>All Answers</TS>
+          </Button>
         </Link>
       </div>
       {latestAnswers.filter(Boolean).map((latestAnswer) => (

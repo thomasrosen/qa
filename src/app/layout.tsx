@@ -1,6 +1,6 @@
 import '@/app/globals.css'
 import { Headline } from '@/components/Headline'
-import { MainNav } from '@/components/client/MainNav'
+import { MainNav } from '@/components/MainNav'
 import { ThemeProvider } from '@/components/client/ThemeProvider'
 import { Toaster } from '@/components/ui/sonner'
 import { cn } from '@/lib/utils'
@@ -25,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="de" suppressHydrationWarning>
       <body
         className={cn('bg-background font-sans antialiased', fontSans.variable)}
       >

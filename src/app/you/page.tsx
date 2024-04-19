@@ -1,4 +1,4 @@
-import { AboutYouCard } from '@/components/client/AboutYouCard'
+import { AboutYouCard } from '@/components/AboutYouCard'
 import { PreferredTagsChooser } from '@/components/client/PreferredTagsChooser'
 import { auth } from '@/lib/auth'
 import { getThings } from '@/lib/getThings'
