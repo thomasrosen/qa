@@ -41,6 +41,7 @@ export default async function SuggestQuestion({
           question_id,
           canBeUsed: undefined,
           Answer_isAnswering: undefined,
+          tags: undefined,
         },
       })
     : null
