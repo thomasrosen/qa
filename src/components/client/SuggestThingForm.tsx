@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Form } from '@/components/ui/form'
 // import { DEFAULT_LOCALE, LOCALES } from '@/lib/constants'
 // import { intlDisplayNamesLanguage } from '@/lib/intlDisplayNamesLanguage'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   SchemaTypeSchema,
   ThingSchema,
@@ -18,7 +19,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { Checkbox } from '../ui/checkbox'
 
 function stringifyJsonLd(jsonld: unknown) {
   return jsonld ? JSON.stringify(jsonld, null, 2) : ''
