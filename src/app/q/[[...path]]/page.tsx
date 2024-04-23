@@ -1,71 +1,11 @@
-import { AnswerChart } from '@/components/AnswerChart'
-import { Headline } from '@/components/Headline'
+import { AnswerChartWrapper } from '@/components/AnswerChartWrapper'
 import NextQuestion from '@/components/NextQuestion'
 import { SignIn } from '@/components/client/SignIn'
-import { TS } from '@/components/translate/TServer'
-import { Button } from '@/components/ui/button'
 import { auth } from '@/lib/auth'
-import { getLatestAnswers } from '@/lib/getLatestAnswers'
 import { isSignedOut } from '@/lib/isSignedIn'
-import Link from 'next/link'
 import { Suspense } from 'react'
 
 export const dynamic = 'force-dynamic'
-
-async function LatestAnswerWrapper() {
-  const latestAnswers = await getLatestAnswers({ take: 1 })
-
-  if (latestAnswers.length === 0) {
-    return null
-  }
-
-  return (
-    <section className="flex flex-col gap-4 mb-4 place-content-center">
-      <div className="mb-2 mt-8 flex justify-between items-center">
-        <Headline type="h2" className="border-0 p-0 m-0">
-          <TS>Your most recent answer</TS>
-        </Headline>
-        <Link href="/answers">
-          <Button variant="outline">
-            <TS>All Answers</TS>
-          </Button>
-        </Link>
-      </div>
-      {latestAnswers.filter(Boolean).map((latestAnswer) => (
-        <AnswerChart key={latestAnswer.answer_id} answer={latestAnswer} />
-      ))}
-    </section>
-  )
-}
-
-async function SpecificAnswerWrapper({ question_id }: { question_id: string }) {
-  const latestAnswers = await getLatestAnswers({
-    take: 1,
-    where: { isAnswering_id: question_id },
-  })
-
-  if (latestAnswers.length === 0) {
-    return null
-  }
-
-  return (
-    <section className="flex flex-col gap-4 mb-4 place-content-center">
-      <div className="mb-2 mt-8 flex justify-between items-center">
-        <Headline type="h2" className="border-0 p-0 m-0">
-          <TS>Results for this question</TS>
-        </Headline>
-        <Link href="/answers">
-          <Button variant="outline">
-            <TS>All Answers</TS>
-          </Button>
-        </Link>
-      </div>
-      {latestAnswers.filter(Boolean).map((latestAnswer) => (
-        <AnswerChart key={latestAnswer.answer_id} answer={latestAnswer} />
-      ))}
-    </section>
-  )
-}
 
 export default async function Questions({
   params: { path },
@@ -92,9 +32,9 @@ export default async function Questions({
 
       <Suspense>
         {question_id ? (
-          <SpecificAnswerWrapper question_id={question_id} />
+          <AnswerChartWrapper question_id={question_id} />
         ) : (
-          <LatestAnswerWrapper />
+          <AnswerChartWrapper />
         )}
       </Suspense>
     </>
