@@ -3,7 +3,6 @@ import { P } from '@/components/P'
 import { ScreenshotElement } from '@/components/client/ScreenshotElement'
 import { BarChart } from '@/components/client/charts/BarChart'
 import { ScatterPlot } from '@/components/client/charts/ScatterPlot'
-import { TS, tServer } from '@/components/translate/TServer'
 import {
   Card,
   CardContent,
@@ -14,6 +13,7 @@ import {
 import { DEFAULT_LOCALE } from '@/lib/constants'
 import { getAnswers } from '@/lib/getAnswers'
 import { AnswerType, ExtendedValueSchemaType } from '@/lib/prisma'
+import { TS, tServer } from '@/translate/components/TServer'
 import { CameraIcon } from '@radix-ui/react-icons'
 import { devNull } from 'os'
 import { Suspense } from 'react'
@@ -31,7 +31,7 @@ async function getTranslatedLabel(
   } else if (value.valueType === 'Thing') {
     label = value.valueAsThing.name
   }
-  return (await tServer({ text: label })) || ''
+  return (await tServer({ keys: 'AnswerChart', text: label })) || ''
 }
 
 function getFirstValue(value: any[] | undefined) {
@@ -110,14 +110,14 @@ export async function AnswerChart({ answer }: { answer?: AnswerType | null }) {
       <Card className="aspect-square flex flex-col relative">
         <CardHeader>
           <CardDescription className="p-0 m-0">
-            <TS>Results for…</TS>
+            <TS keys="answerChart">Results for…</TS>
           </CardDescription>
           <CardTitle className="p-0 m-0">
-            <TS>{answer.isAnswering.question}</TS>
+            <TS keys="answerChart">{answer.isAnswering.question}</TS>
           </CardTitle>
           {aboutThing && (
             <P className="mb-0">
-              <TS>{aboutThing.name}</TS>
+              <TS keys="answerChart">{aboutThing.name}</TS>
             </P>
           )}
         </CardHeader>
@@ -125,7 +125,7 @@ export async function AnswerChart({ answer }: { answer?: AnswerType | null }) {
         <CardContent className="flex flex-col gap-2 grow">
           {!hasValues ? (
             <P className="mb-0">
-              <TS>
+              <TS keys="answerChart">
                 You are the first to answer this question. Tell others to also
                 answer questions, so we can graph you the answer as a nice
                 chart.
@@ -137,7 +137,7 @@ export async function AnswerChart({ answer }: { answer?: AnswerType | null }) {
                 <Suspense
                   fallback={
                     <P>
-                      <TS>Loading chart…</TS>
+                      <TS keys="answerChart">Loading chart…</TS>
                     </P>
                   }
                 >
@@ -158,7 +158,7 @@ export async function AnswerChart({ answer }: { answer?: AnswerType | null }) {
                 </Suspense>
               </div>
               <P type="ghost" className="mb-0">
-                <TS>
+                <TS keys="answerChart">
                   This is what people have answered before{' '}
                   <HideFromTranslation
                     real={
@@ -178,14 +178,14 @@ export async function AnswerChart({ answer }: { answer?: AnswerType | null }) {
                   .
                 </TS>
                 <br />
-                <TS>
+                <TS keys="answerChart">
                   Amount of answers:{' '}
                   <HideFromTranslation real={amountOfAnswers}>
                     123
                   </HideFromTranslation>
                 </TS>
                 <br />
-                <TS>
+                <TS keys="answerChart">
                   Collected at{' '}
                   <a href="https://qa.thomasrosen.me/" className="no-underline">
                     qa.thomasrosen.me

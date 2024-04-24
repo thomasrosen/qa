@@ -15,6 +15,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { cn } from '@/lib/utils'
+import { TC } from '@/translate/components/client/TClient'
 import { Check, ChevronDown } from 'lucide-react'
 import React, { useState } from 'react'
 
@@ -25,12 +26,11 @@ type Option = {
 }
 type ComboboxProps = {
   options: Option[]
-  searchFallback?: React.ReactNode
   renderLabel?: (
     chosenOption: Option,
     infos: { place: 'button' | 'list' }
   ) => React.ReactNode
-  placeholder?: string
+  placeholder?: React.ReactNode
   onChange?: (value: string[]) => void
   multiple?: boolean
   selected: string[]
@@ -38,7 +38,6 @@ type ComboboxProps = {
 }
 export function Combobox({
   options,
-  searchFallback,
   renderLabel,
   placeholder,
   onChange,
@@ -98,7 +97,9 @@ export function Combobox({
               )
             ) : (
               // text-foreground/20
-              <span className="opacity-30">{placeholder ?? 'Select…'}</span>
+              <span className="opacity-30">
+                {placeholder || <TC keys="Combobox">Select…</TC>}
+              </span>
             )}
           </div>
           <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -110,10 +111,12 @@ export function Combobox({
             value={search}
             onValueChange={setSearch}
             placeholder={
-              allowCustom === true ? 'Search or create new…' : 'Search...'
+              allowCustom === true ? 'Search or create new…' : 'Search…'
             }
           />
-          <CommandEmpty>{searchFallback ?? 'Nothing found.'}</CommandEmpty>
+          <CommandEmpty>
+            <TC keys="Combobox">Nothing found.</TC>
+          </CommandEmpty>
           <CommandGroup>
             <CommandList>
               {[

@@ -1,7 +1,6 @@
 import { HideFromTranslation } from '@/components/HideFromTranslation'
 import { P } from '@/components/P'
 import { SignOutButton } from '@/components/client/SignOutButton'
-import { TS } from '@/components/translate/TServer'
 import {
   Card,
   CardDescription,
@@ -10,6 +9,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { UserSchemaType } from '@/lib/prisma'
+import { TS } from '@/translate/components/TServer'
 import Link from 'next/link'
 
 export async function AboutYouCard({ user }: { user: UserSchemaType }) {
@@ -19,11 +19,11 @@ export async function AboutYouCard({ user }: { user: UserSchemaType }) {
     <Card className="orange">
       <CardHeader>
         <CardTitle>
-          <TS>About You</TS>
+          <TS keys="aboutYou">About You</TS>
         </CardTitle>
 
         <CardDescription>
-          <TS>
+          <TS keys="aboutYou">
             Your answers will be grouped together under the following
             identifier. You can reset this identifier at any time.{' '}
             <strong>
@@ -39,7 +39,7 @@ export async function AboutYouCard({ user }: { user: UserSchemaType }) {
 
       <CardFooter className="flex gap-4 justify-between items-center">
         <P className="mb-0 font-bold">
-          <TS>
+          <TS keys="aboutYou">
             Your ID:{' '}
             <HideFromTranslation real={aboutYouID}>
               email@email.com
@@ -47,7 +47,7 @@ export async function AboutYouCard({ user }: { user: UserSchemaType }) {
           </TS>
         </P>
         <SignOutButton>
-          <TS>Reset ID</TS>
+          <TS keys="aboutYou">Reset ID</TS>
         </SignOutButton>
       </CardFooter>
     </Card>

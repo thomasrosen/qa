@@ -1,8 +1,11 @@
 import { AnswerChartWrapper } from '@/components/AnswerChartWrapper'
 import NextQuestion from '@/components/NextQuestion'
+import { P } from '@/components/P'
 import { SignIn } from '@/components/client/SignIn'
 import { auth } from '@/lib/auth'
 import { isSignedOut } from '@/lib/isSignedIn'
+import { TS } from '@/translate/components/TServer'
+import { TranslationStoreEntryPoint } from '@/translate/components/TranslationStoreEntryPoint'
 import { Suspense } from 'react'
 
 export const dynamic = 'force-dynamic'
@@ -25,18 +28,32 @@ export default async function Questions({
   }
 
   return (
-    <>
-      <Suspense>
+    <TranslationStoreEntryPoint
+      keys={['Questions', 'PreferredTagsChooser', 'Combobox']}
+    >
+      <Suspense
+        fallback={
+          <P>
+            <TS keys="Questions">Loading Question…</TS>
+          </P>
+        }
+      >
         <NextQuestion question_id={question_id} />
       </Suspense>
 
-      <Suspense>
+      <Suspense
+        fallback={
+          <P>
+            <TS keys="Questions">Loading Answer Chart…</TS>
+          </P>
+        }
+      >
         {question_id ? (
           <AnswerChartWrapper question_id={question_id} />
         ) : (
           <AnswerChartWrapper />
         )}
       </Suspense>
-    </>
+    </TranslationStoreEntryPoint>
   )
 }

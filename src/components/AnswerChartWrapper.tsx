@@ -1,9 +1,9 @@
 import { getLatestAnswers } from '@/lib/getLatestAnswers'
 import { AnswerType } from '@/lib/types'
 import Link from 'next/link'
+import { TS } from '../translate/components/TServer'
 import { AnswerChart } from './AnswerChart'
 import { Headline } from './Headline'
-import { TS } from './translate/TServer'
 import { Button } from './ui/button'
 
 export async function AnswerChartWrapper({
@@ -30,11 +30,11 @@ export async function AnswerChartWrapper({
     <section className="flex flex-col gap-4 mb-4 place-content-center">
       <div className="mb-2 mt-8 flex justify-between items-center">
         <Headline type="h2" className="border-0 p-0 m-0">
-          <TS>Results for this question</TS>
+          <TS keys="answerChartWrapper">Results for this question</TS>
         </Headline>
         <Link href="/answers">
           <Button variant="outline">
-            <TS>All Answers</TS>
+            <TS keys="answerChartWrapper">All Answers</TS>
           </Button>
         </Link>
       </div>

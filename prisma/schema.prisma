@@ -246,13 +246,14 @@ model OpenAiIndex {
 }
 
 model Translation {
-  translation_id     String   @id @default(cuid())
-  index              Int      @default(autoincrement())
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  translation_id String   @id @default(cuid())
+  index          Int      @default(autoincrement())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
   //
-  originalText       String
-  translation        Json?
-  outputOptions      Json? // describe what the text should be translated to: { locale: 'en-GB', formality: 'informal', ... }
-  translatedBy       String? // the name of the person, or the service that translated this
+  originalText   Json?
+  translation    Json?
+  outputOptions  Json? // describe what the text should be translated to: { locale: 'en-GB', formality: 'informal', ... }
+  translatedBy   String? // the name of the person, or the service that translated this
+  keys           String[] // cache-keys to preload translations on the server
 }

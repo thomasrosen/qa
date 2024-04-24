@@ -1,4 +1,4 @@
-import { wrapWithId } from '@/lib/translate/wrapWithId'
+import { wrapWithId } from '@/translate/lib/wrapWithId'
 import { isValidElement } from 'react'
 
 export const reactWrappedWithIds = (

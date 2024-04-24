@@ -21,6 +21,7 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
+import { TC } from '../../translate/components/client/TClient'
 
 export function PreferredTagsChooser({
   user,
@@ -62,12 +63,16 @@ export function PreferredTagsChooser({
           className={isSubmitting ? 'animate-pulse pointer-events-none' : ''}
         >
           <CardHeader>
-            <CardTitle>Preferred Categories</CardTitle>
+            <CardTitle>
+              <TC keys="PreferredTagsChooser">Preferred Categories</TC>
+            </CardTitle>
             <CardDescription>
-              Choose the categories you want to answer questions about.
-              <br />
-              If you deselect all categories, we will only show general
-              questions.
+              <TC keys="PreferredTagsChooser">
+                Choose the categories you want to answer questions about.
+                <br />
+                If you deselect all categories, we will only show general
+                questions.
+              </TC>
             </CardDescription>
           </CardHeader>
 
@@ -85,7 +90,9 @@ export function PreferredTagsChooser({
                     label: thing.name,
                     thing,
                   }))}
-                  placeholder="Select Categories…"
+                  placeholder={
+                    <TC keys="PreferredTagsChooser">Select Categories…</TC>
+                  }
                   renderLabel={(option) => (
                     <ThingRow
                       className="inline-block w-auto"
@@ -100,12 +107,12 @@ export function PreferredTagsChooser({
 
           <CardFooter className="flex flex-col gap-4 justify-between items-center">
             <Button className="w-full" type="submit">
-              Save Categories
+              <TC keys="PreferredTagsChooser">Save Categories</TC>
             </Button>
 
             {isSubmitting && (
               <P type="ghost" className="m-0 text-center">
-                Loading…
+                <TC keys="PreferredTagsChooser">Loading…</TC>
               </P>
             )}
           </CardFooter>

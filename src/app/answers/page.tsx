@@ -1,10 +1,10 @@
 import { AnswerChart } from '@/components/AnswerChart'
 import { Headline } from '@/components/Headline'
 import { P } from '@/components/P'
-import { TS } from '@/components/translate/TServer'
 import { auth } from '@/lib/auth'
 import { getLatestAnswers } from '@/lib/getLatestAnswers'
 import { isSignedOut } from '@/lib/isSignedIn'
+import { TS } from '@/translate/components/TServer'
 import { redirect } from 'next/navigation'
 import { Suspense } from 'react'
 
@@ -20,7 +20,7 @@ export default async function Answers() {
   return (
     <>
       <Headline type="h2">
-        <TS>Question you already answers</TS>
+        <TS keys="Answers">Question you already answers</TS>
       </Headline>
 
       {latestAnswers ? (
@@ -31,7 +31,7 @@ export default async function Answers() {
         ))
       ) : (
         <P>
-          <TS>Answer questions to see what others think!</TS>
+          <TS keys="Answers">Answer questions to see what others think!</TS>
         </P>
       )}
     </>

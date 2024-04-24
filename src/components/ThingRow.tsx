@@ -4,6 +4,7 @@ import { getJsonLdValueAsString } from '@/lib/getJsonLdValue'
 import { stringToColor } from '@/lib/stringToColour'
 import { ThingSchemaType } from '@/lib/types'
 import { cn } from '@/lib/utils'
+import { TC } from '@/translate/components/client/TClient'
 import { CSSProperties } from 'react'
 
 export function ThingRow({
@@ -23,6 +24,8 @@ export function ThingRow({
     dotStyle.color = getContrastTextColor(dotStyle.backgroundColor)
   }
 
+  const translationKey = thing.thing_id
+
   return (
     <div
       className={cn(
@@ -39,7 +42,7 @@ export function ThingRow({
           />
         )}
         <strong>
-          {thing.name}
+          <TC keys={translationKey}>{thing.name}</TC>
           {thing.type === 'CategoryCode' && thing?._count?.isTagFor
             ? ` (${thing?._count?.isTagFor})`
             : ''}
@@ -47,12 +50,12 @@ export function ThingRow({
       </div>
       {description && (
         <P type="muted" className="m-0 p-0">
-          {description}
+          <TC keys={translationKey}>{description}</TC>
         </P>
       )}
       {/*
       <P type="ghost" className="m-0 p-0">
-        {thing.type}
+        <TC keys="ThingRow">{thing.type}</TC>
       </P>
       */}
     </div>

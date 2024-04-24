@@ -2,7 +2,6 @@ import { Headline } from '@/components/Headline'
 import { P } from '@/components/P'
 import { PreferredTagsChooser } from '@/components/client/PreferredTagsChooser'
 import { QuestionCard } from '@/components/client/QuestionCard'
-import { TS } from '@/components/translate/TServer'
 import { auth } from '@/lib/auth'
 import { getQuestion } from '@/lib/getQuestion'
 import { getRandomQuestion } from '@/lib/getRandomQuestion'
@@ -10,6 +9,8 @@ import { getRandomThing } from '@/lib/getRandomThing'
 import { getThings } from '@/lib/getThings'
 import { getUser } from '@/lib/getUser'
 import { Prisma } from '@/lib/prisma'
+import { TS } from '@/translate/components/TServer'
+import { TranslationStoreEntryPoint } from '@/translate/components/TranslationStoreEntryPoint'
 
 async function NoQuestionsFallback() {
   const session = await auth()
@@ -59,7 +60,7 @@ async function NoQuestionsFallback() {
   return (
     <>
       <P className="text-center">
-        <TS>
+        <TS keys="NextQuestion">
           <strong>
             There are no questions available to answer in the chosen categories
             at the moment.
@@ -72,10 +73,22 @@ async function NoQuestionsFallback() {
       </P>
       <P className="text-center">
         <strong>
-          <TS>Try adding more categories, to get more questions.</TS>
+          <TS keys="NextQuestion">
+            Try adding more categories, to get more questions.
+          </TS>
         </strong>
       </P>
-      <PreferredTagsChooser user={user} tagOptions={tagOptions} />
+      <TranslationStoreEntryPoint
+        keys={[
+          'PreferredTagsChooser',
+          'Combobox',
+          ...(tagOptions || [])
+            .map((thing) => thing.thing_id || '')
+            .filter(Boolean),
+        ]}
+      >
+        <PreferredTagsChooser user={user} tagOptions={tagOptions} />
+      </TranslationStoreEntryPoint>
     </>
   )
 }
@@ -101,7 +114,7 @@ export default async function NextQuestion({
     if (question_id) {
       return (
         <P className="text-center">
-          <TS>
+          <TS keys="NextQuestion">
             <strong>Thanks for already answering this question!</strong>
             <br />
             Every question can be answered only once every 12 month.
@@ -130,7 +143,9 @@ export default async function NextQuestion({
   return (
     <section className="flex flex-col gap-4 mb-4 place-content-center">
       <Headline type="h2" className="border-0 p-0 mt-8 mb-2">
-        <TS>Answer the question to know what others think…</TS>
+        <TS keys="NextQuestion">
+          Answer the question to know what others think…
+        </TS>
       </Headline>
       <QuestionCard question={question} aboutThing={aboutThing ?? undefined} />
     </section>
