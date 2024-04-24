@@ -4,6 +4,7 @@ import { MainNav } from '@/components/MainNav'
 import { ThemeProvider } from '@/components/client/ThemeProvider'
 import { Toaster } from '@/components/ui/sonner'
 import { cn } from '@/lib/utils'
+import { TranslationStoreEntryPoint } from '@/translate/components/TranslationStoreEntryPoint'
 import type { Metadata } from 'next'
 import { Ubuntu } from 'next/font/google'
 
@@ -29,25 +30,27 @@ export default function RootLayout({
       <body
         className={cn('bg-background font-sans antialiased', fontSans.variable)}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          storageKey="saved_theme"
-          enableSystem={true}
-          disableTransitionOnChange={false}
-        >
-          <div className="min-h-screen max-w-full text-foreground flex flex-col items-center p-8 lg:p-16">
-            <header>
-              <Headline type="h1" className="mb-8 text-center">
-                Qrowdsourced Answers
-              </Headline>
+        <TranslationStoreEntryPoint keys={['Combobox']}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            storageKey="saved_theme"
+            enableSystem={true}
+            disableTransitionOnChange={false}
+          >
+            <div className="min-h-screen max-w-full text-foreground flex flex-col items-center p-8 lg:p-16">
+              <header>
+                <Headline type="h1" className="mb-8 text-center">
+                  Qrowdsourced Answers
+                </Headline>
 
-              <MainNav />
-            </header>
-            <main className="w-[500px] max-w-full">{children}</main>
-          </div>
-          <Toaster />
-        </ThemeProvider>
+                <MainNav />
+              </header>
+              <main className="w-[500px] max-w-full">{children}</main>
+            </div>
+            <Toaster />
+          </ThemeProvider>
+        </TranslationStoreEntryPoint>
       </body>
     </html>
   )

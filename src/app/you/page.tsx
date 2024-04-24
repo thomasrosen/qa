@@ -5,6 +5,7 @@ import { getThings } from '@/lib/getThings'
 import { getUser } from '@/lib/getUser'
 import { isSignedOut } from '@/lib/isSignedIn'
 import { Prisma } from '@/lib/prisma'
+import { TranslationStoreEntryPoint } from '@/translate/components/TranslationStoreEntryPoint'
 import { redirect } from 'next/navigation'
 
 export default async function AboutYou() {
@@ -53,9 +54,20 @@ export default async function AboutYou() {
   })
 
   return (
-    <section className="flex flex-col gap-4 mb-4 place-content-center">
-      <AboutYouCard user={user} />
-      <PreferredTagsChooser user={user} tagOptions={tagOptions} />
-    </section>
+    <TranslationStoreEntryPoint
+      keys={[
+        'aboutYou',
+        'PreferredTagsChooser',
+        'Combobox',
+        ...(tagOptions || [])
+          .map((thing) => thing.thing_id || '')
+          .filter(Boolean),
+      ]}
+    >
+      <section className="flex flex-col gap-4 mb-4 place-content-center">
+        <AboutYouCard user={user} />
+        <PreferredTagsChooser user={user} tagOptions={tagOptions} />
+      </section>
+    </TranslationStoreEntryPoint>
   )
 }
