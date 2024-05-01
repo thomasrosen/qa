@@ -41,7 +41,7 @@ export async function getRandomQuestion({ where = {} }: FunctionArgs = {}) {
           equals: user_id,
         },
         updatedAt: {
-          lte: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 365), // show the question again after a year
+          lte: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 30), // show the question again after about a month (30 day)
         },
       },
     ],
