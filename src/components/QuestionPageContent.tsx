@@ -51,18 +51,27 @@ export function QuestionPageContent({
   }, [preloadNext])
 
   const showNext = useCallback(async () => {
-    const nextQuestionId = preloadedQuestionCache.current?.question_id || ''
+    if (preloadedQuestionCache.current) {
+      setQuestion(preloadedQuestionCache.current)
+      preloadNext()
 
-    setQuestion(preloadedQuestionCache.current)
-    setAnswers(preloadedAnswersCache.current)
-    preloadNext()
+      const nextQuestionId = preloadedQuestionCache.current?.question_id || ''
 
-    if (window) {
-      if (nextQuestionId) {
-        window.history.pushState(null, '', `/q/${nextQuestionId}`)
-      } else {
-        window.history.pushState(null, '', '/q')
+      if (window) {
+        if (nextQuestionId) {
+          window.history.pushState(null, '', `/q/${nextQuestionId}`)
+        } else {
+          window.history.pushState(null, '', '/q')
+        }
       }
+    } else {
+      setQuestion(undefined)
+    }
+
+    if (preloadedAnswersCache.current) {
+      setAnswers(preloadedAnswersCache.current)
+    } else {
+      setAnswers(preloadedAnswersCache.current || [])
     }
   }, [preloadNext])
 
