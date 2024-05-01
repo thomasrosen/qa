@@ -49,9 +49,9 @@ export async function getRandomQuestion({ where = {} }: FunctionArgs = {}) {
 
   const questionWhere = {
     canBeUsed: true,
-    Answer_isAnswering: {
-      every: answerWhere,
-    },
+    // Answer_isAnswering: {
+    //   every: answerWhere,
+    // },
     tags: {
       some: {
         OR: [

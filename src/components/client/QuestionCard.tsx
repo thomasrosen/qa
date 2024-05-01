@@ -18,8 +18,8 @@ import {
   ThingSchemaType,
   ValueSchemaType,
 } from '@/lib/prisma'
+import { TC } from '@/translate/components/client/TClient'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { useCallback, useState } from 'react'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -27,16 +27,20 @@ import remarkGfm from 'remark-gfm'
 export function QuestionCard({
   question,
   aboutThing,
+  preloadNext,
+  showNext,
 }: {
   question: QuestionSchemaType
   aboutThing?: ThingSchemaType
+  preloadNext: () => void
+  showNext: () => void
 }) {
   const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
 
   const answer = useCallback(
     async ({ value }: { value: ValueSchemaType }) => {
-      setIsLoading(true)
+      showNext()
+      preloadNext()
 
       await saveAnswer({
         isAnswering_id: question.question_id,
@@ -48,11 +52,8 @@ export function QuestionCard({
           },
         ],
       })
-
-      router.refresh()
-      setIsLoading(false)
     },
-    [question.question_id, aboutThing, router]
+    [showNext, preloadNext, question.question_id, aboutThing]
   )
 
   const skip = useCallback(() => {
@@ -79,7 +80,9 @@ export function QuestionCard({
               </div>
             )}
             {question.question && (
-              <CardTitle className="text-start">{question.question}</CardTitle>
+              <CardTitle className="text-start">
+                <TC>{question.question}</TC>
+              </CardTitle>
             )}
             {question.description && (
               <CardDescription className="text-start">

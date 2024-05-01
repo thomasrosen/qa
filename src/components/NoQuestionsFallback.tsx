@@ -54,7 +54,7 @@ export async function NoQuestionsFallback() {
 
   return (
     <>
-      <P className="text-center">
+      <P>
         <TS keys="NextQuestion">
           <strong>
             There are no questions available to answer in the chosen categories
@@ -66,7 +66,7 @@ export async function NoQuestionsFallback() {
           Check back later when we’ve added more questions.
         </TS>
       </P>
-      <P className="text-center">
+      <P>
         <strong>
           <TS keys="NextQuestion">
             Try adding more categories, to get more questions.

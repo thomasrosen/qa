@@ -52,9 +52,9 @@ export async function getQuestion({
 
   const questionWhere = {
     canBeUsed: true,
-    Answer_isAnswering: {
-      every: answerWhere,
-    },
+    // Answer_isAnswering: {
+    //   every: answerWhere,
+    // },
     tags: {
       some: {
         OR: [

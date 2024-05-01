@@ -1,8 +1,13 @@
+'use client'
+
+import { preloadAnswersForQuestion } from '@/actions/preloadAnswersForQuestion'
+import { preloadQuestion } from '@/actions/preloadQuestion'
 import { Headline } from '@/components/Headline'
 import { QuestionCard } from '@/components/client/QuestionCard'
 import { PreloadedAnswer } from '@/lib/types'
 import { TC } from '@/translate/components/client/TClient'
 import Link from 'next/link'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnswerChart } from './AnswerChart'
 import { Button } from './ui/button'
 
@@ -19,8 +24,29 @@ export function QuestionPageContent({
   preloadedAnswers?: PreloadedAnswer[]
   noQuestionsFallback?: React.ReactNode
 }) {
-  const question = preloadedQuestion
+  const preloadedQuestionCache = useRef(preloadedQuestion)
+  const preloadedAnswersCache = useRef(preloadedAnswers)
+
+  const [question, setQuestion] = useState(preloadedQuestion)
+  const [answers, setAnswers] = useState(preloadedAnswers)
+
   const aboutThing = preloadedAboutThing
+
+  const preloadNext = useCallback(async () => {
+    preloadedAnswersCache.current = await preloadAnswersForQuestion(
+      preloadedQuestionCache.current.question_id
+    )
+    preloadedQuestionCache.current = await preloadQuestion()
+  }, [])
+
+  useEffect(() => {
+    preloadNext()
+  }, [preloadNext])
+
+  const showNext = useCallback(async () => {
+    setQuestion(preloadedQuestionCache.current)
+    setAnswers(preloadedAnswersCache.current)
+  }, [])
 
   const questionNeedsAboutThing =
     question && question.aboutThingTypes && question.aboutThingTypes.length > 0
@@ -39,6 +65,8 @@ export function QuestionPageContent({
           <QuestionCard
             question={question}
             aboutThing={aboutThing ?? undefined}
+            preloadNext={preloadNext}
+            showNext={showNext}
           />
         </section>
       )}
@@ -59,8 +87,8 @@ export function QuestionPageContent({
               </Button>
             </Link>
           </div>
-          {Array.isArray(preloadedAnswers) &&
-            preloadedAnswers
+          {Array.isArray(answers) &&
+            answers
               .filter(Boolean)
               .map((answerData) => (
                 <AnswerChart

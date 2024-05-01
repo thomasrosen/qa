@@ -1,16 +1,11 @@
-import { PreloadedAnswer } from '@/components/AnswerChartWrapper'
+import { preloadAnswersForQuestion } from '@/actions/preloadAnswersForQuestion'
+import { preloadQuestion } from '@/actions/preloadQuestion'
 import { NoQuestionsFallback } from '@/components/NoQuestionsFallback'
 import { QuestionPageContent } from '@/components/QuestionPageContent'
 import { SignIn } from '@/components/client/SignIn'
 import { auth } from '@/lib/auth'
-import { getAnswers } from '@/lib/getAnswers'
-import { getFirstValue } from '@/lib/getFirstValue'
-import { getLatestAnswers } from '@/lib/getLatestAnswers'
-import { getQuestion } from '@/lib/getQuestion'
-import { getRandomQuestion } from '@/lib/getRandomQuestion'
 import { getRandomThing } from '@/lib/getRandomThing'
 import { isSignedOut } from '@/lib/isSignedIn'
-import { AnswerType } from '@/lib/types'
 import { TranslationStoreEntryPoint } from '@/translate/components/TranslationStoreEntryPoint'
 
 export const dynamic = 'force-dynamic'
@@ -33,16 +28,7 @@ export default async function QuestionsPage({
   }
 
   // preload question
-  let preloadedQuestion = null
-  if (question_id) {
-    preloadedQuestion = await getQuestion({
-      where: {
-        question_id,
-      },
-    })
-  } else {
-    preloadedQuestion = await getRandomQuestion()
-  }
+  const preloadedQuestion = await preloadQuestion(question_id)
 
   // preload aboutThing
   let preloadedAboutThing = null
@@ -61,34 +47,7 @@ export default async function QuestionsPage({
   }
 
   // preload latest answers
-  let latestAnswers: AnswerType[] = []
-  if (question_id) {
-    latestAnswers = await getLatestAnswers({
-      take: 1,
-      where: { isAnswering_id: question_id },
-    })
-  } else {
-    latestAnswers = await getLatestAnswers({ take: 1 })
-  }
-
-  const preloadedAnswer: PreloadedAnswer[] = (
-    await Promise.all(
-      latestAnswers.map(async (answer) => {
-        const { amountOfAnswers, newestValueDate, values } = await getAnswers({
-          question_id: answer.isAnswering?.question_id || '',
-          aboutThing_id: (getFirstValue(answer.context) as any)?.aboutThing
-            ?.thing_id, // TODO fix type
-        })
-
-        return {
-          answer,
-          amountOfAnswers,
-          newestValueDate,
-          values,
-        } as PreloadedAnswer
-      })
-    )
-  ).filter(Boolean)
+  const preloadedAnswer = await preloadAnswersForQuestion(question_id)
 
   return (
     <TranslationStoreEntryPoint
