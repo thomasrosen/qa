@@ -37,7 +37,6 @@ export function QuestionCard({
 
   const answer = useCallback(
     async ({ value }: { value: ValueSchemaType }) => {
-      console.log('showNext', showNext)
       showNext()
 
       await saveAnswer({

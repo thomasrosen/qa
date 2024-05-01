@@ -16,6 +16,7 @@ export default async function QuestionsPage({
   params: { path: string[] }
 }) {
   let question_id: string | undefined = undefined
+
   if (Array.isArray(path)) {
     question_id = path[0]
   } else if (typeof path === 'string') {

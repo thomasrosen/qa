@@ -9,13 +9,14 @@ import { TC } from '@/translate/components/client/TClient'
 import Link from 'next/link'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnswerChart } from './AnswerChart'
+import { P } from './P'
 import { Button } from './ui/button'
 
 export function QuestionPageContent({
   question_id,
   preloadedQuestion,
   preloadedAboutThing,
-  preloadedAnswers,
+  preloadedAnswers = [],
   noQuestionsFallback,
 }: {
   question_id?: string
@@ -29,49 +30,72 @@ export function QuestionPageContent({
 
   const [question, setQuestion] = useState(preloadedQuestion)
   const [answers, setAnswers] = useState(preloadedAnswers)
+  const [hasPreloadedQuestion, setHasPreloadedQuestion] = useState(
+    !!preloadedQuestion
+  )
 
   const aboutThing = preloadedAboutThing
 
   const preloadNext = useCallback(async () => {
-    console.log('\n\n\n\n\npreloadNext')
-    console.log('preloadedQuestionCache-1', preloadedQuestionCache.current)
-    console.log('preloadedAnswersCache-1', preloadedAnswersCache.current)
-
     preloadedAnswersCache.current = await preloadAnswersForQuestion(
-      preloadedQuestionCache.current.question_id
+      preloadedQuestionCache.current?.question_id || undefined
     )
     preloadedQuestionCache.current = await preloadQuestion()
-
-    console.log('preloadedQuestionCache-2', preloadedQuestionCache.current)
-    console.log('preloadedAnswersCache-2', preloadedAnswersCache.current)
+    setHasPreloadedQuestion(!!preloadedQuestionCache.current)
   }, [])
 
   useEffect(() => {
-    console.log('useEffect')
     if (preloadNext) {
       preloadNext()
     }
   }, [preloadNext])
 
   const showNext = useCallback(async () => {
-    console.log('\n\n\n\n\nshowNext')
-    console.log('preloadedQuestionCache-3', preloadedQuestionCache.current)
-    console.log('preloadedAnswersCache-3', preloadedAnswersCache.current)
+    const nextQuestionId = preloadedQuestionCache.current?.question_id || ''
+
     setQuestion(preloadedQuestionCache.current)
     setAnswers(preloadedAnswersCache.current)
     preloadNext()
+
+    if (window) {
+      if (nextQuestionId) {
+        window.history.pushState(null, '', `/q/${nextQuestionId}`)
+      } else {
+        window.history.pushState(null, '', '/q')
+      }
+    }
   }, [preloadNext])
 
   const questionNeedsAboutThing =
     question && question.aboutThingTypes && question.aboutThingTypes.length > 0
 
-  const answerIsForPreloadedQuestion = question_id === question.question_id
+  const answerIsForPreloadedQuestion =
+    (question_id && !question) ||
+    (question && question_id === question.question_id)
 
+  const displayQuestion =
+    question &&
+    (!questionNeedsAboutThing || (questionNeedsAboutThing && aboutThing))
+
+  const hasAnswers = answers && Array.isArray(answers) && answers.length > 0
+
+  if (!displayQuestion && !hasAnswers) {
+    return (
+      <section className="flex flex-col gap-4 mb-4 place-content-center">
+        <Headline type="h2" className="border-0 p-0 mt-8 mb-2">
+          <TC keys="NextQuestion">
+            Wir konnten zu der URL leider keine Frage finden.
+          </TC>
+        </Headline>
+        <Link href="/q">
+          <Button>Beantworte eine andere Frage</Button>
+        </Link>
+      </section>
+    )
+  }
   return (
     <>
-      {!question || (questionNeedsAboutThing && !aboutThing) ? (
-        noQuestionsFallback
-      ) : (
+      {displayQuestion && (
         <section className="flex flex-col gap-4 mb-4 place-content-center">
           <Headline type="h2" className="border-0 p-0 mt-8 mb-2">
             <TC keys="NextQuestion">
@@ -87,7 +111,9 @@ export function QuestionPageContent({
         </section>
       )}
 
-      {answers && Array.isArray(answers) && (
+      {!displayQuestion && !answerIsForPreloadedQuestion && noQuestionsFallback}
+
+      {hasAnswers && (
         <section className="flex flex-col gap-4 mb-4 place-content-center">
           <div className="mb-2 mt-8 flex justify-between items-center gap-4">
             <Headline type="h2" className="border-0 p-0 m-0">
@@ -106,17 +132,31 @@ export function QuestionPageContent({
               </Button>
             </Link>
           </div>
-          {answers.filter(Boolean).map((answerData) => (
-            <AnswerChart
-              key={answerData.answer.answer_id}
-              answer={answerData.answer}
-              amountOfAnswers={answerData.amountOfAnswers}
-              newestValueDate={answerData.newestValueDate}
-              values={answerData.values}
-            />
-          ))}
+          {answerIsForPreloadedQuestion && displayQuestion ? (
+            <P>Die Antwort siehst du nachdem beantworten.</P>
+          ) : (
+            answers
+              .filter(Boolean)
+              .map((answerData) => (
+                <AnswerChart
+                  key={answerData.answer.answer_id}
+                  answer={answerData.answer}
+                  amountOfAnswers={answerData.amountOfAnswers}
+                  newestValueDate={answerData.newestValueDate}
+                  values={answerData.values}
+                />
+              ))
+          )}
         </section>
       )}
+
+      {!displayQuestion &&
+        answerIsForPreloadedQuestion &&
+        hasPreloadedQuestion && (
+          <div className="flex flex-row justify-center mt-8">
+            <Button onClick={showNext}>Nächste Frage beantworten</Button>
+          </div>
+        )}
     </>
   )
 }

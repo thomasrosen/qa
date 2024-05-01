@@ -1,8 +1,10 @@
 'use server'
 
+import { auth } from '@/lib/auth'
 import { getAnswers } from '@/lib/getAnswers'
 import { getFirstValue } from '@/lib/getFirstValue'
 import { getLatestAnswers } from '@/lib/getLatestAnswers'
+import { isSignedIn } from '@/lib/isSignedIn'
 import { AnswerType, PreloadedAnswer } from '@/lib/types'
 
 export async function preloadAnswersForQuestion(
@@ -16,7 +18,17 @@ export async function preloadAnswersForQuestion(
       where: { isAnswering_id: question_id },
     })
   } else {
-    latestAnswers = await getLatestAnswers({ take: 1 })
+    // check if logged in
+    const session = await auth()
+    if (isSignedIn(session)) {
+      // @ts-ignore already checked with isSignedOut()
+      const user_id = session.user.id
+
+      latestAnswers = await getLatestAnswers({
+        where: { createdBy_id: user_id },
+        take: 1,
+      })
+    }
   }
 
   const preloadedAnswer: PreloadedAnswer[] = (

@@ -12,13 +12,18 @@ import { redirect } from 'next/navigation'
 
 export default async function AnswersPage() {
   const session = await auth()
-
   if (isSignedOut(session)) {
     redirect('/')
   }
 
+  // @ts-ignore already checked with isSignedOut()
+  const user_id = session.user.id
+
   // preload latest answers
-  let latestAnswers: AnswerType[] = await getLatestAnswers({ take: 9999 })
+  let latestAnswers: AnswerType[] = await getLatestAnswers({
+    where: { createdBy_id: user_id },
+    take: 9999,
+  })
 
   const preloadedAnswers: PreloadedAnswer[] = (
     await Promise.all(

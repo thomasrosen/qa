@@ -1,3 +1,5 @@
+'use client'
+
 import { HideFromTranslation } from '@/components/HideFromTranslation'
 import { P } from '@/components/P'
 import { ScreenshotElement } from '@/components/client/ScreenshotElement'
@@ -16,7 +18,7 @@ import { AnswerType, ExtendedValueSchemaType } from '@/lib/prisma'
 import { TC } from '@/translate/components/client/TClient'
 import { CameraIcon } from '@radix-ui/react-icons'
 import { devNull } from 'os'
-import { Suspense } from 'react'
+import { Suspense, useId } from 'react'
 
 function getLabel(value: ExtendedValueSchemaType): string {
   let label = 'Unknown'
@@ -45,6 +47,9 @@ export function AnswerChart({
   newestValueDate: any
   values: any
 }) {
+  const randomScreenshotId = useId()
+  // const randomScreenshotId = Math.random().toString(36).substring(7)
+
   if (!answer) {
     return null
   }
@@ -97,8 +102,6 @@ export function AnswerChart({
   }
 
   const aboutThing = (getFirstValue(answer.context) as any)?.aboutThing // TODO fix type
-
-  const randomScreenshotId = Math.random().toString(36).substring(7)
 
   return (
     <div id={randomScreenshotId} className="p-2 -m-2 bg-background">
