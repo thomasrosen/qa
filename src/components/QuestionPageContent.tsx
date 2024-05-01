@@ -33,6 +33,10 @@ export function QuestionPageContent({
   const aboutThing = preloadedAboutThing
 
   const preloadNext = useCallback(async () => {
+    console.log(
+      'preloadNext-preloadedQuestionCache.current.question_id',
+      preloadedQuestionCache.current.question_id
+    )
     preloadedAnswersCache.current = await preloadAnswersForQuestion(
       preloadedQuestionCache.current.question_id
     )
@@ -40,10 +44,14 @@ export function QuestionPageContent({
   }, [])
 
   useEffect(() => {
-    preloadNext()
+    console.log('useEffect')
+    if (preloadNext) {
+      preloadNext()
+    }
   }, [preloadNext])
 
   const showNext = useCallback(async () => {
+    console.log('showNext', showNext)
     setQuestion(preloadedQuestionCache.current)
     setAnswers(preloadedAnswersCache.current)
   }, [])
@@ -51,9 +59,11 @@ export function QuestionPageContent({
   const questionNeedsAboutThing =
     question && question.aboutThingTypes && question.aboutThingTypes.length > 0
 
+  const answerIsForPreloadedQuestion = question_id === question.question_id
+
   return (
     <>
-      {!preloadedQuestion || (questionNeedsAboutThing && !aboutThing) ? (
+      {!question || (questionNeedsAboutThing && !aboutThing) ? (
         noQuestionsFallback
       ) : (
         <section className="flex flex-col gap-4 mb-4 place-content-center">
@@ -63,6 +73,7 @@ export function QuestionPageContent({
             </TC>
           </Headline>
           <QuestionCard
+            key={question.question_id}
             question={question}
             aboutThing={aboutThing ?? undefined}
             preloadNext={preloadNext}
@@ -71,12 +82,15 @@ export function QuestionPageContent({
         </section>
       )}
 
-      {preloadedAnswers && (
+      {answers && Array.isArray(answers) && (
         <section className="flex flex-col gap-4 mb-4 place-content-center">
           <div className="mb-2 mt-8 flex justify-between items-center gap-4">
             <Headline type="h2" className="border-0 p-0 m-0">
-              <TC keys="answerChartWrapper">
-                {question_id
+              <TC
+                keys="answerChartWrapper"
+                key={String(answerIsForPreloadedQuestion)}
+              >
+                {answerIsForPreloadedQuestion
                   ? 'Ergebnisse für diese Frage'
                   : 'Ergebnisse zu deiner letzte Antwort'}
               </TC>
@@ -87,18 +101,15 @@ export function QuestionPageContent({
               </Button>
             </Link>
           </div>
-          {Array.isArray(answers) &&
-            answers
-              .filter(Boolean)
-              .map((answerData) => (
-                <AnswerChart
-                  key={answerData.answer.answer_id}
-                  answer={answerData.answer}
-                  amountOfAnswers={answerData.amountOfAnswers}
-                  newestValueDate={answerData.newestValueDate}
-                  values={answerData.values}
-                />
-              ))}
+          {answers.filter(Boolean).map((answerData) => (
+            <AnswerChart
+              key={answerData.answer.answer_id}
+              answer={answerData.answer}
+              amountOfAnswers={answerData.amountOfAnswers}
+              newestValueDate={answerData.newestValueDate}
+              values={answerData.values}
+            />
+          ))}
         </section>
       )}
     </>
