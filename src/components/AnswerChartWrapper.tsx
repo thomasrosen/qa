@@ -19,7 +19,7 @@ export function AnswerChartWrapper({
 }) {
   return (
     <section className="flex flex-col gap-4 mb-4 place-content-center">
-      <div className="mb-2 mt-8 flex justify-between items-center">
+      <div className="mb-2 mt-8 flex justify-between items-center gap-4">
         <Headline type="h2" className="border-0 p-0 m-0">
           <TC keys="answerChartWrapper">Ergebnisse für diese Frage</TC>
         </Headline>
