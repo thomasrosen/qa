@@ -49,7 +49,7 @@ export async function tServer({
   return translation.text
 }
 
-// @ts-expect-error
+// @ts-ignore
 export async function TServer({
   children,
   keys = [],
