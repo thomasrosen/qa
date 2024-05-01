@@ -33,14 +33,16 @@ export function QuestionPageContent({
   const aboutThing = preloadedAboutThing
 
   const preloadNext = useCallback(async () => {
-    console.log(
-      'preloadNext-preloadedQuestionCache.current.question_id',
-      preloadedQuestionCache.current.question_id
-    )
+    console.log('preloadedQuestionCache-1', preloadedQuestionCache.current)
+    console.log('preloadedAnswersCache-1', preloadedAnswersCache.current)
+
     preloadedAnswersCache.current = await preloadAnswersForQuestion(
       preloadedQuestionCache.current.question_id
     )
     preloadedQuestionCache.current = await preloadQuestion()
+
+    console.log('preloadedQuestionCache-2', preloadedQuestionCache.current)
+    console.log('preloadedAnswersCache-2', preloadedAnswersCache.current)
   }, [])
 
   useEffect(() => {
