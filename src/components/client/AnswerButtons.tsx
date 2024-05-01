@@ -203,11 +203,6 @@ export function AnswerButtons({ question, answer }: AnswerButtonsProps) {
                 ? 'Select or type your answer…'
                 : undefined
             }
-            texts={{
-              search: 'Search…',
-              searchOrCreate: 'Search or create new…',
-              searchFallback: 'Nothing found.',
-            }}
           />
 
           <Button
