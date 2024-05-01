@@ -167,3 +167,10 @@ export const SaveAnswerSchema = z.object({
   context: ContextSchema.array(),
 })
 export type SaveAnswerSchemaType = z.input<typeof SaveAnswerSchema>
+
+export type PreloadedAnswer = {
+  answer: AnswerType
+  amountOfAnswers: any
+  newestValueDate: any
+  values: any
+}

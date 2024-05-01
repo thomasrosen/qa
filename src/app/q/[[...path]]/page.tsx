@@ -1,4 +1,5 @@
 import { PreloadedAnswer } from '@/components/AnswerChartWrapper'
+import { NoQuestionsFallback } from '@/components/NoQuestionsFallback'
 import { QuestionPageContent } from '@/components/QuestionPageContent'
 import { SignIn } from '@/components/client/SignIn'
 import { auth } from '@/lib/auth'
@@ -98,7 +99,7 @@ export default async function QuestionsPage({
         preloadedQuestion={preloadedQuestion}
         preloadedAboutThing={preloadedAboutThing}
         preloadedAnswers={preloadedAnswer}
-        noQuestionsFallback={null}
+        noQuestionsFallback={<NoQuestionsFallback />}
       />
     </TranslationStoreEntryPoint>
   )

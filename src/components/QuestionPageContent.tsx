@@ -1,7 +1,10 @@
 import { Headline } from '@/components/Headline'
 import { QuestionCard } from '@/components/client/QuestionCard'
+import { PreloadedAnswer } from '@/lib/types'
 import { TC } from '@/translate/components/client/TClient'
-import { AnswerChartWrapper, type PreloadedAnswer } from './AnswerChartWrapper'
+import Link from 'next/link'
+import { AnswerChart } from './AnswerChart'
+import { Button } from './ui/button'
 
 export function QuestionPageContent({
   question_id,
@@ -41,7 +44,34 @@ export function QuestionPageContent({
       )}
 
       {preloadedAnswers && (
-        <AnswerChartWrapper preloadedAnswers={preloadedAnswers} />
+        <section className="flex flex-col gap-4 mb-4 place-content-center">
+          <div className="mb-2 mt-8 flex justify-between items-center gap-4">
+            <Headline type="h2" className="border-0 p-0 m-0">
+              <TC keys="answerChartWrapper">
+                {question_id
+                  ? 'Ergebnisse für diese Frage'
+                  : 'Ergebnisse zu deiner letzte Antwort'}
+              </TC>
+            </Headline>
+            <Link href="/answers">
+              <Button variant="outline">
+                <TC keys="answerChartWrapper">Alle Antworten</TC>
+              </Button>
+            </Link>
+          </div>
+          {Array.isArray(preloadedAnswers) &&
+            preloadedAnswers
+              .filter(Boolean)
+              .map((answerData) => (
+                <AnswerChart
+                  key={answerData.answer.answer_id}
+                  answer={answerData.answer}
+                  amountOfAnswers={answerData.amountOfAnswers}
+                  newestValueDate={answerData.newestValueDate}
+                  values={answerData.values}
+                />
+              ))}
+        </section>
       )}
     </>
   )
