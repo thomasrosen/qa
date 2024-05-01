@@ -94,6 +94,8 @@ export function TClient({
 export const TC = TClient
 */
 
+import { replaceLastWhitespaceWithNonBreaking } from '@/translate/lib/replaceLastWhitespaceWithNonBreaking'
+
 export function TClient({
   children,
   ...props
@@ -101,6 +103,16 @@ export function TClient({
   children: any
   [key: string]: any
 }) {
+  if (typeof children === 'string') {
+    return (
+      <span
+        dangerouslySetInnerHTML={{
+          __html: replaceLastWhitespaceWithNonBreaking(children),
+        }}
+      />
+    )
+  }
+
   return children
 }
 export const TC = TClient

@@ -6,6 +6,7 @@ import { auth } from '@/lib/auth'
 import { getUser } from '@/lib/getUser'
 import { isSignedOut } from '@/lib/isSignedIn'
 import { prisma } from '@/lib/prisma'
+import { replaceLastWhitespaceWithNonBreaking } from '@/translate/lib/replaceLastWhitespaceWithNonBreaking'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
@@ -60,9 +61,12 @@ export default async function QuestionsPage() {
           <div className="flex flex-col gap-1">
             <strong
               className={question.canBeUsed ? '' : 'line-through opacity-60'}
-            >
-              {question.question}
-            </strong>
+              dangerouslySetInnerHTML={{
+                __html: replaceLastWhitespaceWithNonBreaking(
+                  question.question || ''
+                ),
+              }}
+            />
             <P type="ghost" className="m-0">
               {question.updatedAt.toISOString()}
             </P>
