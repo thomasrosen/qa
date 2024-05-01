@@ -22,10 +22,7 @@ export async function MainNav() {
       },
     })
     isAdmin = user?.isAdmin || false
-    console.log('session', session)
-    console.log('user', user)
   }
-  console.log('isAdmin', isAdmin)
 
   return (
     <HideOnHome>
