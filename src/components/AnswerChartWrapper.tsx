@@ -1,46 +1,46 @@
-import { getLatestAnswers } from '@/lib/getLatestAnswers'
 import { AnswerType } from '@/lib/types'
+import { TC } from '@/translate/components/client/TClient'
 import Link from 'next/link'
-import { TS } from '../translate/components/TServer'
 import { AnswerChart } from './AnswerChart'
 import { Headline } from './Headline'
 import { Button } from './ui/button'
 
-export async function AnswerChartWrapper({
-  question_id,
+export type PreloadedAnswer = {
+  answer: AnswerType
+  amountOfAnswers: any
+  newestValueDate: any
+  values: any
+}
+
+export function AnswerChartWrapper({
+  preloadedAnswers = [],
 }: {
-  question_id?: string
+  preloadedAnswers?: PreloadedAnswer[]
 }) {
-  let latestAnswers: AnswerType[] = []
-
-  if (question_id) {
-    latestAnswers = await getLatestAnswers({
-      take: 1,
-      where: { isAnswering_id: question_id },
-    })
-  } else {
-    latestAnswers = await getLatestAnswers({ take: 1 })
-  }
-
-  if (latestAnswers.length === 0) {
-    return null
-  }
-
   return (
     <section className="flex flex-col gap-4 mb-4 place-content-center">
       <div className="mb-2 mt-8 flex justify-between items-center">
         <Headline type="h2" className="border-0 p-0 m-0">
-          <TS keys="answerChartWrapper">Results for this question</TS>
+          <TC keys="answerChartWrapper">Ergebnisse für diese Frage</TC>
         </Headline>
         <Link href="/answers">
           <Button variant="outline">
-            <TS keys="answerChartWrapper">All Answers</TS>
+            <TC keys="answerChartWrapper">Alle Antworten</TC>
           </Button>
         </Link>
       </div>
-      {latestAnswers.filter(Boolean).map((latestAnswer) => (
-        <AnswerChart key={latestAnswer.answer_id} answer={latestAnswer} />
-      ))}
+      {Array.isArray(preloadedAnswers) &&
+        preloadedAnswers
+          .filter(Boolean)
+          .map((answerData) => (
+            <AnswerChart
+              key={answerData.answer.answer_id}
+              answer={answerData.answer}
+              amountOfAnswers={answerData.amountOfAnswers}
+              newestValueDate={answerData.newestValueDate}
+              values={answerData.values}
+            />
+          ))}
     </section>
   )
 }

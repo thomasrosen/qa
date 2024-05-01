@@ -6,7 +6,7 @@ import { getUser } from '@/lib/getUser'
 import { isSignedOut } from '@/lib/isSignedIn'
 import { notFound } from 'next/navigation'
 
-export default async function SuggestThing({
+export default async function SuggestThingPage({
   params: { path },
 }: {
   params: { path: string[] }

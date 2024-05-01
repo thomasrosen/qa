@@ -20,7 +20,7 @@ import {
 } from '@/lib/prisma'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import React, { useCallback, useState } from 'react'
+import { useCallback, useState } from 'react'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
@@ -63,7 +63,7 @@ export function QuestionCard({
   const tags = question.tags || []
 
   return (
-    <React.Fragment key={question.question_id}>
+    <>
       <Card>
         {question && (
           <CardHeader>
@@ -144,6 +144,6 @@ export function QuestionCard({
           Skip
         </Button>
       </div>
-    </React.Fragment>
+    </>
   )
 }

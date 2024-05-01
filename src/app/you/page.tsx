@@ -8,7 +8,7 @@ import { Prisma } from '@/lib/prisma'
 import { TranslationStoreEntryPoint } from '@/translate/components/TranslationStoreEntryPoint'
 import { redirect } from 'next/navigation'
 
-export default async function AboutYou() {
+export default async function AboutYouPage() {
   const session = await auth()
   if (isSignedOut(session)) {
     redirect('/')

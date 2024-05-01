@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { TS } from '@/translate/components/TServer'
 import { TranslationStoreEntryPoint } from '@/translate/components/TranslationStoreEntryPoint'
 
-export default function Home() {
+export default function HomePage() {
   return (
     <>
       <TranslationStoreEntryPoint keys={['Home', 'DarkModeToggle']}>

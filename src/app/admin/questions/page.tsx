@@ -9,7 +9,7 @@ import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
-export default async function Questions() {
+export default async function QuestionsPage() {
   const session = await auth()
   if (isSignedOut(session)) {
     notFound()
@@ -50,7 +50,7 @@ export default async function Questions() {
 
   return (
     <section className="flex flex-col gap-4 mb-4 place-content-center">
-      <Headline type="h2">Questions</Headline>
+      <Headline type="h2">Fragen</Headline>
 
       {questions.map((question) => (
         <div
@@ -80,10 +80,10 @@ export default async function Questions() {
           </div>
           <div className="flex gap-2">
             <Link href={`/suggest_q/${question.question_id}`}>
-              <Button variant="outline">Edit</Button>
+              <Button variant="outline">Bearbeiten</Button>
             </Link>
             <Link href={`/q/${question.question_id}`}>
-              <Button variant="outline">View</Button>
+              <Button variant="outline">Anzeigen</Button>
             </Link>
           </div>
         </div>

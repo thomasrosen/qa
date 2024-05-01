@@ -1,16 +1,20 @@
-import { AnswerChartWrapper } from '@/components/AnswerChartWrapper'
-import NextQuestion from '@/components/NextQuestion'
-import { P } from '@/components/P'
+import { PreloadedAnswer } from '@/components/AnswerChartWrapper'
+import { QuestionPageContent } from '@/components/QuestionPageContent'
 import { SignIn } from '@/components/client/SignIn'
 import { auth } from '@/lib/auth'
+import { getAnswers } from '@/lib/getAnswers'
+import { getFirstValue } from '@/lib/getFirstValue'
+import { getLatestAnswers } from '@/lib/getLatestAnswers'
+import { getQuestion } from '@/lib/getQuestion'
+import { getRandomQuestion } from '@/lib/getRandomQuestion'
+import { getRandomThing } from '@/lib/getRandomThing'
 import { isSignedOut } from '@/lib/isSignedIn'
-import { TS } from '@/translate/components/TServer'
+import { AnswerType } from '@/lib/types'
 import { TranslationStoreEntryPoint } from '@/translate/components/TranslationStoreEntryPoint'
-import { Suspense } from 'react'
 
 export const dynamic = 'force-dynamic'
 
-export default async function Questions({
+export default async function QuestionsPage({
   params: { path },
 }: {
   params: { path: string[] }
@@ -27,33 +31,77 @@ export default async function Questions({
     return <SignIn />
   }
 
+  // preload question
+  let preloadedQuestion = null
+  if (question_id) {
+    preloadedQuestion = await getQuestion({
+      where: {
+        question_id,
+      },
+    })
+  } else {
+    preloadedQuestion = await getRandomQuestion()
+  }
+
+  // preload aboutThing
+  let preloadedAboutThing = null
+  if (
+    preloadedQuestion &&
+    preloadedQuestion.aboutThingTypes &&
+    preloadedQuestion.aboutThingTypes.length > 0
+  ) {
+    preloadedAboutThing = await getRandomThing({
+      where: {
+        type: {
+          in: preloadedQuestion.aboutThingTypes,
+        },
+      },
+    })
+  }
+
+  // preload latest answers
+  let latestAnswers: AnswerType[] = []
+  if (question_id) {
+    latestAnswers = await getLatestAnswers({
+      take: 1,
+      where: { isAnswering_id: question_id },
+    })
+  } else {
+    latestAnswers = await getLatestAnswers({ take: 1 })
+  }
+
+  const preloadedAnswer: PreloadedAnswer[] = (
+    await Promise.all(
+      latestAnswers.map(async (answer) => {
+        const { amountOfAnswers, newestValueDate, values } = await getAnswers({
+          question_id: answer.isAnswering?.question_id || '',
+          aboutThing_id: (getFirstValue(answer.context) as any)?.aboutThing
+            ?.thing_id, // TODO fix type
+        })
+
+        return {
+          answer,
+          amountOfAnswers,
+          newestValueDate,
+          values,
+        } as PreloadedAnswer
+      })
+    )
+  ).filter(Boolean)
+
   return (
     <TranslationStoreEntryPoint
       keys={['Questions', 'PreferredTagsChooser', 'Combobox']}
     >
-      <Suspense
-        fallback={
-          <P>
-            <TS keys="Questions">Loading Question…</TS>
-          </P>
-        }
-      >
-        <NextQuestion question_id={question_id} />
-      </Suspense>
-
-      <Suspense
-        fallback={
-          <P>
-            <TS keys="Questions">Loading Answer Chart…</TS>
-          </P>
-        }
-      >
-        {question_id ? (
-          <AnswerChartWrapper question_id={question_id} />
-        ) : (
-          <AnswerChartWrapper />
-        )}
-      </Suspense>
+      <QuestionPageContent
+        question_id={question_id}
+        preloadedQuestion={preloadedQuestion}
+        preloadedAboutThing={preloadedAboutThing}
+        preloadedAnswers={preloadedAnswer}
+        noQuestionsFallback={null}
+      />
     </TranslationStoreEntryPoint>
   )
 }
+
+// <NoQuestionsFallback />

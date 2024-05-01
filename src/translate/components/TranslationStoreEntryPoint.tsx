@@ -1,6 +1,7 @@
-import { TranslationStoreProvider } from '@/translate/components/client/TranslationStoreProvider'
-import { loadInitialTranslations } from '@/translate/lib/loadInitialTranslations'
+// import { TranslationStoreProvider } from '@/translate/components/client/TranslationStoreProvider'
+// import { loadInitialTranslations } from '@/translate/lib/loadInitialTranslations'
 
+// @ts-ignore
 export async function TranslationStoreEntryPoint({
   keys,
   children,
@@ -8,11 +9,13 @@ export async function TranslationStoreEntryPoint({
   keys: string[] | string
   children: React.ReactNode
 }) {
-  const initialTranslations = await loadInitialTranslations({ keys })
+  return children
 
-  return (
-    <TranslationStoreProvider initialValue={initialTranslations}>
-      {children}
-    </TranslationStoreProvider>
-  )
+  // const initialTranslations = await loadInitialTranslations({ keys })
+
+  // return (
+  //   <TranslationStoreProvider initialValue={initialTranslations}>
+  //     {children}
+  //   </TranslationStoreProvider>
+  // )
 }

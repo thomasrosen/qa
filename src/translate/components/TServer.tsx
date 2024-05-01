@@ -112,3 +112,14 @@ export async function TServer({
 }
 
 export const TS = TServer
+
+// export function TServer({
+//   children,
+//   ...props
+// }: {
+//   children: any
+//   [key: string]: any
+// }) {
+//   return children
+// }
+// export const TS = TServer

@@ -1,3 +1,4 @@
+/*
 'use client'
 
 import { TRANSLATION_DEFAULTS } from '@/lib/constants'
@@ -90,4 +91,16 @@ export function TClient({
   return children
 }
 
+export const TC = TClient
+*/
+
+export function TClient({
+  children,
+  ...props
+}: {
+  children: any
+  [key: string]: any
+}) {
+  return children
+}
 export const TC = TClient

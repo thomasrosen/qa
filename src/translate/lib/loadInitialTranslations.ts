@@ -7,7 +7,7 @@ import {
   TranslationStateTranslation,
   getRequestDataAsKey,
 } from '@/translate/components/TranslationStore'
-import { loadTranslationsByKeys } from './loadTranslationsByKeys'
+// import { loadTranslationsByKeys } from './loadTranslationsByKeys'
 
 export async function loadInitialTranslations({
   keys = [],
@@ -26,7 +26,7 @@ export async function loadInitialTranslations({
     }
   }
 
-  const translations = await loadTranslationsByKeys({ keys })
+  const translations: any[] = [] // await loadTranslationsByKeys({ keys })
 
   const translationsPerKey = translations.reduce(
     (acc: TranslationStateTranslation, translationRow) => {

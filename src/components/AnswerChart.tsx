@@ -11,16 +11,14 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { DEFAULT_LOCALE } from '@/lib/constants'
-import { getAnswers } from '@/lib/getAnswers'
+import { getFirstValue } from '@/lib/getFirstValue'
 import { AnswerType, ExtendedValueSchemaType } from '@/lib/prisma'
-import { TS, tServer } from '@/translate/components/TServer'
+import { TC } from '@/translate/components/client/TClient'
 import { CameraIcon } from '@radix-ui/react-icons'
 import { devNull } from 'os'
 import { Suspense } from 'react'
 
-async function getTranslatedLabel(
-  value: ExtendedValueSchemaType
-): Promise<string> {
+function getLabel(value: ExtendedValueSchemaType): string {
   let label = 'Unknown'
   if (value.valueType === 'Number') {
     return String(value.valueAsNumber) // numbers don't need translation (maybe when they are formatted)
@@ -31,17 +29,22 @@ async function getTranslatedLabel(
   } else if (value.valueType === 'Thing') {
     label = value.valueAsThing.name
   }
-  return (await tServer({ keys: 'AnswerChart', text: label })) || ''
+
+  return label || ''
+  // return (await tServer({ keys: 'AnswerChart', text: label })) || ''
 }
 
-function getFirstValue(value: any[] | undefined) {
-  if (!value || value.length === 0 || !Array.isArray(value)) {
-    return undefined
-  }
-  return value[0]
-}
-
-export async function AnswerChart({ answer }: { answer?: AnswerType | null }) {
+export function AnswerChart({
+  answer,
+  amountOfAnswers,
+  newestValueDate,
+  values,
+}: {
+  answer?: AnswerType | null
+  amountOfAnswers: any
+  newestValueDate: any
+  values: any
+}) {
   if (!answer) {
     return null
   }
@@ -52,10 +55,6 @@ export async function AnswerChart({ answer }: { answer?: AnswerType | null }) {
     return null
   }
 
-  const { amountOfAnswers, newestValueDate, values } = await getAnswers({
-    question_id: answer.isAnswering.question_id,
-    aboutThing_id: (getFirstValue(answer.context) as any)?.aboutThing?.thing_id, // TODO fix type
-  })
   const typedValues: ExtendedValueSchemaType[] = values
 
   let barChartData: {
@@ -79,24 +78,20 @@ export async function AnswerChart({ answer }: { answer?: AnswerType | null }) {
 
     if (values.length > 0) {
       if (valueType === 'Number') {
-        scatterPlotData = await Promise.all(
-          values.map(async (value, index) => ({
-            label: await getTranslatedLabel(value),
-            // x: value._count._all,
-            y: 0,
-            x: value.valueAsNumber ?? 0,
-            z: value._count._all ?? 1,
-            valueAsNumber: value.valueAsNumber ?? 0,
-          }))
-        )
+        scatterPlotData = values.map((value: any) => ({
+          label: getLabel(value),
+          // x: value._count._all,
+          y: 0,
+          x: value.valueAsNumber ?? 0,
+          z: value._count._all ?? 1,
+          valueAsNumber: value.valueAsNumber ?? 0,
+        }))
       } else {
-        barChartData = await Promise.all(
-          values.map(async (value, index) => ({
-            label: await getTranslatedLabel(value),
-            value: value._count._all,
-            valueAsThing: value.valueAsThing,
-          }))
-        )
+        barChartData = values.map((value: any) => ({
+          label: getLabel(value),
+          value: value._count._all,
+          valueAsThing: value.valueAsThing,
+        }))
       }
     }
   }
@@ -110,14 +105,14 @@ export async function AnswerChart({ answer }: { answer?: AnswerType | null }) {
       <Card className="aspect-square flex flex-col relative">
         <CardHeader>
           <CardDescription className="p-0 m-0">
-            <TS keys="answerChart">Results for…</TS>
+            <TC keys="answerChart">Ergebnisse für…</TC>
           </CardDescription>
           <CardTitle className="p-0 m-0">
-            <TS keys="answerChart">{answer.isAnswering.question}</TS>
+            <TC keys="answerChart">{answer.isAnswering.question}</TC>
           </CardTitle>
           {aboutThing && (
             <P className="mb-0">
-              <TS keys="answerChart">{aboutThing.name}</TS>
+              <TC keys="answerChart">{aboutThing.name}</TC>
             </P>
           )}
         </CardHeader>
@@ -125,41 +120,37 @@ export async function AnswerChart({ answer }: { answer?: AnswerType | null }) {
         <CardContent className="flex flex-col gap-2 grow">
           {!hasValues ? (
             <P className="mb-0">
-              <TS keys="answerChart">
-                You are the first to answer this question. Tell others to also
-                answer questions, so we can graph you the answer as a nice
-                chart.
-              </TS>
+              <TC keys="answerChart">
+                Du bist die erste Person, die diese Frage beantwortet hat. Bitte
+                ermutige auch andere, Fragen zu beantworten, damit wir die
+                Antworten in einem schönen Diagramm darstellen können.
+              </TC>
             </P>
           ) : (
             <>
               <div className="grow min-h-32">
-                <Suspense
-                  fallback={
-                    <P>
-                      <TS keys="answerChart">Loading chart…</TS>
-                    </P>
-                  }
-                >
-                  {valueType === 'Number' ? (
+                {valueType === 'Number' ? (
+                  <Suspense>
                     <ScatterPlot
                       data={scatterPlotData}
                       ariaLabel="Scatter Plot"
                       indexBy="label"
                     />
-                  ) : (
+                  </Suspense>
+                ) : (
+                  <Suspense>
                     <BarChart
                       data={barChartData}
                       tickValues={barChartData.map((d) => d.value)}
                       ariaLabel="Bar Chart"
                       indexBy="label"
                     />
-                  )}
-                </Suspense>
+                  </Suspense>
+                )}
               </div>
               <P type="ghost" className="mb-0">
-                <TS keys="answerChart">
-                  This is what people have answered before{' '}
+                <TC keys="answerChart">
+                  Das haben Personen vor dem{' '}
                   <HideFromTranslation
                     real={
                       newestValueDate
@@ -173,24 +164,24 @@ export async function AnswerChart({ answer }: { answer?: AnswerType | null }) {
                         : devNull
                     }
                   >
-                    April 19, 2024 at 5:11 PM
-                  </HideFromTranslation>
-                  .
-                </TS>
+                    19. April 2024 um 17:11
+                  </HideFromTranslation>{' '}
+                  geantwortet.
+                </TC>
                 <br />
-                <TS keys="answerChart">
-                  Amount of answers:{' '}
+                <TC keys="answerChart">
+                  Anzahl an Antworten:{' '}
                   <HideFromTranslation real={amountOfAnswers}>
                     123
                   </HideFromTranslation>
-                </TS>
+                </TC>
                 <br />
-                <TS keys="answerChart">
-                  Collected at{' '}
+                <TC keys="answerChart">
+                  Gesammelt auf{' '}
                   <a href="https://qa.thomasrosen.me/" className="no-underline">
                     qa.thomasrosen.me
                   </a>
-                </TS>
+                </TC>
               </P>
             </>
           )}

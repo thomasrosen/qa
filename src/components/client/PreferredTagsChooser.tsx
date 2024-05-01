@@ -64,14 +64,15 @@ export function PreferredTagsChooser({
         >
           <CardHeader>
             <CardTitle>
-              <TC keys="PreferredTagsChooser">Preferred Categories</TC>
+              <TC keys="PreferredTagsChooser">Bevorzugte Kategorien</TC>
             </CardTitle>
             <CardDescription>
               <TC keys="PreferredTagsChooser">
-                Choose the categories you want to answer questions about.
+                Wähle die Kategorien aus, zu denen du Fragen beantworten
+                möchtest.
                 <br />
-                If you deselect all categories, we will only show general
-                questions.
+                Wenn du alle Kategorien abwählst, werden nur allgemeine Fragen
+                angezeigt.
               </TC>
             </CardDescription>
           </CardHeader>
@@ -91,7 +92,7 @@ export function PreferredTagsChooser({
                     thing,
                   }))}
                   placeholder={
-                    <TC keys="PreferredTagsChooser">Select Categories…</TC>
+                    <TC keys="PreferredTagsChooser">Kategorien auswählen…</TC>
                   }
                   renderLabel={(option) => (
                     <ThingRow
@@ -107,12 +108,12 @@ export function PreferredTagsChooser({
 
           <CardFooter className="flex flex-col gap-4 justify-between items-center">
             <Button className="w-full" type="submit">
-              <TC keys="PreferredTagsChooser">Save Categories</TC>
+              <TC keys="PreferredTagsChooser">Kategorien speichern</TC>
             </Button>
 
             {isSubmitting && (
               <P type="ghost" className="m-0 text-center">
-                <TC keys="PreferredTagsChooser">Loading…</TC>
+                <TC keys="PreferredTagsChooser">Laden…</TC>
               </P>
             )}
           </CardFooter>

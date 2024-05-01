@@ -98,7 +98,7 @@ export function Combobox({
             ) : (
               // text-foreground/20
               <span className="opacity-30">
-                {placeholder || <TC keys="Combobox">Select…</TC>}
+                {placeholder || <TC keys="Combobox">Auswählen…</TC>}
               </span>
             )}
           </div>
@@ -115,7 +115,7 @@ export function Combobox({
             }
           />
           <CommandEmpty>
-            <TC keys="Combobox">Nothing found.</TC>
+            <TC keys="Combobox">Leider nichts gefunden.</TC>
           </CommandEmpty>
           <CommandGroup>
             <CommandList>

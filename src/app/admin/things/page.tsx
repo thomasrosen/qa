@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
-export default async function Things() {
+export default async function ThingsPage() {
   const session = await auth()
   if (isSignedOut(session)) {
     notFound()
@@ -44,7 +44,7 @@ export default async function Things() {
 
   return (
     <section className="flex flex-col gap-4 mb-4 place-content-center">
-      <Headline type="h2">Things</Headline>
+      <Headline type="h2">Dinge</Headline>
 
       {things.map((thing) => {
         const typeColor = stringToColor(thing.type || '')
@@ -67,7 +67,7 @@ export default async function Things() {
             </div>
             <div className="flex gap-2">
               <Link href={`/suggest_thing/${thing.thing_id}`}>
-                <Button>Edit</Button>
+                <Button>Bearbeiten</Button>
               </Link>
             </div>
           </div>
