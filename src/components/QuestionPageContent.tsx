@@ -33,6 +33,7 @@ export function QuestionPageContent({
   const aboutThing = preloadedAboutThing
 
   const preloadNext = useCallback(async () => {
+    console.log('\n\n\n\n\npreloadNext')
     console.log('preloadedQuestionCache-1', preloadedQuestionCache.current)
     console.log('preloadedAnswersCache-1', preloadedAnswersCache.current)
 
@@ -53,10 +54,13 @@ export function QuestionPageContent({
   }, [preloadNext])
 
   const showNext = useCallback(async () => {
-    console.log('showNext', showNext)
+    console.log('\n\n\n\n\nshowNext')
+    console.log('preloadedQuestionCache-3', preloadedQuestionCache.current)
+    console.log('preloadedAnswersCache-3', preloadedAnswersCache.current)
     setQuestion(preloadedQuestionCache.current)
     setAnswers(preloadedAnswersCache.current)
-  }, [])
+    preloadNext()
+  }, [preloadNext])
 
   const questionNeedsAboutThing =
     question && question.aboutThingTypes && question.aboutThingTypes.length > 0
@@ -78,7 +82,6 @@ export function QuestionPageContent({
             key={question.question_id}
             question={question}
             aboutThing={aboutThing ?? undefined}
-            preloadNext={preloadNext}
             showNext={showNext}
           />
         </section>

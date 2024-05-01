@@ -27,20 +27,18 @@ import remarkGfm from 'remark-gfm'
 export function QuestionCard({
   question,
   aboutThing,
-  preloadNext,
   showNext,
 }: {
   question: QuestionSchemaType
   aboutThing?: ThingSchemaType
-  preloadNext: () => void
   showNext: () => void
 }) {
   const [isLoading, setIsLoading] = useState(false)
 
   const answer = useCallback(
     async ({ value }: { value: ValueSchemaType }) => {
+      console.log('showNext', showNext)
       showNext()
-      preloadNext()
 
       await saveAnswer({
         isAnswering_id: question.question_id,
@@ -53,7 +51,7 @@ export function QuestionCard({
         ],
       })
     },
-    [showNext, preloadNext, question.question_id, aboutThing]
+    [showNext, question.question_id, aboutThing]
   )
 
   const skip = useCallback(() => {
