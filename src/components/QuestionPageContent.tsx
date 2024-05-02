@@ -5,6 +5,7 @@ import { preloadQuestion } from '@/actions/preloadQuestion'
 import { Headline } from '@/components/Headline'
 import { QuestionCard } from '@/components/client/QuestionCard'
 import { PreloadedAnswer } from '@/lib/types'
+import { cn } from '@/lib/utils'
 import { TC } from '@/translate/components/client/TClient'
 import Link from 'next/link'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -28,6 +29,10 @@ export function QuestionPageContent({
   const preloadedQuestionCache = useRef(preloadedQuestion)
   const preloadedAnswersCache = useRef(preloadedAnswers)
 
+  const loadingNextRef = useRef(false)
+  const showNextFunctionCache = useRef<(() => void) | undefined>(undefined)
+  const [isLoadingNextQuestion, setIsLoadingNextQuestion] = useState(false)
+
   const [question, setQuestion] = useState(preloadedQuestion)
   const [answers, setAnswers] = useState(preloadedAnswers)
   const [hasPreloadedQuestion, setHasPreloadedQuestion] = useState(
@@ -37,11 +42,34 @@ export function QuestionPageContent({
   const aboutThing = preloadedAboutThing
 
   const preloadNext = useCallback(async () => {
-    preloadedAnswersCache.current = await preloadAnswersForQuestion(
-      preloadedQuestionCache.current?.question_id || undefined
-    )
-    preloadedQuestionCache.current = await preloadQuestion()
-    setHasPreloadedQuestion(!!preloadedQuestionCache.current)
+    if (loadingNextRef.current === false) {
+      loadingNextRef.current = true
+
+      preloadAnswersForQuestion(
+        preloadedQuestionCache.current?.question_id || undefined
+      )
+        .then((newAnswers) => {
+          preloadedAnswersCache.current = newAnswers
+        })
+        .catch((error) => {
+          console.error('preloadAnswersForQuestion error', error)
+        })
+
+      preloadQuestion()
+        .then((newQuestion) => {
+          preloadedQuestionCache.current = newQuestion
+          setHasPreloadedQuestion(!!preloadedQuestionCache.current)
+
+          loadingNextRef.current = false
+          if (typeof showNextFunctionCache.current === 'function') {
+            showNextFunctionCache.current()
+            showNextFunctionCache.current = undefined
+          }
+        })
+        .catch((error) => {
+          console.error('preloadQuestion error', error)
+        })
+    }
   }, [])
 
   useEffect(() => {
@@ -51,27 +79,37 @@ export function QuestionPageContent({
   }, [preloadNext])
 
   const showNext = useCallback(async () => {
-    if (preloadedQuestionCache.current) {
-      setQuestion(preloadedQuestionCache.current)
-      preloadNext()
+    function showNextQuestion() {
+      if (preloadedQuestionCache.current) {
+        setQuestion(preloadedQuestionCache.current)
+        preloadNext()
 
-      const nextQuestionId = preloadedQuestionCache.current?.question_id || ''
+        const nextQuestionId = preloadedQuestionCache.current?.question_id || ''
 
-      if (window) {
-        if (nextQuestionId) {
-          window.history.pushState(null, '', `/q/${nextQuestionId}`)
-        } else {
-          window.history.pushState(null, '', '/q')
+        if (window) {
+          if (nextQuestionId) {
+            window.history.pushState(null, '', `/q/${nextQuestionId}`)
+          } else {
+            window.history.pushState(null, '', '/q')
+          }
         }
+      } else {
+        setQuestion(undefined)
       }
-    } else {
-      setQuestion(undefined)
+
+      if (preloadedAnswersCache.current) {
+        setAnswers(preloadedAnswersCache.current)
+      } else {
+        setAnswers(preloadedAnswersCache.current || [])
+      }
+      setIsLoadingNextQuestion(false)
     }
 
-    if (preloadedAnswersCache.current) {
-      setAnswers(preloadedAnswersCache.current)
+    if (loadingNextRef.current) {
+      showNextFunctionCache.current = showNextQuestion
+      setIsLoadingNextQuestion(true)
     } else {
-      setAnswers(preloadedAnswersCache.current || [])
+      showNextQuestion()
     }
   }, [preloadNext])
 
@@ -104,8 +142,21 @@ export function QuestionPageContent({
   }
   return (
     <>
+      {isLoadingNextQuestion && (
+        <P type="ghost" className="text-center">
+          Lade nächste Frage…
+        </P>
+      )}
+
       {displayQuestion && (
-        <section className="flex flex-col gap-4 mb-4 place-content-center">
+        <section
+          className={cn(
+            'flex flex-col gap-4 mb-4 place-content-center',
+            isLoadingNextQuestion
+              ? 'pointer-events-none'
+              : 'pointer-events-auto'
+          )}
+        >
           <Headline type="h2" className="border-0 p-0 mt-8 mb-2">
             <TC keys="NextQuestion">
               Beantworte die Frage, um zu erfahren, was andere denken…

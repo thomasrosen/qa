@@ -54,9 +54,9 @@ export function QuestionCard({
   )
 
   const skip = useCallback(() => {
-    setIsLoading(true)
-    window.location.reload()
-  }, [])
+    showNext()
+    // window.location.reload()
+  }, [showNext])
 
   const tags = question.tags || []
 
@@ -113,16 +113,9 @@ export function QuestionCard({
           </CardContent>
         )}
 
-        <CardFooter
-          className={isLoading ? 'pointer-events-none' : 'pointer-events-auto'}
-        >
+        <CardFooter>
           <AnswerButtons question={question} answer={answer} />
         </CardFooter>
-        {isLoading && (
-          <P type="ghost" className="text-center">
-            Loading…
-          </P>
-        )}
       </Card>
       <div className="flex justify-between">
         <nav className="text-white flex">
