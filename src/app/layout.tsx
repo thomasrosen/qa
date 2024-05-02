@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils'
 import { TranslationStoreEntryPoint } from '@/translate/components/TranslationStoreEntryPoint'
 import type { Metadata } from 'next'
 import { Ubuntu } from 'next/font/google'
+import Link from 'next/link'
 
 const fontSans = Ubuntu({
   subsets: ['latin'],
@@ -40,9 +41,11 @@ export default function RootLayout({
           >
             <div className="min-h-screen max-w-full text-foreground flex flex-col items-center p-8 lg:p-16">
               <header>
-                <Headline type="h1" className="mb-8 text-center">
-                  Qrowdsourced Answers
-                </Headline>
+                <Link href="/" className="no-underline">
+                  <Headline type="h1" className="mb-8 text-center">
+                    Qrowdsourced Answers
+                  </Headline>
+                </Link>
 
                 <MainNav />
               </header>
