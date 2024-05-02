@@ -50,7 +50,7 @@ export default async function QuestionsPage() {
   })
 
   return (
-    <section className="flex flex-col gap-4 mb-4 place-content-center">
+    <section className="flex flex-col gap-4 mb-4 place-content-center mx-0 lg:-mx-40">
       <Headline type="h2">Fragen</Headline>
 
       {questions.map((question) => (
@@ -83,11 +83,11 @@ export default async function QuestionsPage() {
             )}
           </div>
           <div className="flex gap-2">
-            <Link href={`/suggest_q/${question.question_id}`}>
-              <Button variant="outline">Bearbeiten</Button>
-            </Link>
             <Link href={`/q/${question.question_id}`}>
               <Button variant="outline">Anzeigen</Button>
+            </Link>
+            <Link href={`/suggest_q/${question.question_id}`}>
+              <Button>Bearbeiten</Button>
             </Link>
           </div>
         </div>

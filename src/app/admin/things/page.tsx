@@ -43,7 +43,7 @@ export default async function ThingsPage() {
   })
 
   return (
-    <section className="flex flex-col gap-4 mb-4 place-content-center">
+    <section className="flex flex-col gap-4 mb-4 place-content-center mx-0 lg:-mx-40">
       <Headline type="h2">Dinge</Headline>
 
       {things.map((thing) => {
