@@ -38,6 +38,7 @@ export async function deleteAccount() {
         emailVerified: null,
         image: null,
         isAdmin: false,
+        isDeleted: true,
       },
     })
 

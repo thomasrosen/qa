@@ -66,6 +66,7 @@ model User {
   //
   preferredTags   Thing[]    @relation("User.preferredTags")
   isAdmin         Boolean?   @default(false)
+  isDeleted       Boolean?   @default(false)
   //
   // accounts      Account[]
   // sessions      Session[]
