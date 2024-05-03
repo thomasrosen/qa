@@ -1,2 +1,2 @@
-import _Loading from '@/app/(normal)/loading'
-export default _Loading
+import LoadingQuestion from '@/app/(normal)/q/[[...path]]/loading'
+export default LoadingQuestion
