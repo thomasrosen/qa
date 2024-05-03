@@ -17,6 +17,7 @@ import { getFirstValue } from '@/lib/getFirstValue'
 import { AnswerType, ExtendedValueSchemaType } from '@/lib/prisma'
 import { TC } from '@/translate/components/client/TClient'
 import { CameraIcon } from '@radix-ui/react-icons'
+import Link from 'next/link'
 import { devNull } from 'os'
 import { Suspense, useId } from 'react'
 
@@ -110,8 +111,14 @@ export function AnswerChart({
           <CardDescription className="p-0 m-0">
             <TC keys="answerChart">Ergebnisse für…</TC>
           </CardDescription>
+
           <CardTitle className="p-0 m-0">
-            <TC keys="answerChart">{answer.isAnswering.question}</TC>
+            <Link
+              href={`/q/${answer.isAnswering.question_id}`}
+              className="no-underline"
+            >
+              <TC keys="answerChart">{answer.isAnswering.question}</TC>
+            </Link>
           </CardTitle>
           {aboutThing && (
             <P className="mb-0">
