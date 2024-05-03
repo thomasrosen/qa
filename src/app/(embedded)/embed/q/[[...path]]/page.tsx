@@ -67,5 +67,3 @@ export default async function EmbedQuestionsPage({
     </TranslationStoreEntryPoint>
   )
 }
-
-// <NoQuestionsFallback />
