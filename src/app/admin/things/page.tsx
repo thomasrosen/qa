@@ -9,6 +9,7 @@ import { isSignedOut } from '@/lib/isSignedIn'
 import { prisma } from '@/lib/prisma'
 import { stringToColor } from '@/lib/stringToColour'
 import { cn } from '@/lib/utils'
+import { TS } from '@/translate/components/TServer'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
@@ -44,7 +45,9 @@ export default async function ThingsPage() {
 
   return (
     <section className="flex flex-col gap-4 mb-4 place-content-center mx-0 lg:-mx-40">
-      <Headline type="h2">Dinge</Headline>
+      <Headline type="h2">
+        <TS keys="admin/things">Things</TS>
+      </Headline>
 
       {things.map((thing) => {
         const typeColor = stringToColor(thing.type || '')
@@ -59,15 +62,18 @@ export default async function ThingsPage() {
                 )}
               />
               <P type="ghost" className="m-0" style={{ color: typeColor }}>
-                {[
-                  thing.updatedAt.toLocaleString(DEFAULT_LOCALE),
-                  thing.type,
-                ].join(' • ')}
+                {thing.updatedAt.toLocaleString(DEFAULT_LOCALE)}
+                {thing.type && ' • '}
+                {thing.type && (
+                  <TS keys="admin/things">{thing.type || 'Thing'}</TS>
+                )}
               </P>
             </div>
             <div className="flex gap-2">
               <Link href={`/suggest_thing/${thing.thing_id}`}>
-                <Button>Bearbeiten</Button>
+                <Button>
+                  <TS keys="admin/things">Edit</TS>
+                </Button>
               </Link>
             </div>
           </div>
