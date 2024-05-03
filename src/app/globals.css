@@ -78,6 +78,27 @@
   --muted-foreground: var(--primary);
 }
 
+.red {
+  --primary: 344 100% 50%;
+  --primary-foreground: 0 100% 100%;
+  --background: 0 100% 100%;
+  --foreground: var(--primary);
+  --card: var(--background);
+  --card-foreground: var(--primary);
+  --muted: var(--background);
+  --muted-foreground: var(--primary);
+}
+.dark .red {
+  --primary: 0 100% 100%;
+  --primary-foreground: 344 100% 50%;
+  --background: 344 100% 50%;
+  --foreground: var(--primary);
+  --card: var(--background);
+  --card-foreground: var(--primary);
+  --muted: var(--background);
+  --muted-foreground: var(--primary);
+}
+
 @layer base {
   * {
     @apply border-border;

@@ -11,6 +11,7 @@ import {
 import { UserSchemaType } from '@/lib/prisma'
 import { TS } from '@/translate/components/TServer'
 import Link from 'next/link'
+import { Button } from './ui/button'
 
 export async function AboutYouCard({ user }: { user: UserSchemaType }) {
   const aboutYouID = user.email || user.id
@@ -37,7 +38,7 @@ export async function AboutYouCard({ user }: { user: UserSchemaType }) {
         </CardDescription>
       </CardHeader>
 
-      <CardFooter className="flex gap-4 justify-between items-center">
+      <CardFooter className="flex-col flex gap-4 items-stretch">
         <P className="mb-0 font-bold">
           <TS keys="aboutYou">
             Your ID:{' '}
@@ -46,9 +47,16 @@ export async function AboutYouCard({ user }: { user: UserSchemaType }) {
             </HideFromTranslation>
           </TS>
         </P>
-        <SignOutButton>
-          <TS keys="aboutYou">Reset ID</TS>
-        </SignOutButton>
+        <div className="flex flex-row gap-2 flex-wrap">
+          <SignOutButton>
+            <TS keys="aboutYou">Logout</TS>
+          </SignOutButton>
+          <Link href="/api/export" target="_blank" download>
+            <Button variant="outline">
+              <TS keys="aboutYou">Download your Data</TS>
+            </Button>
+          </Link>
+        </div>
       </CardFooter>
     </Card>
   )

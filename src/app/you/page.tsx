@@ -1,4 +1,5 @@
 import { AboutYouCard } from '@/components/AboutYouCard'
+import { DeleteAccount } from '@/components/DeleteAccount'
 import { PreferredTagsChooser } from '@/components/client/PreferredTagsChooser'
 import { auth } from '@/lib/auth'
 import { getThings } from '@/lib/getThings'
@@ -57,6 +58,7 @@ export default async function AboutYouPage() {
     <TranslationStoreEntryPoint
       keys={[
         'aboutYou',
+        'deleteAccount',
         'PreferredTagsChooser',
         'Combobox',
         ...(tagOptions || [])
@@ -67,6 +69,7 @@ export default async function AboutYouPage() {
       <section className="flex flex-col gap-4 mb-4 place-content-center">
         <AboutYouCard user={user} />
         <PreferredTagsChooser user={user} tagOptions={tagOptions} />
+        <DeleteAccount user={user} />
       </section>
     </TranslationStoreEntryPoint>
   )
