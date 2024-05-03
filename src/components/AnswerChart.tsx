@@ -105,7 +105,7 @@ export function AnswerChart({
   const aboutThing = (getFirstValue(answer.context) as any)?.aboutThing // TODO fix type
 
   return (
-    <div id={randomScreenshotId} className="p-2 -m-2 bg-background">
+    <div id={randomScreenshotId} className="p-2 -m-2 bg-background w-full">
       <Card className="aspect-square flex flex-col relative">
         <CardHeader>
           <CardDescription className="p-0 m-0">
