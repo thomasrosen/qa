@@ -57,6 +57,9 @@ export async function MainNav() {
               <NavButton startsWith={true} href="/admin/things">
                 <TS keys="MainNav">Admin/Things</TS>
               </NavButton>
+              <NavButton startsWith={true} href="/admin/users">
+                <TS keys="MainNav">Admin/Users</TS>
+              </NavButton>
             </>
           )}
         </nav>
