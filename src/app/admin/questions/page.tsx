@@ -1,11 +1,14 @@
 import { Headline } from '@/components/Headline'
+import { HideFromTranslation } from '@/components/HideFromTranslation'
 import { P } from '@/components/P'
 import { ThingRow } from '@/components/ThingRow'
 import { Button } from '@/components/ui/button'
 import { auth } from '@/lib/auth'
+import { DEFAULT_LOCALE } from '@/lib/constants'
 import { getUser } from '@/lib/getUser'
 import { isSignedOut } from '@/lib/isSignedIn'
 import { prisma } from '@/lib/prisma'
+import { TS } from '@/translate/components/TServer'
 import { replaceLastWhitespaceWithNonBreaking } from '@/translate/lib/replaceLastWhitespaceWithNonBreaking'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -46,12 +49,20 @@ export default async function QuestionsPage() {
         },
       },
       createdBy: true,
+
+      _count: {
+        select: {
+          Answer_isAnswering: true,
+        },
+      },
     },
   })
 
   return (
     <section className="flex flex-col gap-4 mb-4 place-content-center mx-0 lg:-mx-40">
-      <Headline type="h2">Fragen</Headline>
+      <Headline type="h2">
+        <TS keys="admin/questions">Questions</TS>
+      </Headline>
 
       {questions.map((question) => (
         <div
@@ -67,8 +78,24 @@ export default async function QuestionsPage() {
                 ),
               }}
             />
-            <P type="ghost" className="m-0">
-              {question.updatedAt.toISOString()}
+            <P type="ghost" className="m-0 flex-col flex">
+              <span>{question.updatedAt.toLocaleString(DEFAULT_LOCALE)}</span>
+              <strong>
+                <TS keys="admin/questions">
+                  {question._count.Answer_isAnswering === 1 ? (
+                    'One Answer'
+                  ) : (
+                    <>
+                      <HideFromTranslation
+                        real={question._count.Answer_isAnswering}
+                      >
+                        [Unkown number]
+                      </HideFromTranslation>{' '}
+                      Answers
+                    </>
+                  )}
+                </TS>
+              </strong>
             </P>
             {question.tags.length > 0 && (
               <div className="flex flex-wrap gap-1">
@@ -84,10 +111,14 @@ export default async function QuestionsPage() {
           </div>
           <div className="flex gap-2">
             <Link href={`/q/${question.question_id}`}>
-              <Button variant="outline">Anzeigen</Button>
+              <Button variant="outline">
+                <TS keys="admin/questions">View</TS>
+              </Button>
             </Link>
             <Link href={`/suggest_q/${question.question_id}`}>
-              <Button>Bearbeiten</Button>
+              <Button>
+                <TS keys="admin/questions">Edit</TS>
+              </Button>
             </Link>
           </div>
         </div>
