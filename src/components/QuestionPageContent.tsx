@@ -10,6 +10,7 @@ import { TC } from '@/translate/components/client/TClient'
 import Link from 'next/link'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnswerChart } from './AnswerChart'
+import { LoadingSpinner } from './LoadingSpinner'
 import { P } from './P'
 import { Button } from './ui/button'
 
@@ -143,9 +144,12 @@ export function QuestionPageContent({
   return (
     <>
       {isLoadingNextQuestion && (
-        <P type="ghost" className="text-center">
-          Lade nächste Frage…
-        </P>
+        <div className="flex flex-col items-center pt-8">
+          <LoadingSpinner className="h-16 w-16" />
+          <P type="ghost" className="text-center">
+            Lade nächste Frage…
+          </P>
+        </div>
       )}
 
       {displayQuestion && (
