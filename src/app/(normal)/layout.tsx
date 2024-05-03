@@ -1,4 +1,4 @@
-import '@/app/globals.css'
+import '@/app/(normal)/globals.css'
 import { Headline } from '@/components/Headline'
 import { MainNav } from '@/components/MainNav'
 import { ThemeProvider } from '@/components/client/ThemeProvider'

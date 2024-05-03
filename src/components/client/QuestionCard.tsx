@@ -20,21 +20,22 @@ import {
 } from '@/lib/prisma'
 import { TC } from '@/translate/components/client/TClient'
 import Link from 'next/link'
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { Separator } from '../ui/separator'
 
 export function QuestionCard({
+  embedded = false,
   question,
   aboutThing,
   showNext,
 }: {
+  embedded?: boolean
   question: QuestionSchemaType
   aboutThing?: ThingSchemaType
   showNext: () => void
 }) {
-  const [isLoading, setIsLoading] = useState(false)
-
   const answer = useCallback(
     async ({ value }: { value: ValueSchemaType }) => {
       showNext()
@@ -55,7 +56,6 @@ export function QuestionCard({
 
   const skip = useCallback(() => {
     showNext()
-    // window.location.reload()
   }, [showNext])
 
   const tags = question.tags || []
@@ -119,22 +119,32 @@ export function QuestionCard({
       </Card>
       <div className="flex justify-between">
         <nav className="text-white flex">
+          {embedded && (
+            <>
+              <Button variant="link" asChild className="z-10">
+                <Link href="/imprint" className="no-underline" target="_blank">
+                  Impressum
+                </Link>
+              </Button>
+              <Separator orientation="vertical" className="my-2 h-auto" />
+            </>
+          )}
           {/*
           <Button variant="link" asChild className="z-10">
-            <Link href="/suggest_thing" className="no-underline">
+            <Link href="/suggest_thing" className="no-underline" target="_blank">
               Suggest a Thing
             </Link>
           </Button>
           <Separator orientation="vertical" className="my-2 h-auto" />
           */}
           <Button variant="link" asChild className="z-10">
-            <Link href="/suggest_q" className="no-underline">
-              Suggest a Question
+            <Link href="/suggest_q" className="no-underline" target="_blank">
+              Frage vorschlagen
             </Link>
           </Button>
         </nav>
         <Button variant="outline" onClick={skip}>
-          Skip
+          Überspringen
         </Button>
       </div>
     </>

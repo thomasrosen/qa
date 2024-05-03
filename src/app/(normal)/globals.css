@@ -1,0 +1,133 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --h: 266;
+    --s: 87%;
+    --l: 41%;
+    --hs: var(--h) var(--s);
+    --primary: var(--hs) var(--l);
+    --primary-foreground: 0 0% 100%;
+    --secondary: var(--hs) 6%;
+    --secondary-foreground: var(--hs) 95%;
+    --background: var(--hs) 93%;
+    --foreground: var(--primary);
+    --card: var(--hs) 89%;
+    --card-foreground: var(--primary);
+    --popover: var(--hs) 89%;
+    --popover-foreground: var(--primary);
+    --muted: var(--hs) 89%;
+    --muted-foreground: var(--primary);
+    --accent: var(--primary);
+    --accent-foreground: 0 0% 100%;
+    --destructive: 352 81% 56%;
+    --destructive-foreground: 0 0% 100%;
+    --border: var(--primary);
+    --input: var(--primary);
+    --ring: var(--primary);
+    --radius: 1.5rem;
+  }
+}
+
+.dark {
+  --h: 266;
+  --s: 87%;
+  --l: 41%;
+  --hs: var(--h) var(--s);
+  --primary: var(--hs) var(--l);
+  --primary-foreground: 0 0% 100%;
+  --secondary: 0 0% 100%;
+  --secondary-foreground: var(--hs) 6%;
+  --background: var(--hs) 7%;
+  --foreground: 0 0% 100%;
+  --card: var(--hs) 13%;
+  --card-foreground: 0 0% 100%;
+  --popover: var(--hs) 13%;
+  --popover-foreground: 0 0% 100%;
+  --muted: var(--hs) 13%;
+  --muted-foreground: 0 0% 100%;
+  --accent: var(--primary);
+  --accent-foreground: 0 0% 100%;
+  --destructive: 352 81% 56%;
+  --destructive-foreground: 0 0% 100%;
+  --border: var(--primary);
+  --input: var(--primary);
+  --ring: var(--primary);
+}
+
+.orange {
+  --primary: 27 100% 37%;
+  --primary-foreground: 0 100% 100%;
+  --background: 325 43% 89%;
+  --foreground: var(--primary);
+  --card: var(--background);
+  --card-foreground: var(--primary);
+  --muted: var(--background);
+  --muted-foreground: var(--primary);
+}
+.dark .orange {
+  --primary: 0 100% 100%;
+  --primary-foreground: 10 40% 15%;
+  --background: 10 40% 15%;
+  --foreground: var(--primary);
+  --card: var(--background);
+  --card-foreground: var(--primary);
+  --muted: var(--background);
+  --muted-foreground: var(--primary);
+}
+
+.red {
+  --primary: 344 100% 50%;
+  --primary-foreground: 0 100% 100%;
+  --background: 0 100% 100%;
+  --foreground: var(--primary);
+  --card: var(--background);
+  --card-foreground: var(--primary);
+  --muted: var(--background);
+  --muted-foreground: var(--primary);
+}
+.dark .red {
+  --primary: 0 100% 100%;
+  --primary-foreground: 344 100% 50%;
+  --background: 344 100% 50%;
+  --foreground: var(--primary);
+  --card: var(--background);
+  --card-foreground: var(--primary);
+  --muted: var(--background);
+  --muted-foreground: var(--primary);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+a {
+  text-decoration: underline;
+}
+a:hover {
+  text-decoration: none;
+}
+
+.screen_reader_only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.PopoverContent {
+  width: var(--radix-popover-trigger-width);
+  max-height: var(--radix-popover-content-available-height);
+}

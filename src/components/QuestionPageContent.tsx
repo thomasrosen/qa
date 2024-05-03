@@ -15,12 +15,14 @@ import { P } from './P'
 import { Button } from './ui/button'
 
 export function QuestionPageContent({
+  embedded = false,
   question_id,
   preloadedQuestion,
   preloadedAboutThing,
   preloadedAnswers = [],
   noQuestionsFallback,
 }: {
+  embedded?: boolean
   question_id?: string
   preloadedQuestion?: any
   preloadedAboutThing?: any
@@ -161,12 +163,13 @@ export function QuestionPageContent({
               : 'pointer-events-auto'
           )}
         >
-          <Headline type="h2" className="border-0 p-0 mt-8 mb-2">
+          <Headline type="h2" className="border-0 p-0 mb-2">
             <TC keys="NextQuestion">
               Beantworte die Frage, um zu erfahren, was andere denken…
             </TC>
           </Headline>
           <QuestionCard
+            embedded={embedded}
             key={question.question_id}
             question={question}
             aboutThing={aboutThing ?? undefined}
