@@ -48,6 +48,14 @@ export default async function ThingsPage() {
       <Headline type="h2">
         <TS keys="admin/things">Things</TS>
       </Headline>
+      <Link href="/suggest_thing">
+        <Button>
+          <TS keys="admin/things" note="Keep it very short.">
+            {'Suggest new "Thing"'}
+          </TS>
+        </Button>
+      </Link>
+      <br />
 
       {things.map((thing) => {
         const typeColor = stringToColor(thing.type || '')

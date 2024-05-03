@@ -63,6 +63,14 @@ export default async function QuestionsPage() {
       <Headline type="h2">
         <TS keys="admin/questions">Questions</TS>
       </Headline>
+      <Link href="/suggest_q">
+        <Button>
+          <TS keys="admin/questions" note="Keep it very short.">
+            {'Suggest new "Question"'}
+          </TS>
+        </Button>
+      </Link>
+      <br />
 
       {questions.map((question) => (
         <div
