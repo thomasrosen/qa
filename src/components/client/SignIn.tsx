@@ -32,7 +32,7 @@ export function SignIn() {
               easily traced back to you.
             </P>
             <Button
-              variant="secondary"
+              variant="default"
               onClick={() => {
                 setIsLoading(true)
                 signIn('credentials', {})
@@ -52,7 +52,7 @@ export function SignIn() {
               of your answers. In the published dataset, your email is replaced
               by an anonymous-id. Your email address will never be published.
             </P>
-            <div className="flex gap-4">
+            <div className="flex gap-4 flex-col sm:flex-row">
               <Input
                 type="email"
                 value={email}
@@ -63,7 +63,7 @@ export function SignIn() {
                 aria-label="Email"
               />
               <Button
-                variant="secondary"
+                variant="default"
                 onClick={() => {
                   setIsLoading(true)
                   signIn('nodemailer', { email })
