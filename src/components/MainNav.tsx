@@ -51,20 +51,24 @@ export async function MainNav() {
             <TS keys="MainNav">Imprint + Privacy</TS>
           </NavButton>
           <DarkModeToggle />
-          {isAdmin && (
-            <>
-              <NavButton startsWith={true} href="/admin/questions">
-                <TS keys="MainNav">Admin/Questions</TS>
-              </NavButton>
-              <NavButton startsWith={true} href="/admin/things">
-                <TS keys="MainNav">Admin/Things</TS>
-              </NavButton>
-              <NavButton startsWith={true} href="/admin/users">
-                <TS keys="MainNav">Admin/Users</TS>
-              </NavButton>
-            </>
-          )}
         </nav>
+
+        {isAdmin && (
+          <nav
+            className="flex gap-4 items-center mb-8 flex-wrap justify-center"
+            aria-label="Admin"
+          >
+            <NavButton startsWith={true} href="/admin/questions">
+              <TS keys="MainNav">Admin/Questions</TS>
+            </NavButton>
+            <NavButton startsWith={true} href="/admin/things">
+              <TS keys="MainNav">Admin/Things</TS>
+            </NavButton>
+            <NavButton startsWith={true} href="/admin/users">
+              <TS keys="MainNav">Admin/Users</TS>
+            </NavButton>
+          </nav>
+        )}
       </TranslationStoreEntryPoint>
     </HideOnHome>
   )
