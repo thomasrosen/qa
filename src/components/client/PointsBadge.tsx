@@ -22,8 +22,11 @@ export function PointsBadge() {
   }
 
   return (
-    <span className="bg-primary text-primary-foreground py-1 font-bold orange rounded-md px-2 -mr-2">
-      {points === 1 ? '1 Punkt' : `${points} Punkte`}
+    <span
+      title={points === 1 ? '1 Punkt' : `${points} Punkte`}
+      className="bg-primary text-primary-foreground py-1 font-bold orange rounded-md px-2 -mr-2"
+    >
+      {points} 🏆
     </span>
   )
 }
