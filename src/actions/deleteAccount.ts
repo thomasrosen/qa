@@ -14,9 +14,6 @@ export async function deleteAccount() {
     // @ts-ignore Is already checked in isSignedOut()
     const user_id = session.user.id
 
-    console.log('session', session)
-    console.log('user_id', user_id)
-
     await prisma.value.deleteMany({
       where: { createdBy_id: user_id },
     })
