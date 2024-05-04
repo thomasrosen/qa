@@ -40,12 +40,12 @@ export async function MainNav() {
           <NavButton startsWith={true} href="/q">
             <TS keys="MainNav">Questions</TS>
           </NavButton>
-          <NavButton startsWith={true} href="/answers">
+          <NavButton startsWith={true} href="/answers" className="flex gap-2">
             <TS keys="MainNav">Answers</TS>
-          </NavButton>
-          <NavButton startsWith={true} href="/you" className="flex gap-2">
-            <TS keys="MainNav">About You</TS>
             <PointsBadge />
+          </NavButton>
+          <NavButton startsWith={true} href="/you">
+            <TS keys="MainNav">About You</TS>
           </NavButton>
           <NavButton startsWith={true} href="/imprint">
             <TS keys="MainNav">Imprint + Privacy</TS>
