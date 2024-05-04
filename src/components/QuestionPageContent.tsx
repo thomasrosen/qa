@@ -162,7 +162,7 @@ export function QuestionPageContent({
   return (
     <>
       {isLoadingNextQuestion && (
-        <div className="flex flex-col items-center pt-8">
+        <div className="flex flex-col items-center pt-8 mb-8">
           <LoadingSpinner className="h-16 w-16" />
           <P type="ghost" className="text-center">
             Lade nächste Frage…
@@ -175,7 +175,7 @@ export function QuestionPageContent({
           className={cn(
             'flex flex-col gap-4 mb-4 place-content-center',
             isLoadingNextQuestion
-              ? 'pointer-events-none'
+              ? 'pointer-events-none animate-pulse'
               : 'pointer-events-auto'
           )}
         >
