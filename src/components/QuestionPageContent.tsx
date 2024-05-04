@@ -45,10 +45,9 @@ export function QuestionPageContent({
   const [isLoadingNextQuestion, setIsLoadingNextQuestion] = useState(false)
 
   const [question, setQuestion] = useState(preloadedQuestion)
-  const [answers, setAnswers] = useState<PreloadedAnswer[]>([])
-  // const [hasPreloadedQuestion, setHasPreloadedQuestion] = useState(
-  //   !!preloadedQuestion
-  // )
+  const [answers, setAnswers] = useState<PreloadedAnswer[]>(
+    question_id && preloadedAnswers ? preloadedAnswers : []
+  )
 
   const aboutThing = preloadedAboutThing
 
