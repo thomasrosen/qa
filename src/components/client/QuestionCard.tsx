@@ -114,7 +114,7 @@ export function QuestionCard({
           <AnswerButtons question={question} answer={answer} />
         </CardFooter>
       </Card>
-      <div className="flex justify-between">
+      <div className="flex justify-center min-[450px]:justify-between flex-wrap gap-y-2">
         <nav className="text-white flex">
           {embedded && (
             <>
