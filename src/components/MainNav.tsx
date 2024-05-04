@@ -6,6 +6,7 @@ import { getUser } from '@/lib/getUser'
 import { isSignedIn } from '@/lib/isSignedIn'
 import { TS } from '@/translate/components/TServer'
 import { TranslationStoreEntryPoint } from '@/translate/components/TranslationStoreEntryPoint'
+import { PointsBadge } from './client/PointsBadge'
 
 export async function MainNav() {
   let isAdmin = false
@@ -42,8 +43,9 @@ export async function MainNav() {
           <NavButton startsWith={true} href="/answers">
             <TS keys="MainNav">Answers</TS>
           </NavButton>
-          <NavButton startsWith={true} href="/you">
+          <NavButton startsWith={true} href="/you" className="flex gap-2">
             <TS keys="MainNav">About You</TS>
+            <PointsBadge />
           </NavButton>
           <NavButton startsWith={true} href="/imprint">
             <TS keys="MainNav">Imprint + Privacy</TS>

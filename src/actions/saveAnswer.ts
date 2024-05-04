@@ -8,7 +8,7 @@ import {
   SaveAnswerSchemaType,
   type PrismaType,
 } from '@/lib/types'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 
 export async function saveAnswer(data: SaveAnswerSchemaType) {
   try {
@@ -50,6 +50,7 @@ export async function saveAnswer(data: SaveAnswerSchemaType) {
       data: dataObj as any,
     })
     revalidatePath('/q', 'page')
+    revalidateTag('points') // calculating points is based on the amount of answers
 
     if (answerResponse && answerResponse.answer_id) {
       ;(async () => {
