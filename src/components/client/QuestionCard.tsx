@@ -65,7 +65,7 @@ export function QuestionCard({
         {question && (
           <CardHeader>
             {tags.length > 0 && (
-              <div className="flex flex-wrap gap-4 -mt-1 justify-start">
+              <div className="flex flex-wrap gap-x-4 gap-y-0 -mt-1 justify-start">
                 {tags.map((thing) => (
                   <ThingRow
                     key={thing.thing_id}
