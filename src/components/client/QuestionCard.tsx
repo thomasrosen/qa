@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -82,27 +81,25 @@ export function QuestionCard({
               </CardTitle>
             )}
             {question.description && (
-              <CardDescription className="text-start">
-                <Markdown
-                  remarkPlugins={[remarkGfm]}
-                  components={{
-                    p(props) {
-                      return <P type="ghost" className="mb-2" {...props} />
-                    },
-                    a(props) {
-                      return (
-                        <Link
-                          {...props}
-                          target="_blank"
-                          href={props.href as string}
-                        />
-                      )
-                    },
-                  }}
-                >
-                  {question.description}
-                </Markdown>
-              </CardDescription>
+              <Markdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  p(props) {
+                    return <P type="ghost" className="mb-2" {...props} />
+                  },
+                  a(props) {
+                    return (
+                      <Link
+                        {...props}
+                        target="_blank"
+                        href={props.href as string}
+                      />
+                    )
+                  },
+                }}
+              >
+                {question.description}
+              </Markdown>
             )}
           </CardHeader>
         )}
