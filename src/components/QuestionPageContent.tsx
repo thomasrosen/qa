@@ -145,18 +145,37 @@ export function QuestionPageContent({
   const hasAnswers = answers && Array.isArray(answers) && answers.length > 0
 
   if (!displayQuestion && !hasAnswers) {
-    return (
-      <section className="flex flex-col gap-4 mb-4 place-content-center">
-        <Headline type="h2" className="border-0 p-0 mt-8 mb-2">
-          <TC keys="NextQuestion">
-            Wir konnten zu der URL leider keine Frage finden.
-          </TC>
-        </Headline>
-        <Link href="/q">
-          <Button>Beantworte eine andere Frage</Button>
-        </Link>
-      </section>
-    )
+    if (question_id) {
+      return (
+        <section className="flex flex-col gap-4 mb-4 place-content-center">
+          <Headline type="h2" className="border-0 p-0 mt-8 mb-2">
+            <TC keys="NextQuestion">
+              Wir konnten zu der URL leider keine Frage finden.
+            </TC>
+          </Headline>
+          <Link href="/q">
+            <Button>Beantworte eine andere Frage</Button>
+          </Link>
+        </section>
+      )
+    } else {
+      return (
+        <section className="flex flex-col gap-4 mb-4 place-content-center">
+          <Headline type="h2">
+            <TC keys="NextQuestion">Alles beantwortet!</TC>
+          </Headline>
+          <P>
+            <TC keys="NextQuestion">
+              Anscheinend hast du schon alle Fragen beantwortet. Probier es in
+              den nächsten Tagen nochmal.
+            </TC>
+          </P>
+          <Link href="/answers">
+            <Button>Antworten anschauen</Button>
+          </Link>
+        </section>
+      )
+    }
   }
 
   return (
