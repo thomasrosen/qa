@@ -26,9 +26,11 @@ import { TC } from '../../translate/components/client/TClient'
 export function PreferredTagsChooser({
   user,
   tagOptions,
+  fullReload = false,
 }: {
   user: UserSchemaType
   tagOptions: ThingSchemaType[]
+  fullReload?: boolean
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const router = useRouter()
@@ -50,7 +52,11 @@ export function PreferredTagsChooser({
 
     if (submitted) {
       toast.success('Your preferred categories have been saved.')
-      router.refresh()
+      if (fullReload === true) {
+        window.location.reload()
+      } else {
+        router.refresh()
+      }
     } else {
       toast.error('An error occurred while submitting your suggestion.')
     }
