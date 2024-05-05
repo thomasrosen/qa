@@ -1,6 +1,6 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
+import { Button, ButtonProps } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -14,7 +14,7 @@ export function NavButton({
 }: {
   children: React.ReactNode
   href?: string
-  variant?: string
+  variant?: ButtonProps['variant']
   className?: string
   startsWith?: boolean
 }) {
@@ -22,7 +22,7 @@ export function NavButton({
   const isActive = startsWith ? pathname.startsWith(href) : pathname === href
 
   return (
-    <Button variant={variant || isActive ? 'default' : 'ghost'} asChild>
+    <Button variant={isActive ? 'default' : variant || 'ghost'} asChild>
       <Link href={href} className={cn('no-underline', className)}>
         {children}
       </Link>
