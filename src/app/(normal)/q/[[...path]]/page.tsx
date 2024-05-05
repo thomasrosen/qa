@@ -1,7 +1,7 @@
 import { preloadAnswersForQuestion } from '@/actions/preloadAnswersForQuestion'
 import { preloadQuestion } from '@/actions/preloadQuestion'
 import { NoQuestionsFallback } from '@/components/NoQuestionsFallback'
-import { QuestionPageContent } from '@/components/QuestionPageContent'
+import { QuestionPageContent } from '@/components/client/QuestionPageContent'
 import { SignIn } from '@/components/client/SignIn'
 import { auth } from '@/lib/auth'
 import { getRandomThing } from '@/lib/getRandomThing'
@@ -29,7 +29,7 @@ export default async function QuestionsPage({
   }
 
   // preload question
-  const preloadedQuestion = await preloadQuestion(question_id)
+  const preloadedQuestion = await preloadQuestion({ question_id })
 
   // preload aboutThing
   let preloadedAboutThing = null

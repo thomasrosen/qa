@@ -2,17 +2,17 @@
 
 import { preloadAnswersForQuestion } from '@/actions/preloadAnswersForQuestion'
 import { preloadQuestion } from '@/actions/preloadQuestion'
+import { AnswerChart } from '@/components/AnswerChart'
 import { Headline } from '@/components/Headline'
+import { LoadingSpinner } from '@/components/LoadingSpinner'
+import { P } from '@/components/P'
 import { QuestionCard } from '@/components/client/QuestionCard'
+import { Button } from '@/components/ui/button'
 import { PreloadedAnswer, QuestionSchemaType } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { TC } from '@/translate/components/client/TClient'
 import Link from 'next/link'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { AnswerChart } from './AnswerChart'
-import { LoadingSpinner } from './LoadingSpinner'
-import { P } from './P'
-import { Button } from './ui/button'
 
 export function QuestionPageContent({
   embedded = false,
@@ -29,6 +29,10 @@ export function QuestionPageContent({
   preloadedAnswers?: PreloadedAnswer[]
   noQuestionsFallback?: React.ReactNode
 }) {
+  const loadedQuestionIds = useRef<string[]>(
+    preloadedQuestion ? [preloadedQuestion.question_id] : []
+  )
+
   const nextQuestionCache = useRef<QuestionSchemaType | null>(null)
   const nextAnswersCache = useRef<PreloadedAnswer[]>([])
 
@@ -58,7 +62,13 @@ export function QuestionPageContent({
       loadingNextRef.current = true
 
       // load question
-      const nextQuestion = await preloadQuestion()
+      const nextQuestion = await preloadQuestion({
+        not_question_id: loadedQuestionIds.current,
+      })
+      loadedQuestionIds.current = [
+        ...(loadedQuestionIds.current || []),
+        nextQuestion?.question_id || '',
+      ].filter(Boolean)
       nextQuestionCache.current = nextQuestion
       // setHasPreloadedQuestion(!!nextQuestionCache.current)
 
@@ -84,10 +94,13 @@ export function QuestionPageContent({
   }, [])
 
   useEffect(() => {
+    if (question_id) {
+      window.history.pushState(null, '', '/q')
+    }
     if (preloadNext) {
       preloadNext()
     }
-  }, [preloadNext])
+  }, [question_id, preloadNext])
 
   const showNext = useCallback(async () => {
     async function showNextQuestion() {
@@ -103,25 +116,39 @@ export function QuestionPageContent({
       nextQuestionCache.current = null // new values will be set in preloadNext
       nextAnswersCache.current = [] // new values will be set in preloadNext
 
+      console.log('prevQuestionCache.current', prevQuestionCache.current)
+      console.log('currentQuestionCache.current', currentQuestionCache.current)
+      console.log('nextQuestionCache.current', nextQuestionCache.current)
+
       // set values that will be displayed
       setQuestion(currentQuestionCache.current)
       setAnswers(prevAnswersCache.current)
 
-      if (
-        currentQuestionCache.current &&
-        currentQuestionCache.current?.question_id &&
-        window
-      ) {
-        const currentQuestionId = currentQuestionCache.current?.question_id
-        if (embedded === true) {
-          window.history.pushState(null, '', `/embed/q/${currentQuestionId}`)
-        } else {
-          window.history.pushState(null, '', `/q/${currentQuestionId}`)
-        }
-      }
+      // if (
+      //   currentQuestionCache.current &&
+      //   currentQuestionCache.current?.question_id &&
+      //   window
+      // ) {
+      //   const currentQuestionId = currentQuestionCache.current?.question_id
+      //   if (embedded === true) {
+      //     window.history.pushState(null, '', `/embed/q/${currentQuestionId}`)
+      //   } else {
+      //     window.history.pushState(null, '', `/q/${currentQuestionId}`)
+      //   }
+      // }
 
       // get real values for nextQuestionCache and nextAnswersCache
-      await preloadNext()
+      ;(async () => {
+        await preloadNext()
+      })()
+
+      // if (window) {
+      //   if (embedded === true) {
+      //     window.history.pushState(null, '', `/embed/q`)
+      //   } else {
+      //     window.history.pushState(null, '', `/q`)
+      //   }
+      // }
     }
 
     if (loadingNextRef.current === true) {
@@ -130,14 +157,14 @@ export function QuestionPageContent({
     } else {
       showNextQuestion()
     }
-  }, [embedded, preloadNext])
-
-  const questionNeedsAboutThing =
-    question && question.aboutThingTypes && question.aboutThingTypes.length > 0
+  }, [preloadNext])
 
   const answerIsForPreloadedQuestion =
     (question_id && !question) ||
     (question && question_id === question.question_id)
+
+  const questionNeedsAboutThing =
+    question && question.aboutThingTypes && question.aboutThingTypes.length > 0
 
   const displayQuestion =
     question &&
@@ -160,22 +187,7 @@ export function QuestionPageContent({
         </section>
       )
     } else {
-      return (
-        <section className="flex flex-col gap-4 mb-4 place-content-center">
-          <Headline type="h2">
-            <TC keys="NextQuestion">Alles beantwortet!</TC>
-          </Headline>
-          <P>
-            <TC keys="NextQuestion">
-              Anscheinend hast du schon alle Fragen beantwortet. Probier es in
-              den nächsten Tagen nochmal.
-            </TC>
-          </P>
-          <Link href="/answers">
-            <Button>Antworten anschauen</Button>
-          </Link>
-        </section>
-      )
+      return noQuestionsFallback
     }
   }
 
@@ -233,9 +245,6 @@ export function QuestionPageContent({
                 : 'Ergebnisse zu deiner letzte Antwort'}
             </TC>
           </Headline>
-          {/* {answerIsForPreloadedQuestion && displayQuestion ? (
-            <P className="m-0">Die Antwort siehst du nach dem Beantworten.</P>
-          ) : ( */}
           {answers.filter(Boolean).map((answerData) => (
             <AnswerChart
               key={answerData.answer.answer_id}
@@ -245,7 +254,6 @@ export function QuestionPageContent({
               values={answerData.values}
             />
           ))}
-          {/* )} */}
           <Link href="/answers">
             <Button variant="outline">
               <TC keys="answerChartWrapper">Alle Antworten</TC>
