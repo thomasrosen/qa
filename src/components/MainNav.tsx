@@ -58,13 +58,17 @@ export async function MainNav() {
             className="flex gap-4 items-center mb-8 flex-wrap justify-center"
             aria-label="Admin"
           >
-            <NavButton startsWith={true} href="/admin/questions">
+            <NavButton
+              startsWith={true}
+              href="/admin/questions"
+              variant="outline"
+            >
               <TS keys="MainNav">Admin/Questions</TS>
             </NavButton>
-            <NavButton startsWith={true} href="/admin/things">
+            <NavButton startsWith={true} href="/admin/things" variant="outline">
               <TS keys="MainNav">Admin/Things</TS>
             </NavButton>
-            <NavButton startsWith={true} href="/admin/users">
+            <NavButton startsWith={true} href="/admin/users" variant="outline">
               <TS keys="MainNav">Admin/Users</TS>
             </NavButton>
           </nav>
