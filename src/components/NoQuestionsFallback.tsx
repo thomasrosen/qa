@@ -6,6 +6,7 @@ import { getUser } from '@/lib/getUser'
 import { Prisma } from '@/lib/prisma'
 import { TS } from '@/translate/components/TServer'
 import { TranslationStoreEntryPoint } from '@/translate/components/TranslationStoreEntryPoint'
+import { Headline } from './Headline'
 
 export async function NoQuestionsFallback() {
   const session = await auth()
@@ -53,25 +54,19 @@ export async function NoQuestionsFallback() {
   }
 
   return (
-    <>
+    <section className="flex flex-col gap-4 mb-4 place-content-center">
+      <Headline type="h2">
+        <TS keys="NextQuestion">Questions</TS>
+      </Headline>
       <P>
         <TS keys="NextQuestion">
-          <strong>
-            There are no questions available to answer in the chosen categories
-            at the moment.
-          </strong>
+          <strong>You answered all questions in the chosen categories.</strong>
           <br />
-          Every question can be answered only once every 12 month.
+          Every question can be answered only once every month.
           <br />
-          Check back later when we’ve added more questions.
+          Check back later when we’ve added more questions or chose more
+          categories.
         </TS>
-      </P>
-      <P>
-        <strong>
-          <TS keys="NextQuestion">
-            Try adding more categories, to get more questions.
-          </TS>
-        </strong>
       </P>
       <TranslationStoreEntryPoint
         keys={[
@@ -82,8 +77,12 @@ export async function NoQuestionsFallback() {
             .filter(Boolean),
         ]}
       >
-        <PreferredTagsChooser user={user} tagOptions={tagOptions} />
+        <PreferredTagsChooser
+          user={user}
+          tagOptions={tagOptions}
+          fullReload={true}
+        />
       </TranslationStoreEntryPoint>
-    </>
+    </section>
   )
 }
