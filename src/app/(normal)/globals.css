@@ -3,13 +3,39 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --h: 266;
-    --s: 87%;
-    --l: 41%;
+  :root,
+  .light {
+    --h: 0;
+    --s: 5%;
+    --l: 15%;
+  }
+  .dark {
+    --h: 20;
+    --s: 10%;
+    --l: 30%;
+
+    /* --h: 266; */
+    /* --s: 60%; */
+    /* --l: 30%; */
+  }
+  .orange {
+    --h: 30;
+    --s: 80%;
+    --l: 20%;
+  }
+  .red {
+    --h: 0;
+    --s: 80%;
+    --l: 20%;
+  }
+
+  :root,
+  .light,
+  .orange,
+  .red {
     --hs: var(--h) var(--s);
     --primary: var(--hs) var(--l);
-    --primary-foreground: 0 0% 100%;
+    --primary-foreground: var(--hs) 100%;
     --secondary: var(--hs) 6%;
     --secondary-foreground: var(--hs) 95%;
     --background: var(--hs) 93%;
@@ -21,82 +47,39 @@
     --muted: var(--hs) 89%;
     --muted-foreground: var(--primary);
     --accent: var(--primary);
-    --accent-foreground: 0 0% 100%;
-    --destructive: 352 81% 56%;
-    --destructive-foreground: 0 0% 100%;
+    --accent-foreground: var(--hs) 100%;
+    --destructive: 0 80% 50%;
+    --destructive-foreground: 0 80% 100%;
     --border: var(--primary);
     --input: var(--primary);
     --ring: var(--primary);
     --radius: 1.5rem;
   }
-}
 
-.dark {
-  --h: 266;
-  --s: 87%;
-  --l: 41%;
-  --hs: var(--h) var(--s);
-  --primary: var(--hs) var(--l);
-  --primary-foreground: 0 0% 100%;
-  --secondary: 0 0% 100%;
-  --secondary-foreground: var(--hs) 6%;
-  --background: var(--hs) 7%;
-  --foreground: 0 0% 100%;
-  --card: var(--hs) 13%;
-  --card-foreground: 0 0% 100%;
-  --popover: var(--hs) 13%;
-  --popover-foreground: 0 0% 100%;
-  --muted: var(--hs) 13%;
-  --muted-foreground: 0 0% 100%;
-  --accent: var(--primary);
-  --accent-foreground: 0 0% 100%;
-  --destructive: 352 81% 56%;
-  --destructive-foreground: 0 0% 100%;
-  --border: var(--primary);
-  --input: var(--primary);
-  --ring: var(--primary);
-}
-
-.orange {
-  --primary: 27 100% 37%;
-  --primary-foreground: 0 100% 100%;
-  --background: 325 43% 89%;
-  --foreground: var(--primary);
-  --card: var(--background);
-  --card-foreground: var(--primary);
-  --muted: var(--background);
-  --muted-foreground: var(--primary);
-}
-.dark .orange {
-  --primary: 0 100% 100%;
-  --primary-foreground: 10 40% 15%;
-  --background: 10 40% 15%;
-  --foreground: var(--primary);
-  --card: var(--background);
-  --card-foreground: var(--primary);
-  --muted: var(--background);
-  --muted-foreground: var(--primary);
-}
-
-.red {
-  --primary: 344 100% 50%;
-  --primary-foreground: 0 100% 100%;
-  --background: 0 100% 100%;
-  --foreground: var(--primary);
-  --card: var(--background);
-  --card-foreground: var(--primary);
-  --muted: var(--background);
-  --muted-foreground: var(--primary);
-}
-.dark .red {
-  --primary: 0 100% 100%;
-  --primary-foreground: 344 100% 50%;
-  --background: 344 100% 50%;
-  --foreground: var(--primary);
-  --card: var(--background);
-  --card-foreground: var(--primary);
-  --muted: var(--background);
-  --muted-foreground: var(--primary);
+  .dark,
+  .dark .orange,
+  .dark .red {
+    --hs: var(--h) var(--s);
+    --primary: var(--hs) var(--l);
+    --primary-foreground: var(--hs) 100%;
+    --secondary: var(--hs) 100%;
+    --secondary-foreground: var(--hs) 6%;
+    --background: var(--hs) 7%;
+    --foreground: var(--hs) 100%;
+    --card: var(--hs) 13%;
+    --card-foreground: var(--hs) 100%;
+    --popover: var(--hs) 13%;
+    --popover-foreground: var(--hs) 100%;
+    --muted: var(--hs) 13%;
+    --muted-foreground: var(--hs) 100%;
+    --accent: var(--primary);
+    --accent-foreground: var(--hs) 100%;
+    --destructive: 0 80% 25%;
+    --destructive-foreground: 0 80% 100%;
+    --border: var(--primary);
+    --input: var(--primary);
+    --ring: var(--primary);
+  }
 }
 
 @layer base {
