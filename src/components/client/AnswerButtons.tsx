@@ -89,7 +89,7 @@ export function AnswerButtons({ question, answer }: AnswerButtonsProps) {
             })
           }
         >
-          Yes
+          Ja
         </Button>
         <Button
           variant="default"
@@ -106,7 +106,7 @@ export function AnswerButtons({ question, answer }: AnswerButtonsProps) {
             })
           }
         >
-          No
+          Nein
         </Button>
       </div>
     )
