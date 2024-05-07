@@ -1,10 +1,9 @@
 // import { prisma } from '@/lib/prisma'
 
-import { similarTexts } from '@/lib/vectorStore'
+// import { similarTexts } from '@/lib/vectorStore'
 
 export async function GET() {
-  const result = await similarTexts()
-
+  // const result = await similarTexts()
   // const answers = await prisma.answer.findMany({
   //   relationLoadStrategy: 'join', // or 'query'
   //   where: {
@@ -20,7 +19,6 @@ export async function GET() {
   //     context: true,
   //   },
   // })
-
-  const data = { result }
-  return Response.json(data)
+  // const data = { result }
+  // return Response.json(data)
 }
