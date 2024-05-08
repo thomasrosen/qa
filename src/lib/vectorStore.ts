@@ -4,7 +4,7 @@ import { OpenAiIndex, Prisma } from '@prisma/client'
 
 import { prisma } from '@/lib/prisma'
 
-export async function similarTexts() {
+export function createVectorStore() {
   // Use the `withModel` method to get proper type hints for `metadata` field:
   const vectorStore = PrismaVectorStore.withModel<OpenAiIndex>(prisma).create(
     new OpenAIEmbeddings({
@@ -23,6 +23,37 @@ export async function similarTexts() {
     }
   )
 
+  return vectorStore
+}
+
+export async function addContent({
+  texts = [],
+  vectorStore,
+}: {
+  texts: {
+    content: string
+    metadata: any
+  }[]
+  vectorStore: ReturnType<typeof createVectorStore>
+}) {
+  return await vectorStore.addModels(
+    await prisma.$transaction(
+      texts.map(({ content, metadata }) =>
+        prisma.openAiIndex.create({ data: { content, metadata } })
+      )
+    )
+  )
+}
+
+export async function similarTexts({
+  q,
+  amount = 10,
+  vectorStore,
+}: {
+  q: string
+  amount?: number
+  vectorStore: ReturnType<typeof createVectorStore>
+}) {
   // const metadata = {
   //   hello: 'world',
   // }
@@ -36,14 +67,15 @@ export async function similarTexts() {
   // )
 
   // Use the default filter a.k.a {"content": "default"}
-  const resultTwo = await vectorStore.similaritySearch('who am i', 10, {
-    metadata: {
-      equals: {
-        hello: 'world',
-      },
-    },
-  })
-  console.log('LOG_yhDXFBHE', resultTwo)
+  // const resultTwo = await vectorStore.similaritySearch(q, amount, {
+  //   metadata: {
+  //     equals: {
+  //       hello: 'world',
+  //     },
+  //   },
+  // })
+  // console.log('LOG_yhDXFBHE', resultTwo)
 
-  return resultTwo
+  const results = await vectorStore.similaritySearch(q, amount)
+  return results
 }
