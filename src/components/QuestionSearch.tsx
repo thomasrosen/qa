@@ -63,7 +63,7 @@ export function QuestionSearch() {
 
       if (newValue.length === 0) {
         setHasValue(false)
-        setIsShowingSearchButton(true)
+        setIsShowingSearchButton(false)
         setResults([])
         return
       }
