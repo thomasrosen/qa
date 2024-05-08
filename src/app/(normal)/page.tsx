@@ -1,3 +1,4 @@
+import { QuestionSearch } from '@/components/QuestionSearch'
 import { DarkModeToggle } from '@/components/client/DarkModeToggle'
 import { NavButton } from '@/components/client/NavButton'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -8,6 +9,8 @@ export default function HomePage() {
   return (
     <>
       <TranslationStoreEntryPoint keys={['Home', 'DarkModeToggle']}>
+        <QuestionSearch />
+
         <Card>
           <CardHeader>
             <CardTitle>
