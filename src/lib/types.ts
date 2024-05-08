@@ -94,7 +94,9 @@ export const QuestionSchema = z
       message: 'answerThingTypes must be set when answerType is "Thing".',
     }
   )
-export type QuestionSchemaType = z.input<typeof QuestionSchema>
+export type QuestionSchemaType = z.input<typeof QuestionSchema> & {
+  [key: string]: any
+}
 
 export const ThingSchema = z.object({
   thing_id: z.string().optional(),
