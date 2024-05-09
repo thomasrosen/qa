@@ -1,8 +1,8 @@
 import '@/app/(normal)/globals.css'
-import { Headline } from '@/components/Headline'
 import { MainNav } from '@/components/MainNav'
 import { ThemeProvider } from '@/components/client/ThemeProvider'
 import { Toaster } from '@/components/ui/sonner'
+import { QrowdsourcedAnswersLogo } from '@/images/Qrowdsourced-Answers-Logo'
 import { cn } from '@/lib/utils'
 import { TranslationStoreEntryPoint } from '@/translate/components/TranslationStoreEntryPoint'
 import type { Metadata } from 'next'
@@ -28,6 +28,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="de" suppressHydrationWarning>
+      <head>
+        <link rel="icon" href="/QA-Logo-Night.png" />
+      </head>
       <body
         className={cn('bg-background font-sans antialiased', fontSans.variable)}
       >
@@ -40,11 +43,14 @@ export default function RootLayout({
             disableTransitionOnChange={false}
           >
             <div className="min-h-screen max-w-full text-foreground flex flex-col items-center p-8 lg:p-16">
-              <header>
-                <Link href="/" className="no-underline">
-                  <Headline type="h1" className="mb-8 text-center">
-                    Qrowdsourced Answers
-                  </Headline>
+              <header className="w-[500px] max-w-full">
+                <Link
+                  href="/"
+                  className="no-underline"
+                  aria-label="Zur Startseite"
+                  title="Zur Startseite"
+                >
+                  <QrowdsourcedAnswersLogo className="mb-8 w-full" />
                 </Link>
 
                 <MainNav />
