@@ -30,6 +30,7 @@ export default function RootLayout({
     <html lang="de" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/QA-Logo-Night.png" />
+        <link rel="apple-touch-icon" href="/QA-App-Icon-Night.png" />
       </head>
       <body
         className={cn('bg-background font-sans antialiased', fontSans.variable)}
