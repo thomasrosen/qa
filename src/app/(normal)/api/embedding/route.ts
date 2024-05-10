@@ -1,4 +1,4 @@
-import { getTextEmbedding } from '@/lib/getTextEmbedding'
+import { getTextEmbedding } from '@/lib/getTextEmbeddingUSE'
 
 export async function GET(request: Request): Promise<Response> {
   const t = new URL(request.url).searchParams.get('t')
