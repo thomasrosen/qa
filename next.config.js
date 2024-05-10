@@ -5,7 +5,14 @@ let nextConfig = {
       'react-dom/server',
     ]
   },
-};
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.wasm$/,
+      type: 'webassembly/experimental',
+    });
+    return config;
+  },
+}
 
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
