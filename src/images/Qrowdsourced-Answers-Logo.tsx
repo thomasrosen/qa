@@ -36,7 +36,7 @@ export function QrowdsourcedAnswersLogo({
           style={{
             fill: 'var(--art)',
           }}
-          fill-opacity="0.8"
+          fillOpacity="0.8"
         />
         <circle
           cx="26.3413"
@@ -45,7 +45,7 @@ export function QrowdsourcedAnswersLogo({
           style={{
             fill: 'var(--art)',
           }}
-          fill-opacity="0.6"
+          fillOpacity="0.6"
         />
         <circle
           cx="61.7986"
@@ -54,7 +54,7 @@ export function QrowdsourcedAnswersLogo({
           style={{
             fill: 'var(--art)',
           }}
-          fill-opacity="0.6"
+          fillOpacity="0.6"
         />
         <circle
           cx="44.2986"
@@ -83,7 +83,7 @@ export function QrowdsourcedAnswersLogo({
           style={{
             fill: 'var(--art)',
           }}
-          fill-opacity="0.8"
+          fillOpacity="0.8"
         />
         <rect
           x="222.827"
@@ -94,7 +94,7 @@ export function QrowdsourcedAnswersLogo({
           style={{
             fill: 'var(--art)',
           }}
-          fill-opacity="0.6"
+          fillOpacity="0.6"
         />
       </g>
       <defs>
