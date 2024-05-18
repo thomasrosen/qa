@@ -8,9 +8,9 @@ export function createVectorStore() {
   // Use the `withModel` method to get proper type hints for `metadata` field:
   const vectorStore = PrismaVectorStore.withModel<OpenAiIndex>(prisma).create(
     new OpenAIEmbeddings({
-      // openAIApiKey: process.env.OPENAI_API_KEY, // In Node.js defaults to process.env.OPENAI_API_KEY
+      openAIApiKey: process.env.OPENAI_API_KEY, // In Node.js defaults to process.env.OPENAI_API_KEY
       // batchSize: 512, // Default value if omitted is 512. Max is 2048
-      // modelName: 'text-embedding-3-large',
+      modelName: 'text-embedding-3-small',
     }),
     {
       prisma: Prisma,
