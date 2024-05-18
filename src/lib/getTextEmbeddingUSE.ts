@@ -20,6 +20,7 @@ async function loadUseModel() {
     setWasmPaths('./node_modules/@tensorflow/tfjs-backend-wasm/wasm-out/')
     // setThreadsCount(2) // setThreadsCount comes from @tensorflow/tfjs-backend-wasm
     await tf.setBackend('wasm')
+    await tf.ready()
     wasmInitialized = true
     // console.log('getThreadsCount', await getThreadsCount()) // getThreadsCount comes from @tensorflow/tfjs-backend-wasm
   }
