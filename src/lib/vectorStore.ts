@@ -1,16 +1,28 @@
 import { PrismaVectorStore } from '@langchain/community/vectorstores/prisma'
 import { OpenAIEmbeddings } from '@langchain/openai'
-import { OpenAiIndex, Prisma } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 
 import { prisma } from '@/lib/prisma'
 
+type OpenAiIndexModel = {
+  index?: number
+  createdAt?: Date
+  id?: string
+  content: string
+  metadata?: any // Prisma.JsonValue | null
+  belongsToDocument: string
+  positionInDocument: number
+}
+
 export function createVectorStore() {
   // Use the `withModel` method to get proper type hints for `metadata` field:
-  const vectorStore = PrismaVectorStore.withModel<OpenAiIndex>(prisma).create(
+  const vectorStore = PrismaVectorStore.withModel<OpenAiIndexModel>(
+    prisma
+  ).create(
     new OpenAIEmbeddings({
       openAIApiKey: process.env.OPENAI_API_KEY, // In Node.js defaults to process.env.OPENAI_API_KEY
       // batchSize: 512, // Default value if omitted is 512. Max is 2048
-      modelName: 'text-embedding-3-small',
+      // modelName: 'text-embedding-3-small',
     }),
     {
       prisma: Prisma,
@@ -19,6 +31,8 @@ export function createVectorStore() {
       columns: {
         id: PrismaVectorStore.IdColumn,
         content: PrismaVectorStore.ContentColumn,
+        belongsToDocument: true,
+        positionInDocument: true,
       },
     }
   )
@@ -30,16 +44,19 @@ export async function addContent({
   texts = [],
   vectorStore,
 }: {
-  texts: {
-    content: string
-    metadata: any
-  }[]
+  texts: OpenAiIndexModel[]
   vectorStore: ReturnType<typeof createVectorStore>
 }) {
   return await vectorStore.addModels(
     await prisma.$transaction(
-      texts.map(({ content, metadata }) =>
-        prisma.openAiIndex.create({ data: { content, metadata } })
+      texts.map((fields) =>
+        prisma.openAiIndex.create({
+          data: {
+            ...fields,
+            belongsToDocument: fields.belongsToDocument || '_',
+            positionInDocument: fields.positionInDocument || 0,
+          },
+        })
       )
     )
   )

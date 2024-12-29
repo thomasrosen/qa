@@ -236,12 +236,14 @@ model Context {
 }
 
 model OpenAiIndex {
-  index     Int                          @default(autoincrement())
-  createdAt DateTime                     @default(now())
-  id        String                       @id @default(cuid())
-  content   String
-  embedding Unsupported("vector(1536)")?
-  metadata  Json?
+  index              Int                          @default(autoincrement())
+  createdAt          DateTime                     @default(now())
+  id                 String                       @id @default(cuid())
+  content            String
+  embedding          Unsupported("vector(1536)")?
+  metadata           Json?
+  belongsToDocument  String                       @default("_") // ids of documents this index-entry belongs to
+  positionInDocument Int                          @default(0) // the position of this index-entry in the document
 
   @@map("OpenAiIndex")
 }

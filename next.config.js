@@ -10,6 +10,15 @@ let nextConfig = {
       test: /\.wasm$/,
       type: 'webassembly/experimental',
     });
+    config.module.rules.push({
+      test: /\.md$/,
+      type: 'raw-loader',
+    });
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      "sharp$": false,
+      "onnxruntime-node$": false,
+    }
     return config;
   },
 }
